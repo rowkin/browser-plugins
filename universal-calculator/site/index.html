@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title data-i18n="title">Universal Calculator - 一站式智能计算器与 AI 理财健康助理</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- 引入现代字体 Outfit & Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;700;800&display=swap" rel="stylesheet">
+  <script>
+    // 立即执行以避免主题与语言初始化闪烁
+    (function() {
+      // 1. 初始化主题
+      const themeManual = localStorage.getItem('uc-site-theme-manual') === 'true';
+      let theme = 'light';
+      if (themeManual) {
+        theme = localStorage.getItem('uc-site-theme') || 'light';
+      } else {
+        const hour = new Date().getHours();
+        theme = (hour >= 6 && hour < 18) ? 'light' : 'dark';
+        localStorage.setItem('uc-site-theme', theme);
+      }
+      document.documentElement.setAttribute('data-theme', theme);
+
+      // 2. 初始化语言
+      let lang = localStorage.getItem('uc-site-lang');
+      if (!lang) {
+        lang = navigator.language.startsWith('zh') ? 'zh' : 'en';
+        localStorage.setItem('uc-site-lang', lang);
+      }
+      document.documentElement.setAttribute('lang', lang === 'zh' ? 'zh-CN' : 'en');
+    })();
+  </script>
+</head>
+<body>
+  <!-- 顶部导航栏 -->
+  <nav class="navbar">
+    <div class="navbar-container">
+      <div class="brand">
+        <div class="brand-logo">
+          <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="32" height="32" rx="8" fill="url(#navLogoGrad)"/>
+            <path d="M8 11H18M8 16H24M8 21H24M21 11H24" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <defs>
+              <linearGradient id="navLogoGrad" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#0d9488"/>
+                <stop offset="100%" stop-color="#10b981"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <span class="brand-title">Universal Calculator</span>
+          <span class="brand-subtitle">79team</span>
+        </div>
+      </div>
+      
+      <div class="nav-links">
+        <a href="#features" data-i18n="nav-features">核心特色</a>
+        <a href="#panels" data-i18n="nav-panels">功能面板</a>
+        <a href="#ai" data-i18n="nav-ai">AI 诊断</a>
+        <a href="#install" class="nav-cta" data-i18n="nav-install">立即安装</a>
+      </div>
+      <div class="nav-controls">
+        <!-- 双语切换按钮 -->
+        <button id="langToggleBtn" class="lang-toggle" title="Switch Language">🌐 EN</button>
+        <!-- 主题切换按钮 -->
+        <button id="themeToggleBtn" class="theme-toggle" title="切换主题">🌙</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- 英雄宣传区 (Hero Section) -->
+  <header class="hero">
+    <div class="hero-bg-glow"></div>
+    <div class="hero-container">
+      <div class="hero-content">
+        <div class="hero-badge" data-i18n="hero-badge">🚀 Chrome 扩展 Manifest V3 极速架构</div>
+        <h1 class="hero-title" data-i18n="hero-title">
+          让计算与换算更聪明，<br>
+          <span class="gradient-text">一站式智能万能计算器</span>
+        </h1>
+        <p class="hero-subtitle" data-i18n="hero-subtitle">
+          Universal Calculator 是专为七九在线科技打造的生产力计算工具。集成了标准/科学计算、物理单位换算、房贷利息还款推演、实时外汇换算、人民币财务大写以及 BMI 生理指标等核心计算面板。首创 **AI 理财与健康深度诊断助理**，支持端侧离线推理，数据不外泄，隐私无忧。
+        </p>
+        <div class="hero-actions">
+          <a href="https://chromewebstore.google.com/detail/universal-calculator" class="btn btn-primary btn-large" data-i18n="hero-install-store">🛍️ 谷歌商店一键安装</a>
+          <a href="#offline-steps" class="btn btn-secondary btn-large" onclick="showOfflineStepsAndScroll(); return false;" data-i18n="hero-install-offline">📥 离线下载安装</a>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="window-mockup">
+          <div class="window-header">
+            <span class="dot red"></span>
+            <span class="dot yellow"></span>
+            <span class="dot green"></span>
+            <span class="window-title" data-i18n="mock-title">Universal Calculator Workspace</span>
+          </div>
+          <div class="window-body">
+            <div class="mock-grid">
+              <div class="mock-sidebar">
+                <div class="mock-nav-item" data-i18n="mock-nav-calc">🧮 科学计算</div>
+                <div class="mock-nav-item" data-i18n="mock-nav-mortgage">🏠 房贷推演</div>
+                <div class="mock-nav-item active" data-i18n="mock-nav-bmi">🩺 BMI 健康</div>
+                <div class="mock-nav-item" data-i18n="mock-nav-rates">🪙 实时汇率</div>
+              </div>
+              <div class="mock-main">
+                <div class="mock-card">
+                  <div style="display:flex;justify-content:space-between;margin-bottom:8px">
+                    <span style="font-weight:700" data-i18n="mock-panel-title">BMI Calculator</span>
+                    <span class="mock-badge" data-i18n="mock-badge-active">HEALTHY</span>
+                  </div>
+                  <div class="mock-inputs-display" style="font-size:11px;color:var(--text-secondary);margin-top:6px;line-height:1.4">
+                    <div>📏 身高 (Height): 175 cm</div>
+                    <div>⚖️ 体重 (Weight): 70 kg</div>
+                    <div style="margin-top:6px;padding:4px 0;border-top:1px dashed var(--border)">
+                      <strong style="color:var(--primary)">BMI: 22.86 (正常 / Normal)</strong>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="mock-ai-bar">
+                <div class="mock-ai-header" data-i18n="mock-ai-title">🤖 AI Assistant</div>
+                <div class="mock-ai-chat">
+                  <div class="mock-chat-bubble user" data-i18n="mock-chat-user">根据 BMI 正常状态，给一些健康建议。</div>
+                  <div class="mock-chat-bubble assistant" data-i18n="mock-chat-assistant">您好！BMI 22.86 处于非常理想的范围。膳食上建议维持优质蛋白质（如深海鱼）的摄入，每周安排 3 次有氧跑步以保持良好代谢。</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- 核心特色 (Core Features) -->
+  <section id="features" class="section">
+    <div class="section-container">
+      <div class="section-header">
+        <h2 class="section-title" data-i18n="features-title">为什么选择 Universal Calculator ？</h2>
+        <p class="section-subtitle" data-i18n="features-subtitle">打破传统计算工具的局限，提供一站式、高内聚且具备本地智能的跨领域计算体验</p>
+      </div>
+
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon bg-indigo">🧮</div>
+          <h3 class="feature-name" data-i18n="feature-t1">一站式六大计算面板</h3>
+          <p class="feature-desc" data-i18n="feature-d1">汇聚科学计算、房贷月供对比、汇率实时换算、单位快速换算、人民币财务大写以及 BMI 生理计算，再也不需要在多个插件中来回切换。</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon bg-purple">🤖</div>
+          <h3 class="feature-name" data-i18n="feature-t2">AI 智能理财与健康诊断</h3>
+          <p class="feature-desc" data-i18n="feature-d2">基于计算结果一键提供 AI 深度诊断。无论是分析房贷理财的配置路径，还是提供专业的生理饮食与运动训练方案，都能为您即时呈现。</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon bg-cyan">🔌</div>
+          <h3 class="feature-name" data-i18n="feature-t3">首发支持 Chrome 内置 AI</h3>
+          <p class="feature-desc" data-i18n="feature-d3">深度对接浏览器内置 AI (Gemini Nano) 进行本地端侧推理，不走外部服务器，不花一分钱，无需 API Key，保障公司和个人数据隐私不外泄。</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon bg-amber">⚡</div>
+          <h3 class="feature-name" data-i18n="feature-t4">智能前置拦截与零报错</h3>
+          <p class="feature-desc" data-i18n="feature-d4">具备前置配置智能验证，在未填 API Key 时通过 UI 柔性提示，且对外部异常进行 console.warn 降级拦截，确保扩展在开发者模式下 100% 绿色无报错警报。</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon bg-pink">🎨</div>
+          <h3 class="feature-name" data-i18n="feature-t5">极客护眼金属绿 UI</h3>
+          <p class="feature-desc" data-i18n="feature-d5">专为高频计算人群定制的金属绿渐变与雅致明亮主题，完美支持黑暗模式，自适应同步系统主题，界面磨砂毛玻璃极具科技感。</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon bg-emerald">🔒</div>
+          <h3 class="feature-name" data-i18n="feature-t6">本地首要 & 极速隐私</h3>
+          <p class="feature-desc" data-i18n="feature-d6">除了用户主动填写的第三方 API 外，所有数学、大写、BMI 和房贷计算完全在本地离线沙箱执行，响应时间低至毫秒级。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 全景工具集 (Tools Showcase) -->
+  <section id="panels" class="section bg-alt">
+    <div class="section-container">
+      <div class="section-header">
+        <h2 class="section-title" data-i18n="panels-title">全功能计算面板一览</h2>
+        <p class="section-subtitle" data-i18n="panels-subtitle">点击分类查看内置面板的核心能力，内置专属的 AI 大模型推理诊断模块</p>
+      </div>
+
+      <!-- 分类 Tab -->
+      <div class="tools-tab-container">
+        <button class="tools-tab active" data-category="all" data-i18n="tab-all">全部面板</button>
+        <button class="tools-tab" data-category="math" data-i18n="tab-math">🧮 科学计算与数学</button>
+        <button class="tools-tab" data-category="finance" data-i18n="tab-finance">🏠 财务与房贷理财</button>
+        <button class="tools-tab" data-category="physical" data-i18n="tab-physical">🔄 物理单位与换算</button>
+        <button class="tools-tab" data-category="health" data-i18n="tab-health">🩺 健康诊断与科普</button>
+      </div>
+
+      <!-- 面板卡片网格 -->
+      <div class="showcase-grid" id="showcaseGrid">
+        <!-- 动态生成 -->
+      </div>
+    </div>
+  </section>
+
+  <!-- AI 诊断特色 (AI Showcase) -->
+  <section id="ai" class="section">
+    <div class="section-container">
+      <div class="ai-showcase-box">
+        <div class="ai-showcase-content">
+          <div class="feature-icon bg-purple">🤖</div>
+          <h2 class="ai-showcase-title" data-i18n="ai-title">智能双模型支持，随意切换</h2>
+          <p class="ai-showcase-desc" data-i18n="ai-desc">
+            计算器内的 AI 助手支持 **双模型快速热切**，满足您不同等级的算力与隐私需求：
+          </p>
+          <ul class="ai-bullets">
+            <li data-i18n="ai-bullet-1">
+              <strong>Chrome 内置 AI (Gemini Nano)</strong>：本地端侧模型，适合对敏感个人参数（如精确身高、体重、财务预算）进行解释与分析，彻底杜绝数据外传风险。
+            </li>
+            <li data-i18n="ai-bullet-2">
+              <strong>自定义 API (火山引擎/OpenAI)</strong>：支持配置任何 OpenAI 兼容的云端 API（如火山引擎 Coding Plan，支持流式交互），适合处理深层理财规划与结构化营养方案等重算力任务。
+            </li>
+          </ul>
+          <div class="ai-card-tip" data-i18n="ai-tip">
+            💡 <strong>智能提示</strong>：若内置 AI 尚未就绪，系统会以 2.5 秒的间隔在后台自动轮询模型下载状态，下载完成后可一键静默激活，无需人工干预。
+          </div>
+        </div>
+        <div class="ai-showcase-preview">
+          <!-- 模拟 AI 助手面板 -->
+          <div class="panel-mockup">
+            <div class="panel-mock-header">
+              <span style="font-weight:700" data-i18n="ai-mock-header">🤖 Universal Calculator AI</span>
+              <div class="mock-model-select" data-i18n="ai-mock-model">
+                🤖 Chrome 内置 AI (Gemini Nano)
+              </div>
+            </div>
+            <div class="panel-mock-body">
+              <div class="mock-bubble user" data-i18n="ai-mock-bubble-user">请深度解析：等额本金和等额本息。</div>
+              <div class="mock-bubble assistant">
+                <pre style="margin: 0; white-space: pre-wrap; font-size: 11px; font-family: inherit;"><code>等额本息：每月还款固定，前期利息占比大，总利息高，适合收入稳定但前期现金流偏紧的用户。
+等额本金：每月本金固定，利息递减，前期还款额大，总利息低，适合前期资金充裕想节省利息的用户。</code></pre>
+              </div>
+            </div>
+            <div class="panel-mock-footer">
+              <div class="mock-input" data-i18n="ai-mock-input">输入你的技术或财务问题... <span>➡️</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 安装使用说明 (Installation) -->
+  <section id="install" class="section bg-gradient">
+    <div class="section-container">
+      <div class="install-box">
+        <h2 class="install-title" data-i18n="install-title">🚀 立即安装 Universal Calculator，加速你的日常工作流</h2>
+        <p class="install-subtitle" data-i18n="install-subtitle">推荐通过 Chrome 应用商店一键安装；也支持本地开发者模式离线加载</p>
+        
+        <!-- 安装渠道选择 -->
+        <div class="install-methods">
+          <!-- 渠道 A: 商店一键安装 -->
+          <div class="method-card recommended-card">
+            <div class="badge-recommended" data-i18n="install-method-reco-badge">推荐</div>
+            <div class="method-icon">🛍️</div>
+            <h3 data-i18n="install-method-t1">Chrome Web Store 商店安装</h3>
+            <p class="method-desc" data-i18n="install-method-d1">一键安全安装，支持新版本后台自动更新与多设备配置云端同步，体验最佳。</p>
+            <div class="method-action">
+              <a href="https://chromewebstore.google.com/detail/universal-calculator" class="btn btn-primary btn-large" style="display: inline-block;" data-i18n="install-method-btn1">⚡ 谷歌商店一键安装</a>
+            </div>
+          </div>
+          
+          <!-- 渠道 B: 离线开发者安装 -->
+          <div class="method-card">
+            <div class="method-icon">📦</div>
+            <h3 data-i18n="install-method-t2">本地解压加载 (开发者模式)</h3>
+            <p class="method-desc" data-i18n="install-method-d2">免商店市场运行，适合无外网环境或特定离线研发环境。下载 ZIP 安装包解压即可加载。</p>
+            <div class="method-action">
+              <a href="#offline-steps" class="btn btn-secondary btn-large" style="display: inline-block;" onclick="showOfflineStepsAndScroll(); return false;" data-i18n="install-method-btn2">🛠️ 查看本地安装步骤</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- 离线安装步骤详情 -->
+        <div id="offline-steps" class="offline-steps-section" style="display: none; margin-top: 50px;">
+          <h3 style="font-size: 22px; margin-bottom: 30px; font-family: 'Outfit', sans-serif; font-weight: 700;" data-i18n="install-steps-title">🛠️ 本地开发者模式安装步骤</h3>
+          <div class="steps-container">
+            <div class="step-card">
+              <div class="step-num">01</div>
+              <div class="step-text">
+                <h4 data-i18n="install-step-t1">下载安装包</h4>
+                <p data-i18n="install-step-d1">访问 GitHub Releases 页面下载最新的打包 ZIP 压缩包并解压。</p>
+                <pre class="step-code"><code>https://github.com/rowkin/79team/releases</code></pre>
+              </div>
+            </div>
+            <div class="step-card">
+              <div class="step-num">02</div>
+              <div class="step-text">
+                <h4 data-i18n="install-step-t2">开启开发者模式</h4>
+                <p data-i18n="install-step-d2">在 Chrome 地址栏访问 <code>chrome://extensions</code>，并勾选右上角的「开发者模式」。</p>
+              </div>
+            </div>
+            <div class="step-card">
+              <div class="step-num">03</div>
+              <div class="step-text">
+                <h4 data-i18n="install-step-t3">加载扩展程序</h4>
+                <p data-i18n="install-step-d3">点击「加载已解压的扩展程序」，选择刚刚解压的 <code>universal-calculator</code> 目录，安装完成！</p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="install-action">
+            <a href="https://github.com/rowkin/79team/releases" target="_blank" class="btn btn-secondary" data-i18n="install-steps-btn-releases">📥 访问 GitHub 发布页 (下载 ZIP)</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 页脚 -->
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-brand">
+        <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:24px;height:24px;">
+          <rect width="32" height="32" rx="8" fill="#0d9488"/>
+          <path d="M8 11H18M8 16H24M8 21H24M21 11H24" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span>Universal Calculator</span>
+      </div>
+      <p class="footer-text" data-i18n="footer-text">
+        © 2026 七九在线科技. 由 79team 打造。
+      </p>
+      <div class="footer-links">
+        <a href="https://github.com/rowkin/79team/releases" target="_blank" data-i18n="footer-link-releases">下载发布</a>
+        <a href="https://github.com/rowkin/79team/issues" target="_blank" data-i18n="footer-link-feedback">问题反馈</a>
+        <a href="https://github.com/rowkin/79team/blob/main/apps/browser-plugins/universal-calculator/PRIVACY_POLICY.md" target="_blank" data-i18n="footer-link-privacy">隐私政策</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- 数据与多语言切换脚本 -->
+  <script>
+    // 翻译字典
+    const TRANSLATIONS = {
+      zh: {
+        title: 'Universal Calculator - 一站式智能计算器与 AI 理财健康助理',
+        'nav-features': '核心特色',
+        'nav-panels': '功能面板',
+        'nav-ai': 'AI 诊断',
+        'nav-install': '立即安装',
+        'hero-badge': '🚀 Chrome 扩展 Manifest V3 极速架构',
+        'hero-title': '让计算与换算更聪明，<br><span class="gradient-text">一站式智能万能计算器</span>',
+        'hero-subtitle': 'Universal Calculator 是专为七九在线科技打造的生产力计算工具。集成了标准/科学计算、物理单位换算、房贷利息还款推演、实时外汇换算、人民币财务大写以及 BMI 生理指标等核心计算面板。首创 **AI 理财与健康深度诊断助理**，支持端侧离线推理，数据不外泄，隐私无忧。',
+        'hero-install-store': '🛍️ 谷歌商店一键安装',
+        'hero-install-offline': '📥 离线下载安装',
+        'mock-title': 'Universal Calculator Workspace',
+        'mock-nav-calc': '🧮 科学计算',
+        'mock-nav-mortgage': '🏠 房贷推演',
+        'mock-nav-bmi': '🩺 BMI 健康',
+        'mock-nav-rates': '🪙 实时汇率',
+        'mock-panel-title': 'BMI 计算器',
+        'mock-badge-active': '健康理想',
+        'mock-ai-title': '🤖 AI 助手',
+        'mock-chat-user': '根据 BMI 正常状态，给一些健康建议。',
+        'mock-chat-assistant': '您好！您的 BMI 指数为 22.86，处于非常健康的理想范围。膳食上建议维持优质蛋白质（如深海鱼、蛋白）的摄入，每周安排 3 次有氧跑步以保持良好基础代谢。',
+        'features-title': '为什么选择 Universal Calculator ？',
+        'features-subtitle': '打破传统计算工具的局限，提供一站式、高内聚且具备本地智能的跨领域计算体验',
+        'feature-t1': '一站式六大计算面板',
+        'feature-d1': '汇聚科学计算、房贷月供对比、汇率实时换算、单位快速换算、人民币财务大写以及 BMI 生理计算，再也不需要在多个插件中来回切换。',
+        'feature-t2': 'AI 智能理财与健康诊断',
+        'feature-d2': '基于计算结果一键提供 AI 深度诊断。无论是分析房贷理财的配置路径，还是提供专业的生理饮食与运动训练方案，都能为您即时呈现。',
+        'feature-t3': '首发支持 Chrome 内置 AI',
+        'feature-d3': '深度对接浏览器内置 AI (Gemini Nano) 进行本地端侧推理，不走外部服务器，不花一分钱，无需 API Key，保障公司和个人数据隐私不外泄。',
+        'feature-t4': '智能前置拦截与零报错',
+        'feature-d4': '具备前置配置智能验证，在未填 API Key 时通过 UI 柔性提示，且对外部异常进行 console.warn 降级拦截，确保扩展在开发者模式下 100% 绿色无报错警报。',
+        'feature-t5': '极客护眼金属绿 UI',
+        'feature-d5': '专为高频计算人群定制的金属绿渐变与雅致明亮主题，完美支持黑暗模式，自适应同步系统主题，界面磨砂毛玻璃极具科技感。',
+        'feature-t6': '本地首要 & 极速隐私',
+        'feature-d6': '除了用户主动填写的第三方 API 外，所有数学、大写、BMI 和房贷计算完全在本地离线沙箱执行，响应时间低至毫秒级。',
+        'panels-title': '全功能计算面板一览',
+        'panels-subtitle': '点击分类查看内置面板的核心能力，内置专属的 AI 大模型推理诊断模块',
+        'tab-all': '全部面板',
+        'tab-math': '🧮 科学计算与数学',
+        'tab-finance': '🏠 财务与房贷理财',
+        'tab-physical': '🔄 物理单位与换算',
+        'tab-health': '🩺 健康诊断与科普',
+        'ai-title': '智能双模型支持，随意切换',
+        'ai-desc': '计算器内的 AI 助手支持 **双模型快速热切**，满足您不同等级的算力与隐私需求：',
+        'ai-bullet-1': '<strong>Chrome 内置 AI (Gemini Nano)</strong>：本地端侧模型，适合对敏感个人参数（如精确身高、体重、财务预算）进行解释与分析，彻底杜绝数据外传风险。',
+        'ai-bullet-2': '<strong>自定义 API (火山引擎/OpenAI)</strong>：支持配置任何 OpenAI 兼容的云端 API（如火山引擎 Coding Plan，支持流式交互），适合处理深层理财规划与结构化营养方案等重算力任务。',
+        'ai-tip': '💡 <strong>智能提示</strong>：若内置 AI 尚未就绪，系统会以 2.5 秒的间隔在后台自动轮询模型下载状态，下载完成后可一键静默激活，无需人工干预。',
+        'ai-mock-header': '🤖 Universal Calculator AI',
+        'ai-mock-model': '🤖 Chrome 内置 AI (Gemini Nano)',
+        'ai-mock-bubble-user': '请深度解析：等额本金和等额本息。',
+        'ai-mock-input': '输入你的技术或财务问题... <span>➡️</span>',
+        'install-title': '🚀 立即安装 Universal Calculator，加速你的日常工作流',
+        'install-subtitle': '推荐通过 Chrome 应用商店一键安装；也支持本地开发者模式离线加载',
+        'install-method-reco-badge': '推荐',
+        'install-method-t1': 'Chrome Web Store 商店安装',
+        'install-method-d1': '一键安全安装，支持新版本后台自动更新与多设备配置云端同步，体验最佳。',
+        'install-method-btn1': '⚡ 谷歌商店一键安装',
+        'install-method-t2': '本地解压加载 (开发者模式)',
+        'install-method-d2': '免商店市场运行，适合无外网环境或特定离线研发环境。下载 ZIP 安装包解压即可加载。',
+        'install-method-btn2': '🛠️ 查看本地安装步骤',
+        'install-steps-title': '🛠️ 本地开发者模式安装步骤',
+        'install-step-t1': '下载安装包',
+        'install-step-d1': '访问 GitHub Releases 页面下载最新的打包 ZIP 压缩包并解压。',
+        'install-step-t2': '开启开发者模式',
+        'install-step-d2': '在 Chrome 地址栏访问 <code>chrome://extensions</code>，并勾选右上角的「开发者模式」。',
+        'install-step-t3': '加载扩展程序',
+        'install-step-d3': '点击「加载已解压的扩展程序」，选择刚刚解压的 <code>universal-calculator</code> 目录，安装完成！',
+        'install-steps-btn-releases': '📥 访问 GitHub 发布页 (下载 ZIP)',
+        'footer-text': '© 2026 七九在线科技. 由 79team 打造。&nbsp;|&nbsp;版本 v1.0.0',
+        'footer-link-releases': '下载发布',
+        'footer-link-feedback': '问题反馈',
+        'footer-link-privacy': '隐私政策'
+      },
+      en: {
+        title: 'Universal Calculator - Smart Calculator & AI Health/Financial Advisor',
+        'nav-features': 'Features',
+        'nav-panels': 'Panels',
+        'nav-ai': 'AI Advisor',
+        'nav-install': 'Install',
+        'hero-badge': '🚀 Chrome Extension MV3 Swift Architecture',
+        'hero-title': 'Make Calculations & Conversions Smarter with<br><span class="gradient-text">Smart All-in-One Calculator</span>',
+        'hero-subtitle': 'Universal Calculator is a highly efficient browser extension custom-built for modern productivity. It integrates scientific calculators, physical unit converters, mortgage simulators, real-time currency converters, capitalization tables, and BMI physical health index panels. Proudly featuring an AI assistant running offline without keys for absolute data privacy.',
+        'hero-install-store': '🛍️ Chrome Web Store Install',
+        'hero-install-offline': '📥 Offline Download & Install',
+        'mock-title': 'Universal Calculator Workspace',
+        'mock-nav-calc': '🧮 Science Calc',
+        'mock-nav-mortgage': '🏠 Mortgage Plan',
+        'mock-nav-bmi': '🩺 BMI Health',
+        'mock-nav-rates': '🪙 Live Rates',
+        'mock-panel-title': 'BMI Calculator',
+        'mock-badge-active': 'IDEAL',
+        'mock-ai-title': '🤖 AI Assistant',
+        'mock-chat-user': 'Provide health suggestions based on normal BMI.',
+        'mock-chat-assistant': 'Hello! Your BMI is 22.86, which is in the healthy ideal range. It is recommended to maintain a lean protein intake (like fish) and run 3 times a week to keep a high metabolic rate.',
+        'features-title': 'Why Choose Universal Calculator?',
+        'features-subtitle': 'Break the limits of traditional calculators with a unified, cohesive computing sandbox equipped with local intelligence.',
+        'feature-t1': 'All-in-One Calculator Panels',
+        'feature-d1': 'Combines science calculations, mortgage amortizations, currency rates, physical conversions, CNY capitalization, and BMI indices in a single view.',
+        'feature-t2': 'AI Financial & Health Advice',
+        'feature-d2': 'Get custom nutrition recipes or asset configuration routes directly based on your simulation results in one click.',
+        'feature-t3': 'Chrome Built-in AI First-Class Support',
+        'feature-d3': 'First-class support for Chrome Built-in AI (Gemini Nano) local inference. Free, requires no API key, and protects your code/personal privacy.',
+        'feature-t4': 'Smart Warning Interception',
+        'feature-d4': 'Intercepts invalid API keys with friendly UI warnings and demotes external exceptions to console.warn to stay 100% green without extension error flags.',
+        'feature-t5': 'Premium Glassmorphism Green UI',
+        'feature-d5': 'Meticulously designed metal-green gradient and glassmorphism themes. Seamless dark/light mode toggle adapting automatically to your system.',
+        'feature-t6': 'Local-First Computing',
+        'feature-d6': 'Except for voluntary cloud AI APIs, all formulas, currency conversions, capitalized tables, and mortgage charts calculate 100% locally.',
+        'panels-title': 'All Integrated Computing Panels',
+        'panels-subtitle': 'Browse the complete set of calculator panels, each equipped with its own dedicated AI analysis panel.',
+        'tab-all': 'All Panels',
+        'tab-math': '🧮 Scientific & Math',
+        'tab-finance': '🏠 Financial & Mortgage',
+        'tab-physical': '🔄 Units & Conversions',
+        'tab-health': '🩺 Health & Nutrition',
+        'ai-title': 'Smart Dual-Model Engine',
+        'ai-desc': 'The permanent sidebar AI assistant supports instant hot-swapping between two models to fit your task weight and privacy requirements:',
+        'ai-bullet-1': '<strong>Chrome Built-in AI (Gemini Nano)</strong>: Local on-device model, perfect for analyzing sensitive parameters (such as weight and financial budget), eliminating data leakage risks.',
+        'ai-bullet-2': '<strong>Custom API (OpenAI Compatible)</strong>: Configure cloud APIs (such as Volcano Engine Coding Plan) with streaming response, best for complex asset plans.',
+        'ai-tip': '💡 <strong>Smart Tip</strong>: If built-in AI is not ready, the system auto-polls model status in the background every 2.5 seconds. Once downloaded, it activates silently.',
+        'ai-mock-header': '🤖 Universal Calculator AI',
+        'ai-mock-model': '🤖 Chrome Built-in AI (Gemini Nano)',
+        'ai-mock-bubble-user': 'Deeply explain: Equal Principal vs. Equal Payment.',
+        'ai-mock-input': 'Type your calculation or financial question... <span>➡️</span>',
+        'install-title': '🚀 Install Universal Calculator Now',
+        'install-subtitle': 'One-click install via Chrome Web Store or download ZIP package to load unpacked in Developer Mode.',
+        'install-method-reco-badge': 'Recommended',
+        'install-method-t1': 'Chrome Web Store Installation',
+        'install-method-d1': 'Secure one-click install, background automatic updates, and configuration cloud sync for the best experience.',
+        'install-method-btn1': '⚡ One-Click Web Store Install',
+        'install-method-t2': 'Load Unpacked (Developer Mode)',
+        'install-method-d2': 'Run without store access, ideal for offline/intranet development. Simply download the ZIP, unpack, and load.',
+        'install-method-btn2': '🛠️ View Unpacked Setup Steps',
+        'install-steps-title': '🛠️ Local Developer Mode Installation Steps',
+        'install-step-t1': 'Download Package',
+        'install-step-d1': 'Visit GitHub Releases page to download and unpack the latest release ZIP package.',
+        'install-step-t2': 'Enable Developer Mode',
+        'install-step-d2': 'Open <code>chrome://extensions</code> in Chrome and toggle \"Developer Mode\" in the top-right corner.',
+        'install-step-t3': 'Load Unpacked Extension',
+        'install-step-d3': 'Click \"Load unpacked\" and select the unpacked <code>universal-calculator</code> directory. Done!',
+        'install-steps-btn-releases': '📥 Visit GitHub Releases (Download ZIP)',
+        'footer-text': '© 2026 Universal Calculator. Built by 79team.&nbsp;|&nbsp;v1.0.0',
+        'footer-link-releases': 'Releases',
+        'footer-link-feedback': 'Issues',
+        'footer-link-privacy': 'Privacy Policy'
+      }
+    };
+
+    // 在线展示的面板列表
+    const SITE_TOOLS = [
+      { id: 'sci-calc', name: '科学计算器', name_en: 'Scientific Calculator', desc: '支持复杂的三角函数、对数、双曲函数及括号表达式计算，完美支撑开发与科研数学运算。', desc_en: 'Supports complex trigonometric, logarithmic, hyperbolic, and parenthesized expressions for engineering and math calculation.', icon: '🧮', color: 'color-indigo', category: 'math' },
+      { id: 'exchange-rate', name: '实时汇率折算', name_en: 'Live Currency Rates', desc: '支持常用法币双向快速对冲结算，支持离线缓存主流汇率数据，实现毫秒级快速预览。', desc_en: 'Provides bi-directional currency conversions for global fiat, caching mainstream rates locally for sub-millisecond offline calculations.', icon: '🪙', color: 'color-violet', category: 'finance' },
+      { id: 'mortgage-calc', name: '房贷月供推演', name_en: 'Mortgage Simulator', desc: '支持等额本金与等额本息双算法对比，详尽输出月供还款细水账表，提供 AI 专家资产分配意见。', desc_en: 'Compares Equal Principal vs. Equal Payment algorithms, yielding detailed monthly amortization schedules with AI financial asset advice.', icon: '🏠', color: 'color-cyan', category: 'finance' },
+      { id: 'unit-conv', name: '物理单位换算', name_en: 'Unit Converter', desc: '覆盖长度、面积、体积、重量、温度和时间等物理量转换，支持滑动轴输入快速微调。', desc_en: 'Converts physical units across length, area, volume, weight, temperature, and time. Features sliders for quick value fine-tuning.', icon: '🔄', color: 'color-sky', category: 'physical' },
+      { id: 'cny-capital', name: '财务人民币大写', name_en: 'CNY Capitalizer', desc: '一键将普通数字金额转为标准的中国财务人民币大写汉字（壹, 贰, 叁），防止录入错误。', desc_en: 'Converts standard decimal numbers to Chinese financial capitalized characters (Yi, Er, San) instantly to prevent entry errors.', icon: '¥', color: 'color-rose', category: 'finance' },
+      { id: 'bmi-calc', name: 'BMI 健康评估', name_en: 'BMI Calculator', desc: '基于身高与体重快速算出体质指数（BMI），标记肥胖或消瘦状态，提供 AI 饮食运动定调方案。', desc_en: 'Calculates Body Mass Index (BMI) dynamically based on height and weight. Highlights physical classification with custom AI health advice.', icon: '🩺', color: 'color-teal', category: 'health' },
+      { id: 'ai-helper', name: 'AI 深度诊断面板', name_en: 'AI Advisor Panel', desc: '常驻侧栏的双模型分析中心，针对当前计算数据（如 BMI、房贷本息）出具定制化的长篇科普与建议。', desc_en: 'A sidebar dual-model analysis center, providing long-form custom suggestions based on active data indicators.', icon: '🤖', color: 'color-purple', category: 'health' },
+      { id: 'history-board', name: '历史计算看板', name_en: 'History Board', desc: '自动记忆本地历史计算表达式与结果，支持一键载入输入区和全部清空，避免重复录入。', desc_en: 'Automatically records local mathematical expressions and answers, allowing one-click reloading or full purging to avoid repetitive typing.', icon: '⏱', color: 'color-amber', category: 'math' }
+    ];
+
+    // 当前语言环境，默认读取 localStorage
+    let currentLang = localStorage.getItem('uc-site-lang') || 'zh';
+
+    // 动态切换语言
+    function setLanguage(lang) {
+      currentLang = lang;
+      localStorage.setItem('uc-site-lang', lang);
+      document.documentElement.setAttribute('lang', lang === 'zh' ? 'zh-CN' : 'en');
+      
+      // 1. 更新所有包含 data-i18n 属性的标签内容
+      const elements = document.querySelectorAll('[data-i18n]');
+      elements.forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (TRANSLATIONS[lang] && TRANSLATIONS[lang][key]) {
+          // 如果是 title 标签，更新 document.title
+          if (el.tagName === 'TITLE') {
+            document.title = TRANSLATIONS[lang][key];
+          } else {
+            el.innerHTML = TRANSLATIONS[lang][key];
+          }
+        }
+      });
+
+      // 2. 更新语言切换按钮文本
+      const langBtn = document.getElementById('langToggleBtn');
+      if (langBtn) {
+        langBtn.textContent = lang === 'zh' ? '🌐 EN' : '🌐 中文';
+      }
+
+      // 3. 重新渲染工具列表及激活的 Tab 分类
+      const activeTab = document.querySelector('.tools-tab.active');
+      const activeCategory = activeTab ? activeTab.dataset.category : 'all';
+      renderSiteTools(activeCategory);
+    }
+
+    // 动态生成工具卡片
+    function renderSiteTools(category = 'all') {
+      const grid = document.getElementById('showcaseGrid');
+      grid.innerHTML = '';
+
+      const filtered = SITE_TOOLS.filter(t => category === 'all' || t.category === category);
+
+      filtered.forEach(tool => {
+        const card = document.createElement('div');
+        card.className = 'showcase-card';
+        
+        // 依据当前语言渲染工具名称和描述
+        const name = currentLang === 'en' ? (tool.name_en || tool.name) : tool.name;
+        const desc = currentLang === 'en' ? (tool.desc_en || tool.desc) : tool.desc;
+
+        card.innerHTML = `
+          <div class="showcase-card-header">
+            <div class="showcase-icon ${tool.color}">${tool.icon}</div>
+            <h4 class="showcase-name">${name}</h4>
+          </div>
+          <p class="showcase-desc">${desc}</p>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    // 分类点击切换
+    document.querySelectorAll('.tools-tab').forEach(tab => {
+      tab.addEventListener('click', (e) => {
+        document.querySelectorAll('.tools-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        renderSiteTools(tab.dataset.category);
+      });
+    });
+
+    // 主题切换逻辑与初始图标设置
+    const themeBtn = document.getElementById('themeToggleBtn');
+    if (themeBtn) {
+      const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+      themeBtn.textContent = currentTheme === 'light' ? '🌙' : '☀️';
+
+      themeBtn.addEventListener('click', () => {
+        const html = document.documentElement;
+        const current = html.getAttribute('data-theme') || 'light';
+        const next = current === 'dark' ? 'light' : 'dark';
+        html.setAttribute('data-theme', next);
+        themeBtn.textContent = next === 'dark' ? '☀️' : '🌙';
+        localStorage.setItem('uc-site-theme', next);
+        localStorage.setItem('uc-site-theme-manual', 'true');
+      });
+    }
+
+    // 绑定多语言切换按钮点击事件
+    const langBtn = document.getElementById('langToggleBtn');
+    if (langBtn) {
+      langBtn.addEventListener('click', () => {
+        const nextLang = currentLang === 'zh' ? 'en' : 'zh';
+        setLanguage(nextLang);
+      });
+    }
+
+    // 展开并平滑滚动到离线安装步骤
+    function showOfflineStepsAndScroll() {
+      const el = document.getElementById('offline-steps');
+      if (el) {
+        el.style.display = 'block';
+        // 计算绝对文档坐标并进行平滑滚动
+        const targetY = el.getBoundingClientRect().top + window.scrollY - 80;
+        window.scrollTo({ top: targetY, behavior: 'smooth' });
+      }
+    }
+    window.showOfflineStepsAndScroll = showOfflineStepsAndScroll;
+
+    // 初始化加载
+    setLanguage(currentLang);
+  </script>
+</body>
+</html>

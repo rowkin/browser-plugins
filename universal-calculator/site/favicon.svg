@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="44 44 424 424" width="512" height="512">
+  <defs>
+    <!-- 背景微投影 -->
+    <filter id="bgShadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="0" dy="6" stdDeviation="12" flood-color="#1c1917" flood-opacity="0.10"/>
+    </filter>
+    <!-- 计算器主体微投影 -->
+    <filter id="calcShadow" x="-8%" y="-8%" width="116%" height="116%">
+      <feDropShadow dx="0" dy="3" stdDeviation="5" flood-color="#1c1917" flood-opacity="0.12"/>
+    </filter>
+    <!-- teal = 键高亮渐变 -->
+    <linearGradient id="tealGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#14b8a6"/>
+      <stop offset="100%" stop-color="#0d9488"/>
+    </linearGradient>
+    <!-- 齿轮与外壳高级拉丝金属绿渐变 -->
+    <linearGradient id="gearGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#115e59"/>
+      <stop offset="100%" stop-color="#0d766e"/>
+    </linearGradient>
+    <!-- 用于挖空齿轮中心的遮罩，增加内腔大小以容纳更大的计算器 -->
+    <mask id="gearMask">
+      <rect x="0" y="0" width="512" height="512" fill="white" />
+      <circle cx="256" cy="256" r="142" fill="black" />
+    </mask>
+    <!-- 单个对称齿牙形状 -->
+    <path id="singleTooth" d="M 216,110 Q 220,74 236,38 Q 256,32 276,38 Q 292,74 296,110 Z" />
+  </defs>
+
+  <!-- ② 完美对称的 8 齿齿轮主体 -->
+  <g filter="url(#calcShadow)" fill="url(#gearGrad)">
+    <!-- 实心底圆，用 mask 挖出内径 -->
+    <circle cx="256" cy="256" r="172" mask="url(#gearMask)" />
+    <!-- 旋转克隆 8 个齿牙，实现 45度、90度、180度等所有正斜方向的绝对轴对称 -->
+    <use href="#singleTooth" mask="url(#gearMask)" transform="rotate(0, 256, 256)" />
+    <use href="#singleTooth" mask="url(#gearMask)" transform="rotate(45, 256, 256)" />
+    <use href="#singleTooth" mask="url(#gearMask)" transform="rotate(90, 256, 256)" />
+    <use href="#singleTooth" mask="url(#gearMask)" transform="rotate(135, 256, 256)" />
+    <use href="#singleTooth" mask="url(#gearMask)" transform="rotate(180, 256, 256)" />
+    <use href="#singleTooth" mask="url(#gearMask)" transform="rotate(225, 256, 256)" />
+    <use href="#singleTooth" mask="url(#gearMask)" transform="rotate(270, 256, 256)" />
+    <use href="#singleTooth" mask="url(#gearMask)" transform="rotate(315, 256, 256)" />
+  </g>
+
+  <!-- ③ 放大后的计算器主体 (大幅提升在小分辨率图标下的辨识度) -->
+  <!-- 宽 170，高 194，圆角 22，居中于 (256,256) -->
+  <rect x="171" y="159" width="170" height="194" rx="22" fill="url(#gearGrad)" filter="url(#calcShadow)"/>
+
+  <!-- ④ 显示屏 (拉大尺寸) -->
+  <rect x="189" y="175" width="134" height="40" rx="10" fill="#f2f1ee" opacity="0.20"/>
+
+  <!-- ⑤ 按键区背景 (白色半透明卡片) -->
+  <rect x="189" y="227" width="134" height="110" rx="12" fill="#f2f1ee" opacity="0.12"/>
+
+  <!-- ⑥ 按键点阵 (3列 × 3行 = 9个小方块，高保真微缩) -->
+  <!-- Row 1 -->
+  <rect x="206" y="244" width="22" height="14" rx="4" fill="#f2f1ee" opacity="0.30"/>
+  <rect x="245" y="244" width="22" height="14" rx="4" fill="#f2f1ee" opacity="0.30"/>
+  <rect x="284" y="244" width="22" height="14" rx="4" fill="#f2f1ee" opacity="0.30"/>
+  
+  <!-- Row 2 -->
+  <rect x="206" y="275" width="22" height="14" rx="4" fill="#f2f1ee" opacity="0.30"/>
+  <rect x="245" y="275" width="22" height="14" rx="4" fill="#f2f1ee" opacity="0.30"/>
+  <rect x="284" y="275" width="22" height="14" rx="4" fill="#f2f1ee" opacity="0.30"/>
+  
+  <!-- Row 3 -->
+  <rect x="206" y="306" width="22" height="14" rx="4" fill="#f2f1ee" opacity="0.30"/>
+  <rect x="245" y="306" width="22" height="14" rx="4" fill="#f2f1ee" opacity="0.30"/>
+  <!-- = 键高亮 -->
+  <rect x="284" y="306" width="22" height="14" rx="4" fill="url(#tealGrad)" opacity="0.95"/>
+  <!-- = 号双横线 -->
+  <rect x="290" y="311" width="10" height="1.5" rx="0.5" fill="white"/>
+  <rect x="290" y="314" width="10" height="1.5" rx="0.5" fill="white"/>
+</svg>

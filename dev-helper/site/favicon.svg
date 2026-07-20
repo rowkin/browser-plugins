@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <defs>
+    <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#6366f1"/>
+      <stop offset="100%" style="stop-color:#8b5cf6"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-opacity="0.25" flood-color="#4f46e5"/>
+    </filter>
+  </defs>
+  <!-- 渐变圆角背景 -->
+  <rect width="128" height="128" rx="28" fill="url(#g)"/>
+  <!-- “DH”几何艺术字，兼具现代设计感与极致对称 -->
+  <g fill="none" stroke="white" stroke-width="11" stroke-linecap="round" stroke-linejoin="round" filter="url(#shadow)">
+    <!-- 字母 D -->
+    <path d="M 34,40 H 38 A 24,24 0 0 1 38,88 H 34 Z"/>
+    <!-- 字母 H -->
+    <path d="M 76,40 V 88 M 100,40 V 88 M 76,64 H 100"/>
+  </g>
+</svg>

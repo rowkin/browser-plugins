@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title data-i18n="title">DevHelper - 七九在线科技专属开发者工具箱</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="alternate icon" href="favicon.png" type="image/png">
+  <!-- 引入现代字体 Outfit & Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;700;800&display=swap" rel="stylesheet">
+  <script>
+    // 立即执行以避免主题与语言初始化闪烁
+    (function() {
+      // 1. 初始化主题
+      const themeManual = localStorage.getItem('devhelper-site-theme-manual') === 'true';
+      let theme = 'light';
+      if (themeManual) {
+        theme = localStorage.getItem('devhelper-site-theme') || 'light';
+      } else {
+        const hour = new Date().getHours();
+        theme = (hour >= 6 && hour < 18) ? 'light' : 'dark';
+        localStorage.setItem('devhelper-site-theme', theme);
+      }
+      document.documentElement.setAttribute('data-theme', theme);
+
+      // 2. 初始化语言
+      let lang = localStorage.getItem('devhelper-site-lang');
+      if (!lang) {
+        lang = navigator.language.startsWith('zh') ? 'zh' : 'en';
+        localStorage.setItem('devhelper-site-lang', lang);
+      }
+      document.documentElement.setAttribute('lang', lang === 'zh' ? 'zh-CN' : 'en');
+    })();
+  </script>
+</head>
+<body>
+  <!-- 顶部导航栏 -->
+  <nav class="navbar">
+    <div class="navbar-container">
+      <div class="brand">
+        <div class="brand-logo">
+          <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="32" height="32" rx="8" fill="url(#navLogoGrad)"/>
+            <path d="M8 12L13 17L8 22M15 22H24" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <defs>
+              <linearGradient id="navLogoGrad" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#6366f1"/>
+                <stop offset="100%" stop-color="#8b5cf6"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <span class="brand-title">DevHelper</span>
+          <span class="brand-subtitle">79team</span>
+        </div>
+      </div>
+      
+      <div class="nav-links">
+        <a href="#features" data-i18n="nav-features">核心特色</a>
+        <a href="#tools" data-i18n="nav-tools">全景工具集</a>
+        <a href="#ai" data-i18n="nav-ai">AI 助手</a>
+        <a href="#install" class="nav-cta" data-i18n="nav-install">立即安装</a>
+      </div>
+      <div class="nav-controls">
+        <!-- 双语切换按钮 -->
+        <button id="langToggleBtn" class="lang-toggle" title="Switch Language">🌐 EN</button>
+        <!-- 主题切换按钮 -->
+        <button id="themeToggleBtn" class="theme-toggle" title="切换主题">🌙</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- 英雄宣传区 (Hero Section) -->
+  <header class="hero">
+    <div class="hero-bg-glow"></div>
+    <div class="hero-container">
+      <div class="hero-content">
+        <div class="hero-badge" data-i18n="hero-badge">🚀 Chrome 扩展 Manifest V3 架构</div>
+        <h1 class="hero-title" data-i18n="hero-title">
+          让开发飞起来的<br>
+          <span class="gradient-text">一站式智能开发者工具箱</span>
+        </h1>
+        <p class="hero-subtitle" data-i18n="hero-subtitle">
+          DevHelper 是专为七九在线科技打造的高效生产力工具。集成了 JSON 格式化、编解码、API 调试等 20 个常用开发工具，并首创常驻 **双栏本地 AI 助手**，本地离线推理无需 Key，隐私安全无忧。
+        </p>
+        <div class="hero-actions">
+          <a href="https://chromewebstore.google.com/detail/dobgahhmdodeeondedoikibehhmnalie" target="_blank" class="btn btn-primary btn-large" data-i18n="hero-install-store">🛍️ 谷歌商店一键安装</a>
+          <a href="#offline-steps" class="btn btn-secondary btn-large" onclick="showOfflineStepsAndScroll(); return false;" data-i18n="hero-install-offline">📥 离线下载安装</a>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="window-mockup">
+          <div class="window-header">
+            <span class="dot red"></span>
+            <span class="dot yellow"></span>
+            <span class="dot green"></span>
+            <span class="window-title" data-i18n="mock-title">DevHelper Workspace</span>
+          </div>
+          <div class="window-body">
+            <div class="mock-grid">
+              <div class="mock-sidebar">
+                <div class="mock-nav-item active" data-i18n="mock-nav-data">📊 数据格式化</div>
+                <div class="mock-nav-item" data-i18n="mock-nav-encode">🔐 安全编解码</div>
+                <div class="mock-nav-item" data-i18n="mock-nav-dev">🛠 API 调试器</div>
+                <div class="mock-nav-item" data-i18n="mock-nav-convert">⏱ 时间戳转换</div>
+              </div>
+              <div class="mock-main">
+                <div class="mock-card">
+                  <div style="display:flex;justify-content:space-between;margin-bottom:8px">
+                    <span style="font-weight:700">JSON Format</span>
+                    <span class="mock-badge" data-i18n="mock-badge-active">ACTIVE</span>
+                  </div>
+                  <div class="mock-code">
+                    {<br>
+                    &nbsp;&nbsp;<span style="color:#a5b4fc">"name"</span>: <span style="color:#34d399">"DevHelper"</span>,<br>
+                    &nbsp;&nbsp;<span style="color:#a5b4fc">"features"</span>: [<span style="color:#f59e0b">"Offline AI"</span>, <span style="color:#f59e0b">"20 Tools"</span>]<br>
+                    }
+                  </div>
+                </div>
+              </div>
+              <div class="mock-ai-bar">
+                <div class="mock-ai-header" data-i18n="mock-ai-title">🤖 Chrome Built-in AI</div>
+                <div class="mock-ai-chat">
+                  <div class="mock-chat-bubble user" data-i18n="mock-chat-user">这段 JSON 安全吗？</div>
+                  <div class="mock-chat-bubble assistant" data-i18n="mock-chat-assistant">经本地 AI 审查，该 JSON 格式安全，不含敏感凭证。</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- 核心特色 (Core Features) -->
+  <section id="features" class="section">
+    <div class="section-container">
+      <div class="section-header">
+        <h2 class="section-title" data-i18n="features-title">为什么选择 DevHelper ？</h2>
+        <p class="section-subtitle" data-i18n="features-subtitle">打破传统扩展单一零碎的局限，提供一站式、高内聚的沉浸式极客开发体验</p>
+      </div>
+
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon bg-indigo">🛠️</div>
+          <h3 class="feature-name" data-i18n="feature-t1">20 个高频开发工具</h3>
+          <p class="feature-desc" data-i18n="feature-d1">涵盖格式化、编解码、哈希计算、JWT、API 调试等所有日常高频工具，均支持离线无网使用，飞速响应。</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon bg-purple">🤖</div>
+          <h3 class="feature-name" data-i18n="feature-t2">双栏 AI 协同面板</h3>
+          <p class="feature-desc" data-i18n="feature-d2">70/30 经典双栏比例设计，右侧 AI 助手常驻，左侧操作时右侧随时解读提问，打造终极结对编程环境。</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon bg-cyan">🔌</div>
+          <h3 class="feature-name" data-i18n="feature-t3">Chrome 内置 AI 支持</h3>
+          <p class="feature-desc" data-i18n="feature-d3">首发支持 Chrome Built-in AI (Gemini Nano) 离线推理，不花一分钱，无需 API Key，保护公司源码隐私不外泄。</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon bg-amber">⚡</div>
+          <h3 class="feature-name" data-i18n="feature-t4">自动检测与轮询安装</h3>
+          <p class="feature-desc" data-i18n="feature-d4">内置 AI 环境一键自动化就绪检测，若模型未下载，提供保姆级 Flags/Components 引导，后台自动轮询直至就绪。</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon bg-pink">🎨</div>
+          <h3 class="feature-name" data-i18n="feature-t5">精致暗色毛玻璃 UI</h3>
+          <p class="feature-desc" data-i18n="feature-d5">专为开发者定制的高级暗色毛玻璃与雅致明亮主题，卡片风格赏心悦目，支持自适应随系统主题同步。</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon bg-emerald">🔒</div>
+          <h3 class="feature-name" data-i18n="feature-t6">本地至上 & 极客隐私</h3>
+          <p class="feature-desc" data-i18n="feature-d6">所有数据处理逻辑 100% 运行在本地沙箱中，除了用户显式配置的第三方 API 代理外，绝不上传任何隐私或代码数据。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 全景工具集 (Tools Showcase) -->
+  <section id="tools" class="section bg-alt">
+    <div class="section-container">
+      <div class="section-header">
+        <h2 class="section-title" data-i18n="tools-title">全景工具集一览</h2>
+        <p class="section-subtitle" data-i18n="tools-subtitle">点选分类查看内置工具的功能描述，每个工具均内嵌独立的 AI 智能解读面板</p>
+      </div>
+
+      <!-- 分类 Tab -->
+      <div class="tools-tab-container">
+        <button class="tools-tab active" data-category="all" data-i18n="tab-all">全部工具</button>
+        <button class="tools-tab" data-category="data" data-i18n="tab-data">📊 数据处理</button>
+        <button class="tools-tab" data-category="encode" data-i18n="tab-encode">🔐 编解码</button>
+        <button class="tools-tab" data-category="convert" data-i18n="tab-convert">🔄 格式转换</button>
+        <button class="tools-tab" data-category="dev" data-i18n="tab-dev">🛠 开发调试</button>
+        <button class="tools-tab" data-category="generate" data-i18n="tab-generate">✨ 二维码/生成</button>
+      </div>
+
+      <!-- 工具卡片网格 -->
+      <div class="showcase-grid" id="showcaseGrid">
+        <!-- 动态生成 -->
+      </div>
+    </div>
+  </section>
+
+  <!-- AI 助手特色 (AI Assistant Showcase) -->
+  <section id="ai" class="section">
+    <div class="section-container">
+      <div class="ai-showcase-box">
+        <div class="ai-showcase-content">
+          <div class="feature-icon bg-purple">🤖</div>
+          <h2 class="ai-showcase-title" data-i18n="ai-title">智能双模型支持，随意切换</h2>
+          <p class="ai-showcase-desc" data-i18n="ai-desc">
+            右侧常驻 AI 面板支持 **双模型极速热切**，满足您不同层级的算力与隐私需求：
+          </p>
+          <ul class="ai-bullets">
+            <li data-i18n="ai-bullet-1">
+              <strong>Chrome 内置 AI (Gemini Nano)</strong>：本地端侧模型，适合对敏感业务代码进行解释、格式转换等，彻底杜绝数据外传风险。
+            </li>
+            <li data-i18n="ai-bullet-2">
+              <strong>自定义 API (火山引擎/OpenAI)</strong>：支持配置任何 OpenAI 兼容的云端 API（如火山引擎 Coding Plan Lite，支持流式交互），适合处理高难度算法、跨文件复杂重构等重算力任务。
+            </li>
+          </ul>
+          <div class="ai-card-tip" data-i18n="ai-tip">
+            💡 <strong>智能提示</strong>：若内置 AI 尚未就绪，系统会以 2.5 秒的间隔在后台自动轮询模型下载状态，下载完成后可一键静默激活，无需人工干预。
+          </div>
+        </div>
+        <div class="ai-showcase-preview">
+          <!-- 模拟 AI 助手面板 -->
+          <div class="panel-mockup">
+            <div class="panel-mock-header">
+              <span style="font-weight:700" data-i18n="ai-mock-header">🤖 DevHelper AI</span>
+              <div class="mock-model-select" data-i18n="ai-mock-model">
+                🤖 Chrome 内置 AI (Gemini Nano)
+              </div>
+            </div>
+            <div class="panel-mock-body">
+              <div class="mock-bubble user" data-i18n="ai-mock-bubble-user">帮我写一个快速排序</div>
+              <div class="mock-bubble assistant">
+                <pre style="margin: 0; white-space: pre-wrap; font-size: 11px;"><code>function quickSort(arr) {
+  if (arr.length <= 1) return arr;
+  const pivot = arr[0];
+  const left = arr.slice(1).filter(x => x < pivot);
+  const right = arr.slice(1).filter(x => x >= pivot);
+  return [...quickSort(left), pivot, ...quickSort(right)];
+}</code></pre>
+              </div>
+            </div>
+            <div class="panel-mock-footer">
+              <div class="mock-input" data-i18n="ai-mock-input">输入你的技术问题... <span>➡️</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 安装使用说明 (Installation) -->
+  <section id="install" class="section bg-gradient">
+    <div class="section-container">
+      <div class="install-box">
+        <h2 class="install-title" data-i18n="install-title">🚀 立即安装 DevHelper，加速你的开发工作流</h2>
+        <p class="install-subtitle" data-i18n="install-subtitle">推荐通过 Chrome 应用商店一键安装；也支持本地开发者模式离线加载</p>
+        
+        <!-- 安装渠道选择 -->
+        <div class="install-methods">
+          <!-- 渠道 A: 商店一键安装 -->
+          <div class="method-card recommended-card">
+            <div class="badge-recommended" data-i18n="install-method-reco-badge">推荐</div>
+            <div class="method-icon">🛍️</div>
+            <h3 data-i18n="install-method-t1">Chrome Web Store 商店安装</h3>
+            <p class="method-desc" data-i18n="install-method-d1">一键安全安装，支持新版本后台自动更新与多设备配置云端同步，体验最佳。</p>
+            <div class="method-action">
+              <a href="https://chromewebstore.google.com/detail/dobgahhmdodeeondedoikibehhmnalie" target="_blank" class="btn btn-primary btn-large" style="display: inline-block;" data-i18n="install-method-btn1">⚡ 谷歌商店一键安装</a>
+            </div>
+          </div>
+          
+          <!-- 渠道 B: 离线开发者安装 -->
+          <div class="method-card">
+            <div class="method-icon">📦</div>
+            <h3 data-i18n="install-method-t2">本地解压加载 (开发者模式)</h3>
+            <p class="method-desc" data-i18n="install-method-d2">免商店市场运行，适合无外网环境或特定离线研发环境。下载 ZIP 安装包解压即可加载。</p>
+            <div class="method-action">
+              <a href="#offline-steps" class="btn btn-secondary btn-large" style="display: inline-block;" onclick="showOfflineStepsAndScroll(); return false;" data-i18n="install-method-btn2">🛠️ 查看本地安装步骤</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- 离线安装步骤详情 -->
+        <div id="offline-steps" class="offline-steps-section" style="display: none; margin-top: 50px;">
+          <h3 style="font-size: 22px; margin-bottom: 30px; font-family: 'Outfit', sans-serif; font-weight: 700;" data-i18n="install-steps-title">🛠️ 本地开发者模式安装步骤</h3>
+          <div class="steps-container">
+            <div class="step-card">
+              <div class="step-num">01</div>
+              <div class="step-text">
+                <h4 data-i18n="install-step-t1">下载安装包</h4>
+                <p data-i18n="install-step-d1">访问 GitHub Releases 页面下载最新的打包 ZIP 压缩包并解压。</p>
+                <pre class="step-code"><code>https://github.com/rowkin/dev-helper/releases</code></pre>
+              </div>
+            </div>
+            <div class="step-card">
+              <div class="step-num">02</div>
+              <div class="step-text">
+                <h4 data-i18n="install-step-t2">开启开发者模式</h4>
+                <p data-i18n="install-step-d2">在 Chrome 地址栏访问 <code>chrome://extensions</code>，并勾选右上角的「开发者模式」。</p>
+              </div>
+            </div>
+            <div class="step-card">
+              <div class="step-num">03</div>
+              <div class="step-text">
+                <h4 data-i18n="install-step-t3">加载扩展程序</h4>
+                <p data-i18n="install-step-d3">点击「加载已解压的扩展程序」，选择刚刚解压的 <code>dev-helper</code> 目录，安装完成！</p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="install-action">
+            <a href="https://github.com/rowkin/dev-helper/releases" target="_blank" class="btn btn-secondary" data-i18n="install-steps-btn-releases">📥 访问 GitHub 发布页 (下载 ZIP)</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 页脚 -->
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-brand">
+        <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:24px;height:24px;">
+          <rect width="32" height="32" rx="8" fill="#6366f1"/>
+          <path d="M8 12L13 17L8 22M15 22H24" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span>DevHelper</span>
+      </div>
+      <p class="footer-text" data-i18n="footer-text">
+        © 2026 七九在线科技. 由 79team 打造。
+      </p>
+      <div class="footer-links">
+        <a href="https://github.com/rowkin/dev-helper/releases" target="_blank" data-i18n="footer-link-releases">下载发布</a>
+        <a href="https://github.com/rowkin/dev-helper/issues" target="_blank" data-i18n="footer-link-feedback">问题反馈</a>
+        <a href="https://github.com/rowkin/dev-helper/blob/main/PRIVACY_POLICY.md" target="_blank" data-i18n="footer-link-privacy">隐私政策</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- 数据与多语言切换脚本 -->
+  <script>
+    // 翻译字典
+    const TRANSLATIONS = {
+      zh: {
+        title: 'DevHelper - 七九在线科技专属开发者工具箱',
+        'nav-features': '核心特色',
+        'nav-tools': '全景工具集',
+        'nav-ai': 'AI 助手',
+        'nav-install': '立即安装',
+        'hero-badge': '🚀 Chrome 扩展 Manifest V3 架构',
+        'hero-title': '让开发飞起来的<br><span class="gradient-text">一站式智能开发者工具箱</span>',
+        'hero-subtitle': 'DevHelper 是专为七九在线科技打造的高效生产力工具。集成了 JSON 格式化、编解码、API 调试等 20 个常用开发工具，并首创常驻 **双栏本地 AI 助手**，本地离线推理无需 Key，隐私安全无忧。',
+        'hero-install-store': '🛍️ 谷歌商店一键安装',
+        'hero-install-offline': '📥 离线下载安装',
+        'mock-title': 'DevHelper Workspace',
+        'mock-nav-data': '📊 数据格式化',
+        'mock-nav-encode': '🔐 安全编解码',
+        'mock-nav-dev': '🛠 API 调试器',
+        'mock-nav-convert': '⏱ 时间戳转换',
+        'mock-ai-title': '🤖 Chrome Built-in AI',
+        'mock-chat-user': '这段 JSON 安全吗？',
+        'mock-chat-assistant': '经本地 AI 审查，该 JSON 格式安全，不含敏感凭证。',
+        'features-title': '为什么选择 DevHelper ？',
+        'features-subtitle': '打破传统扩展单一零碎的局限，提供一站式、高内聚的沉浸式极客开发体验',
+        'feature-t1': '20 个高频开发工具',
+        'feature-d1': '涵盖格式化、编解码、哈希计算、JWT、API 调试、截图等所有日常高频工具，均支持离线无网使用，飞速响应。',
+        'feature-t2': '双栏 AI 协同面板',
+        'feature-d2': '70/30 经典双栏比例设计，右侧 AI 助手常驻，左侧操作时右侧随时解读提问，打造终极结对编程环境。',
+        'feature-t3': 'Chrome 内置 AI 支持',
+        'feature-d3': '首发支持 Chrome Built-in AI (Gemini Nano) 离线推理，不花一分钱，无需 API Key，保护公司源码隐私不外泄。',
+        'feature-t4': '自动检测与轮询安装',
+        'feature-d4': '内置 AI 环境一键自动化就绪检测，若模型未下载，提供保姆级 Flags/Components 引导，后台自动轮询直至就绪。',
+        'feature-t5': '精致暗色毛玻璃 UI',
+        'feature-d5': '专为开发者定制的高级暗色毛玻璃与雅致明亮主题，卡片风格赏心悦目，支持自适应随系统主题同步。',
+        'feature-t6': '本地至上 & 极客隐私',
+        'feature-d6': '所有数据处理逻辑 100% 运行在本地沙箱中，除了用户显式配置的第三方 API 代理外，绝不上传任何隐私或代码数据。',
+        'tools-title': '全景工具集一览',
+        'tools-subtitle': '点选分类查看内置工具的功能描述，每个工具均内嵌独立的 AI 智能解读面板',
+        'tab-all': '全部工具',
+        'tab-data': '📊 数据处理',
+        'tab-encode': '🔐 编解码',
+        'tab-convert': '🔄 格式转换',
+        'tab-dev': '🛠 开发调试',
+        'tab-generate': '✨ 二维码/生成',
+        'ai-title': '智能双模型支持，随意切换',
+        'ai-desc': '右侧常驻 AI 面板支持 **双模型极速热切**，满足您不同层级的算力与隐私需求：',
+        'ai-bullet-1': '<strong>Chrome 内置 AI (Gemini Nano)</strong>：本地端侧模型，适合对敏感业务代码进行解释、格式转换等，彻底杜绝数据外传风险。',
+        'ai-bullet-2': '<strong>自定义 API (火山引擎/OpenAI)</strong>：支持配置任何 OpenAI 兼容的云端 API（如火山引擎 Coding Plan Lite，支持流式交互），适合处理高难度算法、跨文件复杂重构等重算力任务。',
+        'ai-tip': '💡 <strong>智能提示</strong>：若内置 AI 尚未就绪，系统会以 2.5 秒的间隔在后台自动轮询模型下载状态，下载完成后可一键静默激活，无需人工干预。',
+        'ai-mock-header': '🤖 DevHelper AI',
+        'ai-mock-model': '🤖 Chrome 内置 AI (Gemini Nano)',
+        'ai-mock-bubble-user': '帮我写一个快速排序',
+        'ai-mock-input': '输入你的技术问题... <span>➡️</span>',
+        'install-title': '🚀 立即安装 DevHelper，加速你的开发工作流',
+        'install-subtitle': '推荐通过 Chrome 应用商店一键安装；也支持本地开发者模式离线加载',
+        'install-method-reco-badge': '推荐',
+        'install-method-t1': 'Chrome Web Store 商店安装',
+        'install-method-d1': '一键安全安装，支持新版本后台自动更新与多设备配置云端同步，体验最佳。',
+        'install-method-btn1': '⚡ 谷歌商店一键安装',
+        'install-method-t2': '本地解压加载 (开发者模式)',
+        'install-method-d2': '免商店市场运行，适合无外网环境或特定离线研发环境。下载 ZIP 安装包解压即可加载。',
+        'install-method-btn2': '🛠️ 查看本地安装步骤',
+        'install-steps-title': '🛠️ 本地开发者模式安装步骤',
+        'install-step-t1': '下载安装包',
+        'install-step-d1': '访问 GitHub Releases 页面下载最新的打包 ZIP 压缩包并解压。',
+        'install-step-t2': '开启开发者模式',
+        'install-step-d2': '在 Chrome 地址栏访问 <code>chrome://extensions</code>，并勾选右上角的「开发者模式」。',
+        'install-step-t3': '加载扩展程序',
+        'install-step-d3': '点击「加载已解压的扩展程序」，选择刚刚解压的 <code>dev-helper</code> 目录，安装完成！',
+        'install-steps-btn-releases': '📥 访问 GitHub 发布页 (下载 ZIP)',
+        'footer-text': '© 2026 七九在线科技. 由 79team 打造。&nbsp;|&nbsp;版本 v1.5.1',
+        'footer-link-releases': '下载发布',
+        'footer-link-feedback': '问题反馈',
+        'footer-link-privacy': '隐私政策'
+      },
+      en: {
+        title: 'DevHelper - Smart All-in-One Developer Toolbox',
+        'nav-features': 'Features',
+        'nav-tools': 'Tools',
+        'nav-ai': 'AI Assistant',
+        'nav-install': 'Install',
+        'hero-badge': '🚀 Chrome Extension MV3 Architecture',
+        'hero-title': 'Accelerate Your Workflow with<br><span class="gradient-text">Smart All-in-One Developer Toolbox</span>',
+        'hero-subtitle': 'DevHelper is a highly efficient productivity toolbox designed for modern developers. It integrates 20 handy utilities like JSON formatting, encoding/decoding, and API testing, featuring a built-in split-screen local AI assistant running offline without keys for absolute privacy.',
+        'hero-install-store': '🛍️ Chrome Web Store Install',
+        'hero-install-offline': '📥 Offline Download & Install',
+        'mock-title': 'DevHelper Workspace',
+        'mock-nav-data': '📊 Data Formatting',
+        'mock-nav-encode': '🔐 Encoding / Decoding',
+        'mock-nav-dev': '🛠 API Debugger',
+        'mock-nav-convert': '⏱ Timestamp Converter',
+        'mock-ai-title': '🤖 Chrome Built-in AI',
+        'mock-chat-user': 'Is this JSON secure?',
+        'mock-chat-assistant': 'Reviewed by local AI, this JSON format is secure and contains no sensitive credentials.',
+        'features-title': 'Why Choose DevHelper?',
+        'features-subtitle': 'Break the limits of fragmented browser extensions and enjoy a cohesive, immersive geek development experience.',
+        'feature-t1': '20 High-Frequency Utilities',
+        'feature-d1': 'Includes JSON formatting, diffing, encoding/decoding, hashing, JWT parsing, and API client. Fully functional offline with lightning-fast response.',
+        'feature-t2': 'Split-Screen AI Panel',
+        'feature-d2': '70/30 layout with built-in AI assistant. Inspect, analyze, and troubleshoot side-by-side without disrupting your operational flow.',
+        'feature-t3': 'Chrome Built-in AI Support',
+        'feature-d3': 'First-class support for Chrome Built-in AI (Gemini Nano) offline inference. Free, requires no API key, and protects your code privacy.',
+        'feature-t4': 'Auto Detection & Polling',
+        'feature-d4': 'Automated one-click check for local AI environment. Clear setup guides for Flags/Components with background auto-polling until ready.',
+        'feature-t5': 'Premium Glassmorphism UI',
+        'feature-d5': 'Meticulously crafted dark glassmorphism and light themes. Beautiful typography and layouts that auto-sync with system settings.',
+        'feature-t6': 'Local First & Privacy Guaranteed',
+        'feature-d6': 'All operations run 100% locally in browser sandbox. No user code or data is uploaded except explicitly configured third-party APIs.',
+        'tools-title': 'All-in-One Developer Tools',
+        'tools-subtitle': 'Browse the complete set of developer utilities, each equipped with its own dedicated AI analysis panel.',
+        'tab-all': 'All Tools',
+        'tab-data': '📊 Data',
+        'tab-encode': '🔐 Encode',
+        'tab-convert': '🔄 Convert',
+        'tab-dev': '🛠 Dev',
+        'tab-generate': '✨ Generate',
+        'ai-title': 'Dual-Model Engine, Switch Instantly',
+        'ai-desc': 'The permanent sidebar AI assistant supports instant hot-swapping between two models to fit your task weight and privacy requirements:',
+        'ai-bullet-1': '<strong>Chrome Built-in AI (Gemini Nano)</strong>: Local on-device model, perfect for explaining sensitive business code and formatting data, eliminating data leakage risks.',
+        'ai-bullet-2': '<strong>Custom API (OpenAI Compatible)</strong>: Configure cloud APIs (such as Volcano Engine Coding Plan Lite) with streaming response, best for complex algorithm design and heavy tasks.',
+        'ai-tip': '💡 <strong>Smart Tip</strong>: If built-in AI is not ready, the system auto-polls model status in the background every 2.5 seconds. Once downloaded, it activates silently without manual actions.',
+        'ai-mock-header': '🤖 DevHelper AI',
+        'ai-mock-model': '🤖 Chrome Built-in AI (Gemini Nano)',
+        'ai-mock-bubble-user': 'Help me write a quick sort function',
+        'ai-mock-input': 'Type your technical question... <span>➡️</span>',
+        'install-title': '🚀 Accelerate Your Development Workflow Now',
+        'install-subtitle': 'One-click install via Chrome Web Store or download ZIP package to load unpacked in Developer Mode.',
+        'install-method-reco-badge': 'Recommended',
+        'install-method-t1': 'Chrome Web Store Installation',
+        'install-method-d1': 'Secure one-click install, background automatic updates, and configuration cloud sync for the best experience.',
+        'install-method-btn1': '⚡ One-Click Web Store Install',
+        'install-method-t2': 'Load Unpacked (Developer Mode)',
+        'install-method-d2': 'Run without store access, ideal for offline/intranet development. Simply download the ZIP, unpack, and load.',
+        'install-method-btn2': '🛠️ View Unpacked Setup Steps',
+        'install-steps-title': '🛠️ Local Developer Mode Installation Steps',
+        'install-step-t1': 'Download Package',
+        'install-step-d1': 'Visit GitHub Releases page to download and unpack the latest release ZIP package.',
+        'install-step-t2': 'Enable Developer Mode',
+        'install-step-d2': 'Open <code>chrome://extensions</code> in Chrome and toggle \"Developer Mode\" in the top-right corner.',
+        'install-step-t3': 'Load Unpacked Extension',
+        'install-step-d3': 'Click \"Load unpacked\" and select the unpacked <code>dev-helper</code> directory. Done!',
+        'install-steps-btn-releases': '📥 Visit GitHub Releases (Download ZIP)',
+        'footer-text': '© 2026 DevHelper. Built by 79team.&nbsp;|&nbsp;v1.5.1',
+        'footer-link-releases': 'Releases',
+        'footer-link-feedback': 'Issues',
+        'footer-link-privacy': 'Privacy Policy'
+      }
+    };
+
+    // 在线展示的工具列表（携带中英双语信息）
+    const SITE_TOOLS = [
+      { id: 'json-format',   name: 'JSON 格式化', name_en: 'JSON Formatter', desc: '支持完美美化、极致压缩、强类型校验及双向转义，内置 AI 深度解读 JSON 结构。', desc_en: 'Supports perfect beautification, compression, strict type validation, and double-escape handling, with built-in AI for deep structure analysis.', icon: '{ }', color: 'color-indigo', category: 'data' },
+      { id: 'json-diff',     name: 'JSON 对比',   name_en: 'JSON Diff', desc: '支持两段 JSON 文本的行级与字符级差异可视化对比，由 AI 精确总结修改逻辑。', desc_en: 'Provides side-by-side visual difference comparisons at the line and character level, with AI summaries of the change patterns.', icon: 'DI',  color: 'color-violet', category: 'data' },
+      { id: 'encode-decode', name: '编解码工具',  name_en: 'Encode / Decode', desc: 'URL、Base64、Unicode、Hex 多合一互转，具备 AI 自动检测编码格式并一键解码能力。', desc_en: 'All-in-one conversion for URL, Base64, Unicode, and Hex, featuring AI auto-detection of format and one-click decoding.', icon: 'ENC', color: 'color-cyan', category: 'encode' },
+      { id: 'jwt-parser',    name: 'JWT 解析',    name_en: 'JWT Parser', desc: '轻量化拆分 JWT 头部、载荷与签名，实时检测 Token 有效期及签名完整度，内置 AI 安全评估。', desc_en: 'Splits JWT header, payload, and signature dynamically. Validates expiration and signature integrity with built-in AI security assessments.', icon: 'JWT', color: 'color-sky',    category: 'encode' },
+      { id: 'hash-calc',     name: '哈希计算',    name_en: 'Hash Calculator', desc: '支持 MD5、SHA1、SHA256、SHA512 文本及本地文件的文件流哈希计算，速度极快。', desc_en: 'Computes MD5, SHA1, SHA256, and SHA512 hashes for text and local files via fast client-side streaming.', icon: '#', color: 'color-teal',   category: 'encode' },
+      { id: 'timestamp',     name: '时间戳转换',  name_en: 'Timestamp Converter', desc: 'Unix 时间戳与格式化本地日期双向轻松转换，支持毫秒级、秒级，智能生成代码片段。', desc_en: 'Bidirectional conversions between Unix timestamps (seconds/milliseconds) and date strings, with smart code generation.', icon: '⏱', color: 'color-amber',  category: 'convert' },
+      { id: 'color-convert', name: '颜色转换',    name_en: 'Color Converter', desc: '支持 HEX / RGB / HSL / HSV 动态转换与取色板，集成 Chrome 原生 EyeDropper 支持屏幕跨页签高精度吸色。', desc_en: 'Supports HEX / RGB / HSL / HSV dynamic conversions and color palettes. Integrates Chrome EyeDropper for high-precision cross-tab screen picking.', icon: '🎨', color: 'color-pink',   category: 'convert' },
+      { id: 'number-base',   name: '进制转换',    name_en: 'Number Base Converter', desc: '支持 2 ~ 36 进制数字的自由双向换算，提供位运算符速查及公式演示。', desc_en: 'Converts numbers between base 2 and 36 bidirectionally, featuring quick bitwise operators search and formula demos.', icon: '01',  color: 'color-orange', category: 'convert' },
+      { id: 'api-tester',    name: 'API 调试',    name_en: 'API Client', desc: '精美轻量的 Web 版 Postman，支持自定义 Headers、Params、Body (JSON/Form/Raw)，AI 自动分析响应。', desc_en: 'A sleek, lightweight web Postman supporting custom headers, params, and body (JSON/Form/Raw), with AI response summaries.', icon: 'API', color: 'color-emerald', category: 'dev' },
+      { id: 'code-beautify', name: '代码格式化',  name_en: 'Code Beautifier', desc: '支持 Javascript、CSS、HTML、JSON、SQL 的一键智能格式化与混淆压缩美化。', desc_en: 'Smart formatter, beautifier, and minifier for JavaScript, CSS, HTML, JSON, and SQL.', icon: 'JS',  color: 'color-indigo', category: 'dev' },
+      { id: 'regex-test',    name: '正则测试',    name_en: 'Regex Tester', desc: '实时正则表达式匹配与分组捕获，自带常用正则表达式速查手册及 AI 解读表达式。', desc_en: 'Real-time regular expression tester with capture group highlights, a cheatsheet of common patterns, and AI pattern explanations.', icon: 'RE',  color: 'color-violet', category: 'dev' },
+      { id: 'qrcode',        name: '二维码工具',  name_en: 'QR Code Tool', desc: '支持输入内容一键生成二维码，可配置颜色、Logo与大小；也支持直接识别并解析二维码图片。', desc_en: 'Generates QR codes with custom colors, sizes, and logo overlays, and decodes QR images directly from upload or drag-and-drop.', icon: 'QR',  color: 'color-cyan',  category: 'generate' },
+      { id: 'uuid-gen',      name: 'UUID 生成器', name_en: 'UUID Generator', desc: '支持批量一键生成 RFC4122 规范的 UUID v4，以及雪花 ID (Snowflake) 与高能 NanoID。', desc_en: 'Generates batch RFC4122-compliant UUID v4, Snowflake IDs, and highly unique NanoIDs in one click.', icon: 'ID', color: 'color-sky', category: 'generate' },
+      { id: 'password-gen',  name: '密码生成器',  name_en: 'Password Generator', desc: '依据可配置的长度、大小写、数字及特殊符号规则，在本地高强度随机生成高防密码。', desc_en: 'Generates high-strength random passwords locally based on customizable length, case, number, and special character rules.', icon: '🔐', color: 'color-rose',   category: 'generate' },
+      { id: 'img-base64',    name: '图片 Base64', name_en: 'Image Base64 Converter', desc: '支持拖拽本地图片文件与 Base64 文本编码的极速互转，100% 离线计算，不消耗网络带宽。', desc_en: 'Converts images to Base64 strings and vice versa. 100% offline computations that preserve your network bandwidth.', icon: 'IMG', color: 'color-amber',  category: 'generate' },
+      { id: 'ai-assistant',  name: 'AI 助手',     name_en: 'AI Assistant', desc: '常驻侧边双栏大模型助手，提供代码分析、SQL优化与技术解答，支持离线内置模型及云端API切换。', desc_en: 'Permanent split-screen AI assistant offering code review, SQL tuning, and general Q&A, supporting both local offline model and cloud APIs.', icon: '🤖', color: 'color-purple', category: 'dev' },
+      { id: 'page-timing',   name: '页面性能检测', name_en: 'Page Performance Tester', desc: '测量 FP/FCP/DOMContentLoaded/Load 耗时，瀑布图分析时序，由 AI 专家提供调优诊断建议。', desc_en: 'Measures FP, FCP, DOMContentLoaded, and Load times, displays waterfall sequences, and offers AI performance optimization tips.', icon: '⚡', color: 'color-orange', category: 'dev' },
+      { id: 'markdown-editor', name: 'Markdown 编辑器', name_en: 'Markdown Editor', desc: '支持 GFM 语法、Mermaid 图表在线渲染与双栏同步滚动，AI 辅助高效创作。', desc_en: 'Supports GFM syntax, Mermaid diagram rendering, and real-time split-screen sync scrolling, with AI assistance.', icon: 'MD',  color: 'color-teal',   category: 'dev' },
+      { id: 'screenshot',      name: '屏幕截图',    name_en: 'Screen Capturer', desc: '支持可视区域、全页面长图滚动拼接及自由框选截图，内置全功能 Canvas 涂鸦标注编辑器，支持 AI OCR 提取文本。', desc_en: 'Supports capturing visible tab, full-page stitching, and custom rect, with a built-in full-featured Canvas annotation editor and AI OCR extraction.', icon: '📸', color: 'color-rose',   category: 'generate' },
+      { id: 'ip-speed',        name: 'IP 与网速检测', name_en: 'IP & Speed Tester', desc: '查询内外网 IP 地址与网络延迟，测试网络实时下载与上传速度，提供 AI 智能网络建议。', desc_en: 'Inspects local and public IP addresses, detects geographical locations, and measures latency, download, and upload speeds with AI diagnostics.', icon: '🌐', color: 'color-indigo', category: 'dev' },
+      { id: 'universal-calculator', name: '万能计算器', name_en: 'Universal Calculator', desc: '包含标准/科学计算器、物理单位换算、房贷利息还款推演、实时外汇换算与人民币财务大写/BMI等功能，内置 AI 理财与计算诊断。', desc_en: 'Includes standard/scientific calc, unit conversions, mortgage repayment plans, real-time exchange rates, and RMB capital/BMI calculators with AI advisors.', icon: '🧮', color: 'color-violet', category: 'convert' }
+    ];
+
+    // 当前语言环境，默认读取 localStorage
+    let currentLang = localStorage.getItem('devhelper-site-lang') || 'zh';
+
+    // 动态切换语言
+    function setLanguage(lang) {
+      currentLang = lang;
+      localStorage.setItem('devhelper-site-lang', lang);
+      document.documentElement.setAttribute('lang', lang === 'zh' ? 'zh-CN' : 'en');
+      
+      // 1. 更新所有包含 data-i18n 属性的标签内容
+      const elements = document.querySelectorAll('[data-i18n]');
+      elements.forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (TRANSLATIONS[lang] && TRANSLATIONS[lang][key]) {
+          // 如果是 title 标签，更新 document.title
+          if (el.tagName === 'TITLE') {
+            document.title = TRANSLATIONS[lang][key];
+          } else {
+            el.innerHTML = TRANSLATIONS[lang][key];
+          }
+        }
+      });
+
+      // 2. 更新语言切换按钮文本
+      const langBtn = document.getElementById('langToggleBtn');
+      if (langBtn) {
+        langBtn.textContent = lang === 'zh' ? '🌐 EN' : '🌐 中文';
+      }
+
+      // 3. 重新渲染工具列表及激活的 Tab 分类
+      const activeTab = document.querySelector('.tools-tab.active');
+      const activeCategory = activeTab ? activeTab.dataset.category : 'all';
+      renderSiteTools(activeCategory);
+    }
+
+    // 动态生成工具卡片
+    function renderSiteTools(category = 'all') {
+      const grid = document.getElementById('showcaseGrid');
+      grid.innerHTML = '';
+
+      const filtered = SITE_TOOLS.filter(t => category === 'all' || t.category === category);
+
+      filtered.forEach(tool => {
+        const card = document.createElement('div');
+        card.className = 'showcase-card';
+        
+        // 依据当前语言渲染工具名称和描述
+        const name = currentLang === 'en' ? (tool.name_en || tool.name) : tool.name;
+        const desc = currentLang === 'en' ? (tool.desc_en || tool.desc) : tool.desc;
+
+        card.innerHTML = `
+          <div class="showcase-card-header">
+            <div class="showcase-icon ${tool.color}">${tool.icon}</div>
+            <h4 class="showcase-name">${name}</h4>
+          </div>
+          <p class="showcase-desc">${desc}</p>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    // 分类点击切换
+    document.querySelectorAll('.tools-tab').forEach(tab => {
+      tab.addEventListener('click', (e) => {
+        document.querySelectorAll('.tools-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        renderSiteTools(tab.dataset.category);
+      });
+    });
+
+    // 主题切换逻辑与初始图标设置
+    const themeBtn = document.getElementById('themeToggleBtn');
+    if (themeBtn) {
+      const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+      themeBtn.textContent = currentTheme === 'light' ? '🌙' : '☀️';
+
+      themeBtn.addEventListener('click', () => {
+        const html = document.documentElement;
+        const current = html.getAttribute('data-theme') || 'light';
+        const next = current === 'dark' ? 'light' : 'dark';
+        html.setAttribute('data-theme', next);
+        themeBtn.textContent = next === 'dark' ? '☀️' : '🌙';
+        localStorage.setItem('devhelper-site-theme', next);
+        localStorage.setItem('devhelper-site-theme-manual', 'true');
+      });
+    }
+
+    // 绑定多语言切换按钮点击事件
+    const langBtn = document.getElementById('langToggleBtn');
+    if (langBtn) {
+      langBtn.addEventListener('click', () => {
+        const nextLang = currentLang === 'zh' ? 'en' : 'zh';
+        setLanguage(nextLang);
+      });
+    }
+
+    // 展开并平滑滚动到离线安装步骤
+    function showOfflineStepsAndScroll() {
+      const el = document.getElementById('offline-steps');
+      if (el) {
+        el.style.display = 'block';
+        // 计算绝对文档坐标并进行平滑滚动
+        const targetY = el.getBoundingClientRect().top + window.scrollY - 80;
+        window.scrollTo({ top: targetY, behavior: 'smooth' });
+      }
+    }
+    window.showOfflineStepsAndScroll = showOfflineStepsAndScroll;
+
+    // 初始化加载
+    setLanguage(currentLang);
+  </script>
+</body>
+</html>

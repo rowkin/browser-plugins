@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title data-i18n="docTitle">QR Code Studio & 浏览器扩展 - 专业二维码生成、美化与全能扫描工作台</title>
+  <meta name="description" content="专为开发者与效率玩家打造的高品质二维码浏览器扩展与网页工作台。支持渐变色、点阵形态、码眼定制、Logo水印、高清矢量导出与实时摄像头/图片扫码。">
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="stylesheet" href="style.css">
+  
+  <!-- 预加载现代英文字体 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;700;800&display=swap" rel="stylesheet">
+  
+  <!-- 离线二维码生成与解码库 -->
+  <script src="qrcode.min.js"></script>
+  <script src="jsQR.min.js"></script>
+
+  <script>
+    // 立即执行以避免主题与语言初始化闪烁
+    (function() {
+      // 1. 初始化主题
+      const savedTheme = localStorage.getItem('qr-site-theme');
+      let theme = savedTheme;
+      if (!theme) {
+        theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      }
+      document.documentElement.setAttribute('data-theme', theme);
+
+      // 2. 初始化语言
+      let lang = localStorage.getItem('qr-site-lang');
+      if (!lang) {
+        lang = navigator.language && navigator.language.startsWith('zh') ? 'zh' : 'en';
+      }
+      document.documentElement.setAttribute('data-lang', lang);
+    })();
+  </script>
+</head>
+<body>
+  <div class="ambient-glow"></div>
+
+  <!-- 顶部导航栏 -->
+  <header class="navbar">
+    <div class="container navbar-inner">
+      <a href="#" class="brand">
+        <div class="brand-icon">🔳</div>
+        <div>
+          <span class="brand-title">QR Studio</span>
+          <span class="brand-badge">v1.1.0</span>
+        </div>
+      </a>
+
+      <nav class="nav-menu">
+        <a href="#playground" class="nav-link" data-i18n="navPlayground">在线体验</a>
+        <a href="#features" class="nav-link" data-i18n="navFeatures">核心特性</a>
+        <a href="#scanner" class="nav-link" data-i18n="navScanner">在线识图</a>
+        <a href="#install" class="nav-link" data-i18n="navInstall">安装扩展</a>
+      </nav>
+
+      <div class="nav-actions">
+        <!-- 语言切换 -->
+        <button id="btn-lang-toggle" class="btn-icon" title="切换语言 / Switch Language">
+          🌐
+        </button>
+        <!-- 主题切换 -->
+        <button id="btn-theme-toggle" class="btn-icon" title="切换深色/浅色主题">
+          🌓
+        </button>
+        <!-- GitHub / 源码 -->
+        <a href="https://github.com/rowkin/browser-plugins" target="_blank" class="btn-icon" title="GitHub 仓库">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero 英雄区域 -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-pill">
+        <span class="hero-pill-badge">NEW</span>
+        <span data-i18n="heroPill">全面升级：全屏 Studio 工作台与多模态解析已上线</span>
+      </div>
+      
+      <h1 class="hero-title">
+        <span data-i18n="heroTitle1">不止是快速生成，更是</span><br>
+        <span class="hero-title-gradient" data-i18n="heroTitle2">高颜值的二维码创作与识别工具</span>
+      </h1>
+      
+      <p class="hero-subtitle" data-i18n="heroSubtitle">
+        告别普通单调的黑白像素块。支持丰富的主题渐变、点阵形态、自定义码眼、高清矢量导出、以及高灵敏度的图片/摄像头扫描。
+      </p>
+
+      <div class="hero-cta-group">
+        <a href="#install" class="btn-primary" data-i18n="ctaInstall">
+          <span>🚀 安装 Chrome 扩展</span>
+        </a>
+        <a href="#playground" class="btn-secondary" data-i18n="ctaTryOnline">
+          <span>🎨 在线即刻体验</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 在线 Playground 交互演示 -->
+  <section id="playground" class="playground-section">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-tag" data-i18n="tagPlayground">LIVE PLAYGROUND</div>
+        <h2 class="section-title" data-i18n="titlePlayground">实时互动二维码生成器</h2>
+        <p class="section-desc" data-i18n="descPlayground">在网页端体验与浏览器扩展全屏工作台同款的强大生成与美化引擎。</p>
+      </div>
+
+      <div class="studio-demo-wrapper">
+        <!-- 控制表单 -->
+        <div class="demo-controls">
+          <div class="demo-group">
+            <label class="demo-label" for="site-text-input">
+              <span data-i18n="labelContent">内容或链接 (Text / URL)</span>
+            </label>
+            <input type="text" id="site-text-input" class="demo-input" value="https://github.com/rowkin/browser-plugins" placeholder="输入任意网址或文本...">
+          </div>
+
+          <div class="demo-group">
+            <label class="demo-label">
+              <span data-i18n="labelPreset">预设色彩主题</span>
+            </label>
+            <div class="theme-pill-group">
+              <button class="theme-pill active" data-theme="classic">
+                <span class="theme-dot" style="background:#0f172a"></span>经典墨黑
+              </button>
+              <button class="theme-pill" data-theme="blue">
+                <span class="theme-dot" style="background:#2563eb"></span>深海湛蓝
+              </button>
+              <button class="theme-pill" data-theme="emerald">
+                <span class="theme-dot" style="background:#059669"></span>青翠翡绿
+              </button>
+              <button class="theme-pill" data-theme="sunset">
+                <span class="theme-dot" style="background:linear-gradient(135deg, #f97316, #ec4899)"></span>晚霞渐变
+              </button>
+              <button class="theme-pill" data-theme="cyber">
+                <span class="theme-dot" style="background:linear-gradient(135deg, #06b6d4, #8b5cf6)"></span>赛博幻影
+              </button>
+            </div>
+          </div>
+
+          <div class="demo-group">
+            <label class="demo-label">
+              <span data-i18n="labelDotStyle">点阵图案形态</span>
+            </label>
+            <div class="theme-pill-group">
+              <button class="theme-pill dot-pill active" data-dot="square">◼️ 直角方块</button>
+              <button class="theme-pill dot-pill" data-dot="rounded">🔲 柔和圆角</button>
+              <button class="theme-pill dot-pill" data-dot="dots">⚫ 优雅圆点</button>
+            </div>
+          </div>
+
+          <div class="demo-group">
+            <label class="demo-label">
+              <span data-i18n="labelCenterLogo">嵌入中央标志</span>
+            </label>
+            <div class="theme-pill-group">
+              <button class="theme-pill logo-pill active" data-logo="none">无 Logo</button>
+              <button class="theme-pill logo-pill" data-logo="brand">✨ 品牌标</button>
+              <button class="theme-pill logo-pill" data-logo="star">⭐ 质感星</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 预览与导出 -->
+        <div class="demo-preview">
+          <div class="qr-card-view">
+            <canvas id="site-qr-canvas" width="220" height="220"></canvas>
+          </div>
+          <div class="download-bar">
+            <button id="btn-demo-download-png" class="btn-primary" data-i18n="btnDownloadPng">
+              📥 下载高清 PNG
+            </button>
+            <button id="btn-demo-copy" class="btn-secondary" data-i18n="btnCopyImage">
+              📋 复制图片
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 特性卡片矩阵 -->
+  <section id="features" class="features-section">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-tag" data-i18n="tagFeatures">CORE FEATURES</div>
+        <h2 class="section-title" data-i18n="titleFeatures">全场景覆盖的设计细节</h2>
+        <p class="section-desc" data-i18n="descFeatures">为日常办公、页面分享、视觉传达量身打造的高效工具链。</p>
+      </div>
+
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon-box">⚡</div>
+          <h3 class="feature-title" data-i18n="feat1Title">极速悬浮与受限平滑降级</h3>
+          <p class="feature-desc" data-i18n="feat1Desc">一键在当前网页唤起轻量悬浮窗；当处于 Chrome 内部或系统页面时，智能引导并唤起独立工作台，零死角零崩溃。</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon-box">🎨</div>
+          <h3 class="feature-title" data-i18n="feat2Title">全屏 Studio 美化工作台</h3>
+          <p class="feature-desc" data-i18n="feat2Desc">独立页面配置中心，支持平滑渐变调色、圆角点阵、独立码眼样式与中心品牌水印嵌入，带来设计级排版质感。</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon-box">📷</div>
+          <h3 class="feature-title" data-i18n="feat3Title">双模态高灵敏度识别引擎</h3>
+          <p class="feature-desc" data-i18n="feat3Desc">集成毫秒级 jsQR 解码器，支持电脑摄像头扫码、拖拽图片、剪贴板截图粘贴与右键快速识图，精准提取内容。</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon-box">🌓</div>
+          <h3 class="feature-title" data-i18n="feat4Title">自适应深浅色模式系统</h3>
+          <p class="feature-desc" data-i18n="feat4Desc">无缝跟随操作系统偏好，精调明度与对比度，暗夜模式下码盘与控制面板柔和护眼，长时间使用不疲劳。</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon-box">🌐</div>
+          <h3 class="feature-title" data-i18n="feat5Title">全语言国际化无缝适配</h3>
+          <p class="feature-desc" data-i18n="feat5Desc">完整支持简体中文、英文、日文动态切换，所有提示与右键菜单均按语言环境智能匹配。</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon-box">🛡️</div>
+          <h3 class="feature-title" data-i18n="feat6Title">100% 本地纯纯离线与隐私保护</h3>
+          <p class="feature-desc" data-i18n="feat6Desc">所有算法均在浏览器本地沙箱执行，绝不向任何第三方服务器上传解析内容或扫描图片，绝对安全可靠。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 在线扫码与图片识别 -->
+  <section id="scanner" class="scan-section">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-tag" data-i18n="tagScanner">QR DECODER</div>
+        <h2 class="section-title" data-i18n="titleScanner">在线二维码识图与解析</h2>
+        <p class="section-desc" data-i18n="descScanner">无需安装任何软件，拖拽任意二维码图片或从剪贴板粘贴直接解码。</p>
+      </div>
+
+      <div class="scan-box-card" id="site-drop-zone">
+        <input type="file" id="site-file-input" accept="image/*" style="display:none">
+        <div style="font-size: 38px; margin-bottom: 12px;">📁</div>
+        <h3 style="font-size: 17px; margin-bottom: 6px;" data-i18n="dropTitle">点击选择图片 或 拖拽二维码至此</h3>
+        <p style="font-size: 13px; color: var(--text-muted);" data-i18n="dropHint">支持任意格式，亦可使用 Ctrl+V / Cmd+V 快速粘贴</p>
+      </div>
+
+      <div class="scan-result-card" id="site-scan-result">
+        <div style="font-weight: 600; font-size: 13px; color: var(--primary); margin-bottom: 6px;">🎉 解析成功 / Decoded Result:</div>
+        <div id="site-decoded-text" style="word-break: break-all; font-family: monospace; font-size: 14px; background: var(--bg-card); padding: 12px; border-radius: 6px; border: 1px solid var(--border);"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 安装指引 -->
+  <section id="install" class="install-section">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-tag" data-i18n="tagInstall">INSTALLATION</div>
+        <h2 class="section-title" data-i18n="titleInstall">便捷三步安装到 Chrome / Edge</h2>
+        <p class="section-desc" data-i18n="descInstall">遵循 Manifest V3 标准，无任何广告，开箱即用。</p>
+      </div>
+
+      <div class="steps-grid">
+        <div class="step-card">
+          <div class="step-number">01</div>
+          <h3 class="step-title" data-i18n="step1Title">下载最新构建包</h3>
+          <p class="step-desc" data-i18n="step1Desc">从 GitHub Releases 下载最新的 <code>qrcode-extension-v1.1.0.zip</code> 离线压缩包并解压。</p>
+        </div>
+
+        <div class="step-card">
+          <div class="step-number">02</div>
+          <h3 class="step-title" data-i18n="step2Title">打开扩展管理面板</h3>
+          <p class="step-desc" data-i18n="step2Desc">在 Chrome 浏览器地址栏中输入 <code>chrome://extensions</code>，并开启右上角的【开发者模式】。</p>
+        </div>
+
+        <div class="step-card">
+          <div class="step-number">03</div>
+          <h3 class="step-title" data-i18n="step3Title">加载已解压的扩展程序</h3>
+          <p class="step-desc" data-i18n="step3Desc">点击【加载已解压的扩展程序】，选中解压出来的 <code>dist</code> 或 <code>src</code> 目录，即刻体验！</p>
+        </div>
+      </div>
+
+      <div style="text-align: center; margin-top: 40px;">
+        <a href="https://github.com/rowkin/browser-plugins/releases" target="_blank" class="btn-primary" data-i18n="btnDownloadZip">
+          📦 前往 Releases 下载离线安装包
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 底部版权 -->
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div>
+        <p>© 2026 79team. Licensed under ISC.</p>
+        <p style="font-size: 12px; margin-top: 4px; color: var(--text-subtle);">基于纯原生 Web 技术与 Canvas 渲染构建 · 零外部网络依赖</p>
+      </div>
+
+      <div class="footer-links">
+        <a href="#playground" class="footer-link" data-i18n="navPlayground">在线体验</a>
+        <a href="#features" class="footer-link" data-i18n="navFeatures">核心特性</a>
+        <a href="#install" class="footer-link" data-i18n="navInstall">安装指南</a>
+        <a href="https://github.com/rowkin/browser-plugins" target="_blank" class="footer-link">GitHub</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- 页面交互与国际化脚本 -->
+  <script>
+    // 国际化文案字典
+    const i18nData = {
+      zh: {
+        docTitle: "QR Code Studio & 浏览器扩展 - 专业二维码生成、美化与全能扫描工作台",
+        navPlayground: "在线体验",
+        navFeatures: "核心特性",
+        navScanner: "在线识图",
+        navInstall: "安装扩展",
+        heroPill: "全面升级：全屏 Studio 工作台与多模态解析已上线",
+        heroTitle1: "不止是快速生成，更是",
+        heroTitle2: "高颜值的二维码创作与识别工具",
+        heroSubtitle: "告别普通单调的黑白像素块。支持丰富的主题渐变、点阵形态、自定义码眼、高清矢量导出、以及高灵敏度的图片/摄像头扫描。",
+        ctaInstall: "🚀 安装 Chrome 扩展",
+        ctaTryOnline: "🎨 在线即刻体验",
+        tagPlayground: "LIVE PLAYGROUND",
+        titlePlayground: "实时互动二维码生成器",
+        descPlayground: "在网页端体验与浏览器扩展全屏工作台同款的强大生成与美化引擎。",
+        labelContent: "内容或链接 (Text / URL)",
+        labelPreset: "预设色彩主题",
+        labelDotStyle: "点阵图案形态",
+        labelCenterLogo: "嵌入中央标志",
+        btnDownloadPng: "📥 下载高清 PNG",
+        btnCopyImage: "📋 复制图片",
+        tagFeatures: "CORE FEATURES",
+        titleFeatures: "全场景覆盖的设计细节",
+        descFeatures: "为日常办公、页面分享、视觉传达量身打造的高效工具链。",
+        feat1Title: "极速悬浮与受限平滑降级",
+        feat1Desc: "一键在当前网页唤起轻量悬浮窗；当处于 Chrome 内部或系统页面时，智能引导并唤起独立工作台，零死角零崩溃。",
+        feat2Title: "全屏 Studio 美化工作台",
+        feat2Desc: "独立页面配置中心，支持平滑渐变调色、圆角点阵、独立码眼样式与中心品牌水印嵌入，带来设计级排版质感。",
+        feat3Title: "双模态高灵敏度识别引擎",
+        feat3Desc: "集成毫秒级 jsQR 解码器，支持电脑摄像头扫码、拖拽图片、剪贴板截图粘贴与右键快速识图，精准提取内容。",
+        feat4Title: "自适应深浅色模式系统",
+        feat4Desc: "无缝跟随操作系统偏好，精调明度与对比度，暗夜模式下码盘与控制面板柔和护眼，长时间使用不疲劳。",
+        feat5Title: "全语言国际化无缝适配",
+        feat5Desc: "完整支持简体中文、英文、日文动态切换，所有提示与右键菜单均按语言环境智能匹配。",
+        feat6Title: "100% 本地纯纯离线与隐私保护",
+        feat6Desc: "所有算法均在浏览器本地沙箱执行，绝不向任何第三方服务器上传解析内容或扫描图片，绝对安全可靠。",
+        tagScanner: "QR DECODER",
+        titleScanner: "在线二维码识图与解析",
+        descScanner: "无需安装任何软件，拖拽任意二维码图片或从剪贴板粘贴直接解码。",
+        dropTitle: "点击选择图片 或 拖拽二维码至此",
+        dropHint: "支持任意格式，亦可使用 Ctrl+V / Cmd+V 快速粘贴",
+        tagInstall: "INSTALLATION",
+        titleInstall: "便捷三步安装到 Chrome / Edge",
+        descInstall: "遵循 Manifest V3 标准，无任何广告，开箱即用。",
+        step1Title: "下载最新构建包",
+        step1Desc: "从 GitHub Releases 下载最新的 qrcode-extension-v1.1.0.zip 离线压缩包并解压。",
+        step2Title: "打开扩展管理面板",
+        step2Desc: "在 Chrome 浏览器地址栏中输入 chrome://extensions，并开启右上角的【开发者模式】。",
+        step3Title: "加载已解压的扩展程序",
+        step3Desc: "点击【加载已解压的扩展程序】，选中解压出来的 dist 或 src 目录，即刻体验！",
+        btnDownloadZip: "📦 前往 Releases 下载离线安装包"
+      },
+      en: {
+        docTitle: "QR Code Studio & Browser Extension - Professional QR Generator & Scanner",
+        navPlayground: "Playground",
+        navFeatures: "Features",
+        navScanner: "Scanner",
+        navInstall: "Install",
+        heroPill: "NEW: Fullscreen Studio & Multi-modal Scanner is Live",
+        heroTitle1: "More than fast generation,",
+        heroTitle2: "A Beautiful QR Design & Scan Studio",
+        heroSubtitle: "Say goodbye to boring plain black-and-white pixels. Custom gradients, dot patterns, eye styles, logo embedding, and instant camera/image decoding.",
+        ctaInstall: "🚀 Install Chrome Extension",
+        ctaTryOnline: "🎨 Try Interactive Demo",
+        tagPlayground: "LIVE PLAYGROUND",
+        titlePlayground: "Interactive QR Code Generator",
+        descPlayground: "Experience the same powerful customization and rendering engine right in your browser.",
+        labelContent: "Content / URL",
+        labelPreset: "Preset Color Themes",
+        labelDotStyle: "Dot Matrix Pattern",
+        labelCenterLogo: "Embed Center Logo",
+        btnDownloadPng: "📥 Download PNG",
+        btnCopyImage: "📋 Copy Image",
+        tagFeatures: "CORE FEATURES",
+        titleFeatures: "Engineered for Visual Excellence",
+        descFeatures: "A high-productivity toolchain built for daily work, sharing, and branding.",
+        feat1Title: "Instant In-page & Safe Fallback",
+        feat1Desc: "Floating card injection on web pages with graceful fallback to the standalone Studio when visiting protected Chrome URLs.",
+        feat2Title: "Fullscreen Studio Workbench",
+        feat2Desc: "Rich options page with smooth gradients, dot matrix shapes, custom eyes, and logo watermarking.",
+        feat3Title: "Dual-Modal High Sensitivity Scanner",
+        feat3Desc: "Built-in millisecond jsQR engine supporting webcam scan, file drop, clipboard pasting, and context menu decoding.",
+        feat4Title: "Adaptive Dark / Light Modes",
+        feat4Desc: "Flawless theme adaptation respecting system preferences with refined contrast and glow aesthetics.",
+        feat5Title: "Full Internationalization",
+        feat5Desc: "Seamless switching between Simplified Chinese, English, and Japanese across all UI modules.",
+        feat6Title: "100% Local & Privacy Guaranteed",
+        feat6Desc: "Zero tracking, zero server uploads. Every render and decode operation happens securely on your device.",
+        tagScanner: "QR DECODER",
+        titleScanner: "Online QR Image Decoder",
+        descScanner: "No installation needed. Drop any QR code image or paste from your clipboard to extract text.",
+        dropTitle: "Click to select or drop QR code image here",
+        dropHint: "Supports all standard image formats. Ctrl+V / Cmd+V supported.",
+        tagInstall: "INSTALLATION",
+        titleInstall: "Easy 3-Step Setup for Chrome & Edge",
+        descInstall: "Complies with Manifest V3 standards. No telemetry, no ads.",
+        step1Title: "Download Latest Release",
+        step1Desc: "Download qrcode-extension-v1.1.0.zip from GitHub Releases and extract it.",
+        step2Title: "Open Extension Manager",
+        step2Desc: "Navigate to chrome://extensions in your browser and enable Developer Mode.",
+        step3Title: "Load Unpacked Extension",
+        step3Desc: "Click 'Load unpacked' and select the unzipped directory to enjoy immediately!",
+        btnDownloadZip: "📦 Download Offline ZIP from Releases"
+      }
+    };
+
+    let currentLang = document.documentElement.getAttribute('data-lang') || 'zh';
+
+    function applyLanguage(lang) {
+      currentLang = lang;
+      document.documentElement.setAttribute('data-lang', lang);
+      localStorage.setItem('qr-site-lang', lang);
+
+      const dict = i18nData[lang] || i18nData.zh;
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (dict[key]) {
+          if (el.tagName === 'INPUT') {
+            el.placeholder = dict[key];
+          } else {
+            el.innerHTML = dict[key];
+          }
+        }
+      });
+      document.title = dict.docTitle;
+    }
+
+    // 语言切换按钮
+    document.getElementById('btn-lang-toggle').addEventListener('click', () => {
+      const nextLang = currentLang === 'zh' ? 'en' : 'zh';
+      applyLanguage(nextLang);
+    });
+
+    // 主题切换按钮
+    document.getElementById('btn-theme-toggle').addEventListener('click', () => {
+      const curTheme = document.documentElement.getAttribute('data-theme') || 'light';
+      const nextTheme = curTheme === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', nextTheme);
+      localStorage.setItem('qr-site-theme', nextTheme);
+    });
+
+    // 默认应用文案
+    applyLanguage(currentLang);
+
+    /* =======================================================
+       Playground 二维码生成引擎
+       ======================================================= */
+    const siteCanvas = document.getElementById('site-qr-canvas');
+    const siteInput = document.getElementById('site-text-input');
+    let currentPreset = 'classic';
+    let currentDot = 'square';
+    let currentLogo = 'none';
+
+    const colorPresets = {
+      classic: { fg1: '#0f172a', fg2: '#0f172a', bg: '#ffffff' },
+      blue: { fg1: '#1d4ed8', fg2: '#3b82f6', bg: '#ffffff' },
+      emerald: { fg1: '#047857', fg2: '#10b981', bg: '#ffffff' },
+      sunset: { fg1: '#f97316', fg2: '#ec4899', bg: '#ffffff' },
+      cyber: { fg1: '#06b6d4', fg2: '#8b5cf6', bg: '#ffffff' }
+    };
+
+    function renderSiteQR() {
+      const text = siteInput.value.trim() || 'https://github.com';
+      const colors = colorPresets[currentPreset] || colorPresets.classic;
+
+      // 临时容器使用 qrcode.min.js 生成矩阵
+      const tempDiv = document.createElement('div');
+      try {
+        const qr = new QRCode(tempDiv, {
+          text: text,
+          width: 256,
+          height: 256,
+          correctLevel: QRCode.CorrectLevel.H
+        });
+
+        // 提取生成的原始 canvas
+        setTimeout(() => {
+          const rawCanvas = tempDiv.querySelector('canvas');
+          if (!rawCanvas) return;
+          drawCustomQR(rawCanvas, colors);
+        }, 30);
+      } catch (err) {
+        console.error('QR Render err:', err);
+      }
+    }
+
+    function drawCustomQR(sourceCanvas, colors) {
+      const ctx = siteCanvas.getContext('2d');
+      const size = siteCanvas.width;
+      const sCtx = sourceCanvas.getContext('2d');
+      const sWidth = sourceCanvas.width;
+      const sHeight = sourceCanvas.height;
+      const imgData = sCtx.getImageData(0, 0, sWidth, sHeight);
+
+      // 背景
+      ctx.fillStyle = colors.bg;
+      ctx.fillRect(0, 0, size, size);
+
+      // 检测模块网格大小
+      let moduleCount = 0;
+      let firstRow = -1;
+      for (let y = 0; y < sHeight; y++) {
+        for (let x = 0; x < sWidth; x++) {
+          const idx = (y * sWidth + x) * 4;
+          if (imgData.data[idx] < 128) {
+            firstRow = y;
+            break;
+          }
+        }
+        if (firstRow !== -1) break;
+      }
+      
+      let moduleSize = 1;
+      if (firstRow !== -1) {
+        let run = 0;
+        for (let x = 0; x < sWidth; x++) {
+          const idx = (firstRow * sWidth + x) * 4;
+          if (imgData.data[idx] < 128) {
+            run++;
+          } else if (run > 0) {
+            moduleSize = run;
+            break;
+          }
+        }
+      }
+      moduleCount = Math.round(sWidth / moduleSize);
+      if (moduleCount < 21) moduleCount = 25;
+
+      const cellSize = size / moduleCount;
+
+      // 渐变色
+      const gradient = ctx.createLinearGradient(0, 0, size, size);
+      gradient.addColorStop(0, colors.fg1);
+      gradient.addColorStop(1, colors.fg2);
+      ctx.fillStyle = gradient;
+
+      for (let r = 0; r < moduleCount; r++) {
+        for (let c = 0; c < moduleCount; c++) {
+          const sx = Math.floor((c + 0.5) * moduleSize);
+          const sy = Math.floor((r + 0.5) * moduleSize);
+          const idx = (sy * sWidth + sx) * 4;
+          const isDark = imgData.data[idx] < 128;
+
+          if (isDark) {
+            const px = c * cellSize;
+            const py = r * cellSize;
+
+            if (currentDot === 'dots') {
+              ctx.beginPath();
+              ctx.arc(px + cellSize / 2, py + cellSize / 2, cellSize * 0.42, 0, Math.PI * 2);
+              ctx.fill();
+            } else if (currentDot === 'rounded') {
+              drawRoundedRect(ctx, px + 0.5, py + 0.5, cellSize - 1, cellSize - 1, 3);
+            } else {
+              ctx.fillRect(px, py, cellSize, cellSize);
+            }
+          }
+        }
+      }
+
+      // 嵌入 Logo
+      if (currentLogo !== 'none') {
+        const logoSize = size * 0.22;
+        const lx = (size - logoSize) / 2;
+        const ly = (size - logoSize) / 2;
+
+        ctx.fillStyle = colors.bg;
+        ctx.beginPath();
+        ctx.arc(size / 2, size / 2, logoSize * 0.65, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.lineWidth = 3;
+        ctx.strokeStyle = colors.fg1;
+        ctx.stroke();
+
+        ctx.font = `${Math.floor(logoSize * 0.6)}px sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(currentLogo === 'brand' ? '✨' : '⭐', size / 2, size / 2);
+      }
+    }
+
+    function drawRoundedRect(ctx, x, y, w, h, r) {
+      ctx.beginPath();
+      ctx.moveTo(x + r, y);
+      ctx.lineTo(x + w - r, y);
+      ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+      ctx.lineTo(x + w, y + h - r);
+      ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+      ctx.lineTo(x + r, y + h);
+      ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+      ctx.lineTo(x, y + r);
+      ctx.quadraticCurveTo(x, y, x + r, y);
+      ctx.closePath();
+      ctx.fill();
+    }
+
+    // 绑定 Playground 控制事件
+    siteInput.addEventListener('input', renderSiteQR);
+
+    document.querySelectorAll('.theme-pill[data-theme]').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        document.querySelectorAll('.theme-pill[data-theme]').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentPreset = btn.getAttribute('data-theme');
+        renderSiteQR();
+      });
+    });
+
+    document.querySelectorAll('.dot-pill').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        document.querySelectorAll('.dot-pill').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentDot = btn.getAttribute('data-dot');
+        renderSiteQR();
+      });
+    });
+
+    document.querySelectorAll('.logo-pill').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        document.querySelectorAll('.logo-pill').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentLogo = btn.getAttribute('data-logo');
+        renderSiteQR();
+      });
+    });
+
+    // 下载 PNG
+    document.getElementById('btn-demo-download-png').addEventListener('click', () => {
+      const a = document.createElement('a');
+      a.href = siteCanvas.toDataURL('image/png');
+      a.download = `qrcode_${Date.now()}.png`;
+      a.click();
+    });
+
+    // 复制图片
+    document.getElementById('btn-demo-copy').addEventListener('click', async () => {
+      try {
+        siteCanvas.toBlob(async (blob) => {
+          await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
+          const btn = document.getElementById('btn-demo-copy');
+          const old = btn.textContent;
+          btn.textContent = '✅ 已复制 / Copied!';
+          setTimeout(() => btn.textContent = old, 1500);
+        });
+      } catch (e) {
+        console.error(e);
+      }
+    });
+
+    // 初始化渲染一次
+    renderSiteQR();
+
+    /* =======================================================
+       在线识别 (Scanner & Decoder)
+       ======================================================= */
+    const dropZone = document.getElementById('site-drop-zone');
+    const fileInput = document.getElementById('site-file-input');
+    const scanResultBox = document.getElementById('site-scan-result');
+    const decodedText = document.getElementById('site-decoded-text');
+
+    dropZone.addEventListener('click', () => fileInput.click());
+
+    fileInput.addEventListener('change', (e) => {
+      if (e.target.files && e.target.files[0]) {
+        handleFile(e.target.files[0]);
+      }
+    });
+
+    dropZone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropZone.style.borderColor = 'var(--primary)';
+    });
+
+    dropZone.addEventListener('dragleave', () => {
+      dropZone.style.borderColor = 'var(--border-focus)';
+    });
+
+    dropZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropZone.style.borderColor = 'var(--border-focus)';
+      if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+        handleFile(e.dataTransfer.files[0]);
+      }
+    });
+
+    // 支持全局粘贴截图
+    window.addEventListener('paste', (e) => {
+      const items = e.clipboardData && e.clipboardData.items;
+      if (!items) return;
+      for (let item of items) {
+        if (item.type.indexOf('image') !== -1) {
+          const file = item.getAsFile();
+          handleFile(file);
+          break;
+        }
+      }
+    });
+
+    function handleFile(file) {
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        const img = new Image();
+        img.onload = function() {
+          decodeImage(img);
+        };
+        img.src = evt.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function decodeImage(img) {
+      const cvs = document.createElement('canvas');
+      const ctx = cvs.getContext('2d');
+      cvs.width = img.width;
+      cvs.height = img.height;
+      ctx.drawImage(img, 0, 0);
+
+      const imgData = ctx.getImageData(0, 0, cvs.width, cvs.height);
+      if (typeof jsQR !== 'undefined') {
+        const code = jsQR(imgData.data, imgData.width, imgData.height);
+        if (code && code.data) {
+          scanResultBox.style.display = 'block';
+          decodedText.textContent = code.data;
+          scanResultBox.scrollIntoView({ behavior: 'smooth' });
+        } else {
+          alert(currentLang === 'zh' ? '未能在图片中检测到有效的二维码，请尝试提高图片清晰度。' : 'No QR code found in this image.');
+        }
+      }
+    }
+  </script>
+</body>
+</html>

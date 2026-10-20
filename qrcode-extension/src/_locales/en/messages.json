@@ -1,0 +1,194 @@
+{
+  "extName": {
+    "message": "QR Code Generator",
+    "description": "Extension name"
+  },
+  "extDescription": {
+    "message": "Generate QR code from selected URL, text or current page.",
+    "description": "Extension description"
+  },
+  "contextMenuTitle": {
+    "message": "Generate QR Code",
+    "description": "Context menu item title"
+  },
+  "copyButtonText": {
+    "message": "Copy",
+    "description": "Padding control text"
+  },
+  "settingsHeader": {
+    "message": "Settings",
+    "description": "Title for the settings panel"
+  },
+  "copiedText": {
+    "message": "Copied",
+    "description": "Text shown after successful copy"
+  },
+  "copyFailedText": {
+    "message": "Copy failed",
+    "description": "Text shown when copy fails"
+  },
+  "clickToSelectText": {
+    "message": "Click to select",
+    "description": "Tooltip for URL text"
+  },
+  "generateFailedText": {
+    "message": "QR code generation failed",
+    "description": "Error message when QR code generation fails"
+  },
+  "downloadQRCode": {
+    "message": "Download QR Code",
+    "description": "Tooltip for download button"
+  },
+  "downloadSuccess": {
+    "message": "Download successful",
+    "description": "Message shown after successful download"
+  },
+  "downloadFailed": {
+    "message": "Download failed",
+    "description": "Message shown when download fails"
+  },
+  "loadingText": {
+    "message": "Generating QR Code...",
+    "description": "Text shown while generating QR code"
+  },
+  "customizeColor": {
+    "message": "Customize",
+    "description": "Button to toggle color customization"
+  },
+  "foregroundColor": {
+    "message": "Foreground",
+    "description": "Label for foreground color input"
+  },
+  "backgroundColor": {
+    "message": "Background",
+    "description": "Label for background color input"
+  },
+  "presetColors": {
+    "message": "Presets",
+    "description": "Label for preset colors"
+  },
+  "classicBlackWhite": {
+    "message": "Classic",
+    "description": "Tooltip for classic black/white preset"
+  },
+  "blueTheme": {
+    "message": "Blue",
+    "description": "Tooltip for blue preset"
+  },
+  "greenTheme": {
+    "message": "Green",
+    "description": "Tooltip for green preset"
+  },
+  "redTheme": {
+    "message": "Red",
+    "description": "Tooltip for red preset"
+  },
+  "purpleTheme": {
+    "message": "Purple",
+    "description": "Tooltip for purple preset"
+  },
+  "resetColor": {
+    "message": "Reset",
+    "description": "Button to reset colors"
+  },
+  "paddingControl": {
+    "message": "Padding",
+    "description": "Label for padding control"
+  },
+  "paddingNone": {
+    "message": "None",
+    "description": "Tooltip for 0 padding"
+  },
+  "paddingSmall": {
+    "message": "Small",
+    "description": "Tooltip for small padding"
+  },
+  "paddingMedium": {
+    "message": "Med",
+    "description": "Tooltip for medium padding"
+  },
+  "paddingLarge": {
+    "message": "Large",
+    "description": "Tooltip for large padding"
+  },
+  "qrGeneratorTitle": {
+    "message": "QR Code Generator",
+    "description": "Left panel title"
+  },
+  "contextMenuParent": {
+    "message": "QR Code (Generate & Recognize)",
+    "description": "Context menu parent title"
+  },
+  "contextMenuGenerate": {
+    "message": "Generate QR Code",
+    "description": "Context menu generate item"
+  },
+  "contextMenuRecognize": {
+    "message": "Recognize QR Code",
+    "description": "Context menu recognize item"
+  },
+  "recognitionTitle": {
+    "message": "QR Code Recognition Result",
+    "description": "Recognition panel title"
+  },
+  "recognitionSuccess": {
+    "message": "Recognition successful",
+    "description": "Recognition success message"
+  },
+  "recognitionFailed": {
+    "message": "No QR code detected",
+    "description": "Recognition failure message"
+  },
+  "recognizedContent": {
+    "message": "Recognized Content",
+    "description": "Recognized content label"
+  },
+  "visitUrl": {
+    "message": "Visit URL",
+    "description": "Visit URL button"
+  },
+  "generateFromRecognized": {
+    "message": "Generate QR Code",
+    "description": "Generate QR from recognized content button"
+  },
+  "recognizing": {
+    "message": "Recognizing QR code...",
+    "description": "Recognizing message"
+  },
+  "customizeQRCode": {
+    "message": "Customize QR Code",
+    "description": "Customize QR from recognized content button"
+  },
+  "urlLengthHint": {
+    "message": "URL is long. Consider using a URL shortener for better scanning.",
+    "description": "URL length hint message"
+  },
+  "phoneNumber": {
+    "message": "Phone",
+    "description": "Phone number type label"
+  },
+  "emailAddress": {
+    "message": "Email",
+    "description": "Email address type label"
+  },
+  "plainText": {
+    "message": "Text",
+    "description": "Plain text type label"
+  },
+  "makeCall": {
+    "message": "Make Call",
+    "description": "Make call button"
+  },
+  "sendEmail": {
+    "message": "Send Email",
+    "description": "Send email button"
+  },
+  "darkGrayTheme": {
+    "message": "Dark Gray",
+    "description": "Dark gray preset theme"
+  },
+  "contextMenuStudio": {
+    "message": "🚀 Open QR Studio",
+    "description": "Context menu open studio"
+  }
+}

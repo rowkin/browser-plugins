@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QR Studio - 二维码全功能设计工作台</title>
+  <link rel="stylesheet" href="studio.css">
+  <script src="qrcode.min.js"></script>
+  <script src="jsQR.min.js"></script>
+</head>
+<body>
+  <div class="studio-app">
+    <!-- 左侧深色侧边栏 -->
+    <aside class="studio-sidebar">
+      <div>
+        <div class="brand-header">
+          <div class="brand-logo">
+            <svg viewBox="0 0 24 24">
+              <path d="M3 3h8v8H3V3zm2 2v4h4V5H5zm8-2h8v8h-8V3zm2 2v4h4V5h-4zM3 13h8v8H3v-8zm2 2v4h4v-4H5zm13-2h3v2h-3v-2zm-5 0h2v3h-2v-3zm2 3h3v2h-3v-2zm-2 2h2v3h-2v-3zm5 0h3v3h-3v-3z"/>
+            </svg>
+          </div>
+          <div class="brand-title">
+            <h1 data-i18n="app_title">QR Studio</h1>
+            <span class="brand-badge" data-i18n="app_subtitle">专业二维码工坊 v1.1.0</span>
+          </div>
+        </div>
+
+        <nav>
+          <ul class="nav-menu">
+            <li class="nav-item active" data-tab="tab-generator">
+              <span class="nav-icon">🎨</span>
+              <span data-i18n="nav_generator">创意二维码生成</span>
+            </li>
+            <li class="nav-item" data-tab="tab-camera">
+              <span class="nav-icon">📷</span>
+              <span data-i18n="nav_camera">相机扫码识别</span>
+              <span class="nav-badge" data-i18n="badge_live">实时</span>
+            </li>
+            <li class="nav-item" data-tab="tab-decoder">
+              <span class="nav-icon">🖼️</span>
+              <span data-i18n="nav_decoder">上传图片解析</span>
+            </li>
+            <li class="nav-item" data-tab="tab-history">
+              <span class="nav-icon">📜</span>
+              <span data-i18n="nav_history">历史记录管理</span>
+              <span id="historyBadge" class="nav-badge" style="display: none;">0</span>
+            </li>
+          </ul>
+        </nav>
+      </div>
+
+      <div class="sidebar-footer">
+        <div class="sidebar-action-row">
+          <button id="btnToggleTheme" class="theme-toggle-btn" title="Toggle Theme">
+            <span id="themeIcon">🌙</span>
+            <span id="themeLabel" data-i18n="theme_dark">深色模式</span>
+          </button>
+          <button id="btnToggleLang" class="lang-toggle-btn" title="Switch Language">
+            <span>🌐</span>
+            <span id="langLabel">English</span>
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- 右侧主体内容切换区 -->
+    <main class="studio-main">
+      <!-- ─── TAB 1: 创意二维码生成 ─── -->
+      <section id="tab-generator" class="tab-pane active">
+        <div class="generator-layout">
+          <!-- 中间配置参数列 -->
+          <div class="config-column">
+            <!-- 模版类型选择 -->
+            <div class="content-type-tabs">
+              <button class="type-tab-btn active" data-type="url">
+                <span>🔗</span><span data-i18n="type_url">网址链接</span>
+              </button>
+              <button class="type-tab-btn" data-type="text">
+                <span>📝</span><span data-i18n="type_text">纯文本</span>
+              </button>
+              <button class="type-tab-btn" data-type="wifi">
+                <span>📶</span><span data-i18n="type_wifi">WiFi网络</span>
+              </button>
+              <button class="type-tab-btn" data-type="vcard">
+                <span>👤</span><span data-i18n="type_vcard">名片信息</span>
+              </button>
+              <button class="type-tab-btn" data-type="tel">
+                <span>📞</span><span data-i18n="type_tel">电话短信</span>
+              </button>
+            </div>
+
+            <!-- 内容输入卡片 -->
+            <div class="config-card">
+              <div class="card-title">
+                <span data-i18n="section_content">二维码内容与数据</span>
+                <span class="badge" data-i18n="realtime_sync">实时同步</span>
+              </div>
+
+              <!-- 网址链接面板 -->
+              <div id="form-url" class="type-form-group">
+                <div class="form-field">
+                  <label class="form-label" data-i18n="label_url_input">输入网址 (URL)</label>
+                  <input type="url" id="inputUrl" class="form-input" placeholder="https://example.com" value="https://github.com/rowkin1991/qrcode-extension">
+                </div>
+              </div>
+
+              <!-- 纯文本面板 -->
+              <div id="form-text" class="type-form-group" style="display: none;">
+                <div class="form-field">
+                  <label class="form-label" data-i18n="label_text_input">输入文本内容</label>
+                  <textarea id="inputText" class="form-textarea" placeholder="输入任意文本、便签、代码或留言..."></textarea>
+                </div>
+              </div>
+
+              <!-- WiFi 连网面板 -->
+              <div id="form-wifi" class="type-form-group" style="display: none;">
+                <div class="grid-2">
+                  <div class="form-field">
+                    <label class="form-label" data-i18n="label_wifi_ssid">WiFi 名称 (SSID)</label>
+                    <input type="text" id="wifiSsid" class="form-input" placeholder="My_Home_WiFi">
+                  </div>
+                  <div class="form-field">
+                    <label class="form-label" data-i18n="label_wifi_type">加密方式</label>
+                    <select id="wifiType" class="form-select">
+                      <option value="WPA">WPA/WPA2/WPA3 (推荐)</option>
+                      <option value="WEP">WEP</option>
+                      <option value="nopass">无密码 (开放网络)</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="form-field" style="margin-top: 10px;">
+                  <label class="form-label" data-i18n="label_wifi_pass">WiFi 密码</label>
+                  <input type="password" id="wifiPass" class="form-input" placeholder="输入密码">
+                </div>
+              </div>
+
+              <!-- 名片 vCard 面板 -->
+              <div id="form-vcard" class="type-form-group" style="display: none;">
+                <div class="grid-2">
+                  <div class="form-field">
+                    <label class="form-label" data-i18n="label_vcard_name">姓名</label>
+                    <input type="text" id="vcardName" class="form-input" placeholder="张三">
+                  </div>
+                  <div class="form-field">
+                    <label class="form-label" data-i18n="label_vcard_tel">手机号</label>
+                    <input type="tel" id="vcardTel" class="form-input" placeholder="13800000000">
+                  </div>
+                </div>
+                <div class="grid-2" style="margin-top: 10px;">
+                  <div class="form-field">
+                    <label class="form-label" data-i18n="label_vcard_email">电子邮箱</label>
+                    <input type="email" id="vcardEmail" class="form-input" placeholder="zhangsan@example.com">
+                  </div>
+                  <div class="form-field">
+                    <label class="form-label" data-i18n="label_vcard_org">公司/组织</label>
+                    <input type="text" id="vcardOrg" class="form-input" placeholder="79team">
+                  </div>
+                </div>
+              </div>
+
+              <!-- 电话与短信面板 -->
+              <div id="form-tel" class="type-form-group" style="display: none;">
+                <div class="form-field">
+                  <label class="form-label" data-i18n="label_phone_number">电话号码</label>
+                  <input type="tel" id="inputTel" class="form-input" placeholder="+86 13800000000">
+                </div>
+                <div class="form-field" style="margin-top: 10px;">
+                  <label class="form-label" data-i18n="label_sms_body">短信预设正文 (选填)</label>
+                  <input type="text" id="inputSms" class="form-input" placeholder="您好，我对您的产品很感兴趣...">
+                </div>
+              </div>
+            </div>
+
+            <!-- 主题美化高阶折叠设置卡片 -->
+            <div class="customizer-accordion">
+              <!-- 折叠项 1: 色彩与渐变 -->
+              <div class="accordion-item open">
+                <div class="accordion-header">
+                  <span>🎨 <span data-i18n="acc_colors">色彩与高级渐变系统</span></span>
+                  <span class="arrow">▼</span>
+                </div>
+                <div class="accordion-body">
+                  <div class="form-field">
+                    <label class="form-label" data-i18n="label_color_mode">色彩填充模式</label>
+                    <select id="colorModeSelect" class="form-select">
+                      <option value="solid" data-i18n="mode_solid">经典单色填充 (Solid)</option>
+                      <option value="linear" data-i18n="mode_linear" selected>线性炫彩渐变 (Linear Gradient)</option>
+                      <option value="radial" data-i18n="mode_radial">径向环形渐变 (Radial Gradient)</option>
+                    </select>
+                  </div>
+
+                  <div class="color-picker-row">
+                    <span data-i18n="color_fg_1">主前景色 (Color 1)</span>
+                    <div class="color-picker-control">
+                      <input type="color" id="fgColor1" class="color-box" value="#6366f1">
+                      <span id="fgColor1Hex" style="font-size: 12px; font-family: monospace;">#6366F1</span>
+                    </div>
+                  </div>
+
+                  <div id="fgColor2Row" class="color-picker-row">
+                    <span data-i18n="color_fg_2">次前景色 (Color 2)</span>
+                    <div class="color-picker-control">
+                      <input type="color" id="fgColor2" class="color-box" value="#d946ef">
+                      <span id="fgColor2Hex" style="font-size: 12px; font-family: monospace;">#D946EF</span>
+                    </div>
+                  </div>
+
+                  <div class="color-picker-row">
+                    <span data-i18n="color_bg">背景底色</span>
+                    <div class="color-picker-control">
+                      <input type="color" id="bgColor" class="color-box" value="#ffffff">
+                      <label style="font-size: 12px; display: flex; align-items: center; gap: 4px; cursor: pointer;">
+                        <input type="checkbox" id="bgTransparent">
+                        <span data-i18n="bg_transparent">透明背景</span>
+                      </label>
+                    </div>
+                  </div>
+
+                  <div class="form-field">
+                    <label class="form-label" data-i18n="preset_palettes">精选质感主题色板</label>
+                    <div class="palette-row">
+                      <div class="palette-chip active" style="background: linear-gradient(135deg, #6366f1, #d946ef);" data-c1="#6366f1" data-c2="#d946ef" title="霓虹紫粉"></div>
+                      <div class="palette-chip" style="background: linear-gradient(135deg, #0d9488, #10b981);" data-c1="#0d9488" data-c2="#10b981" title="翡翠青绿"></div>
+                      <div class="palette-chip" style="background: linear-gradient(135deg, #0284c7, #38bdf8);" data-c1="#0284c7" data-c2="#38bdf8" title="极客科技蓝"></div>
+                      <div class="palette-chip" style="background: linear-gradient(135deg, #ea580c, #f59e0b);" data-c1="#ea580c" data-c2="#f59e0b" title="落日暖橙"></div>
+                      <div class="palette-chip" style="background: #111827;" data-c1="#111827" data-c2="#111827" title="经典墨黑"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 折叠项 2: 点阵形状与码眼 -->
+              <div class="accordion-item">
+                <div class="accordion-header">
+                  <span>✨ <span data-i18n="acc_shapes">点阵样式与定位码眼</span></span>
+                  <span class="arrow">▼</span>
+                </div>
+                <div class="accordion-body">
+                  <div class="form-field">
+                    <label class="form-label" data-i18n="label_dot_style">码点外观样式</label>
+                    <div class="dot-options-grid">
+                      <div class="dot-option-card active" data-dot="square">
+                        <div class="dot-icon-preview">⬛</div>
+                        <span class="dot-title" data-i18n="dot_square">经典方块</span>
+                      </div>
+                      <div class="dot-option-card" data-dot="dots">
+                        <div class="dot-icon-preview">⚫</div>
+                        <span class="dot-title" data-i18n="dot_dots">优雅圆点</span>
+                      </div>
+                      <div class="dot-option-card" data-dot="rounded">
+                        <div class="dot-icon-preview">🔲</div>
+                        <span class="dot-title" data-i18n="dot_rounded">平滑圆角</span>
+                      </div>
+                      <div class="dot-option-card" data-dot="fluid">
+                        <div class="dot-icon-preview">💧</div>
+                        <span class="dot-title" data-i18n="dot_fluid">液态胶囊</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="grid-2">
+                    <div class="form-field">
+                      <label class="form-label" data-i18n="label_eye_frame">码眼外框形状</label>
+                      <select id="eyeFrameSelect" class="form-select">
+                        <option value="square" data-i18n="shape_square">经典方形</option>
+                        <option value="rounded" data-i18n="shape_rounded" selected>圆角矩形</option>
+                        <option value="circle" data-i18n="shape_circle">圆润环形</option>
+                      </select>
+                    </div>
+                    <div class="form-field">
+                      <label class="form-label" data-i18n="label_eye_dot">码眼内芯形状</label>
+                      <select id="eyeDotSelect" class="form-select">
+                        <option value="square" data-i18n="shape_square">方形点</option>
+                        <option value="circle" data-i18n="shape_circle" selected>圆形点</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="color-picker-row">
+                    <label style="font-size: 13px; display: flex; align-items: center; gap: 6px; cursor: pointer;">
+                      <input type="checkbox" id="eyeCustomColor">
+                      <span data-i18n="eye_custom_color">码眼独立配色</span>
+                    </label>
+                    <div id="eyeColorPickerWrapper" class="color-picker-control" style="display: none;">
+                      <input type="color" id="eyeColor" class="color-box" value="#4f46e5">
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 折叠项 3: 中心嵌入 Logo -->
+              <div class="accordion-item">
+                <div class="accordion-header">
+                  <span>🖼️ <span data-i18n="acc_logo">中心 Logo / 品牌图标嵌入</span></span>
+                  <span class="arrow">▼</span>
+                </div>
+                <div class="accordion-body">
+                  <div class="form-field">
+                    <label class="form-label" data-i18n="label_logo_source">预设快捷图标</label>
+                    <div class="palette-row">
+                      <button type="button" class="btn-secondary-action logo-preset-btn" data-logo="none" data-i18n="logo_none">无 Logo</button>
+                      <button type="button" class="btn-secondary-action logo-preset-btn" data-logo="wechat">微信</button>
+                      <button type="button" class="btn-secondary-action logo-preset-btn" data-logo="alipay">支付宝</button>
+                      <button type="button" class="btn-secondary-action logo-preset-btn" data-logo="github">GitHub</button>
+                      <button type="button" class="btn-secondary-action logo-preset-btn" data-logo="web">官网 Web</button>
+                    </div>
+                  </div>
+
+                  <div class="form-field">
+                    <label class="form-label" data-i18n="label_custom_logo">或上传自定义图片 (PNG / SVG / JPG)</label>
+                    <input type="file" id="logoFileInput" accept="image/*" class="form-input">
+                  </div>
+
+                  <div class="grid-2">
+                    <div class="form-field">
+                      <label class="form-label"><span data-i18n="label_logo_size">Logo 占比大小</span>: <span id="logoSizeVal">22%</span></label>
+                      <input type="range" id="logoSizeRange" min="15" max="30" value="22" step="1">
+                    </div>
+                    <div class="form-field">
+                      <label class="form-label"><span data-i18n="label_logo_margin">保护留白边距</span>: <span id="logoMarginVal">4px</span></label>
+                      <input type="range" id="logoMarginRange" min="0" max="10" value="4" step="1">
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 折叠项 4: 尺寸与纠错级别 -->
+              <div class="accordion-item">
+                <div class="accordion-header">
+                  <span>⚙️ <span data-i18n="acc_settings">输出清晰度与容错机制</span></span>
+                  <span class="arrow">▼</span>
+                </div>
+                <div class="accordion-body">
+                  <div class="grid-2">
+                    <div class="form-field">
+                      <label class="form-label" data-i18n="label_ecc">容错纠错级别 (ECC)</label>
+                      <select id="eccSelect" class="form-select">
+                        <option value="L">L (7% 容错，密度最小)</option>
+                        <option value="M">M (15% 容错，标准推荐)</option>
+                        <option value="Q">Q (25% 容错，带Logo推荐)</option>
+                        <option value="H" selected>H (30% 容错，最高保障)</option>
+                      </select>
+                    </div>
+                    <div class="form-field">
+                      <label class="form-label" data-i18n="label_export_size">导出图片清晰度</label>
+                      <select id="exportSizeSelect" class="form-select">
+                        <option value="512">512 × 512 px (标准高清)</option>
+                        <option value="1024" selected>1024 × 1024 px (超清 2K)</option>
+                        <option value="2048">2048 × 2048 px (印刷级 4K)</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 右侧实时高清预览与操作列 -->
+          <div class="preview-column">
+            <div class="preview-container">
+              <div class="qr-canvas-wrapper">
+                <canvas id="studioQrCanvas" width="280" height="280"></canvas>
+              </div>
+
+              <div class="preview-info" data-i18n="preview_tip">
+                ✨ 移动设备相机或任意扫码 App 均可毫秒级秒开识别
+              </div>
+
+              <div class="action-button-group">
+                <button id="btnDownloadPng" class="btn-primary-gradient">
+                  <span>📥</span><span data-i18n="btn_download_png">下载高清 PNG 图片</span>
+                </button>
+                <div class="secondary-actions">
+                  <button id="btnDownloadSvg" class="btn-secondary-action">
+                    <span>📄</span><span data-i18n="btn_download_svg">导出 SVG 矢量图</span>
+                  </button>
+                  <button id="btnCopyImage" class="btn-secondary-action">
+                    <span>📋</span><span data-i18n="btn_copy_image">复制到剪贴板</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ─── TAB 2: 相机扫码识别 ─── -->
+      <section id="tab-camera" class="tab-pane">
+        <div class="scanner-container">
+          <div class="camera-viewport-card">
+            <video id="cameraVideo" playsinline autoplay></video>
+            <div class="scanner-overlay">
+              <div class="scan-laser-line"></div>
+            </div>
+          </div>
+
+          <div class="camera-controls">
+            <button id="btnStartCamera" class="btn-primary-gradient" style="padding: 9px 20px;">
+              <span>📹</span><span data-i18n="camera_start">开启摄像头扫码</span>
+            </button>
+          </div>
+
+          <div id="cameraResultCard" class="scan-result-card" style="display: none;">
+            <div style="flex: 1; min-width: 0;">
+              <div style="font-size: 11px; color: var(--text-muted);" data-i18n="scan_result_label">扫描识别结果：</div>
+              <div id="cameraResultText" style="font-size: 14px; font-weight: 600; word-break: break-all; margin-top: 4px;"></div>
+            </div>
+            <button id="btnCopyCameraResult" class="btn-secondary-action" data-i18n="btn_copy">复制结果</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ─── TAB 3: 上传图片解码 ─── -->
+      <section id="tab-decoder" class="tab-pane">
+        <div class="decoder-container">
+          <div id="dropZone" class="drop-zone">
+            <div class="drop-icon">🖼️</div>
+            <div style="font-size: 15px; font-weight: 600;" data-i18n="drop_zone_title">拖拽二维码图片至此处，或点击浏览上传</div>
+            <div style="font-size: 12px; color: var(--text-muted);" data-i18n="drop_zone_sub">支持在页面任意处直接 Ctrl+V / Cmd+V 快速粘贴图片进行解码</div>
+            <input type="file" id="decodeFileInput" accept="image/*" style="display: none;">
+          </div>
+
+          <div id="decoderResultCard" class="scan-result-card" style="display: none; width: 540px;">
+            <div style="flex: 1; min-width: 0;">
+              <div style="font-size: 11px; color: var(--text-muted);" data-i18n="decode_result_label">解析成功提取内容：</div>
+              <div id="decoderResultText" style="font-size: 14px; font-weight: 600; word-break: break-all; margin-top: 4px;"></div>
+            </div>
+            <div style="display: flex; gap: 8px;">
+              <button id="btnCopyDecodeResult" class="btn-secondary-action" data-i18n="btn_copy">复制</button>
+              <button id="btnOpenInGenerator" class="btn-secondary-action" data-i18n="btn_import_generator">重新生成</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ─── TAB 4: 历史记录管理 ─── -->
+      <section id="tab-history" class="tab-pane">
+        <div class="history-layout">
+          <div class="history-toolbar">
+            <div style="font-size: 16px; font-weight: 700;" data-i18n="history_title">二维码生成与扫描历史</div>
+            <button id="btnClearHistory" class="btn-secondary-action" style="color: #ef4444; border-color: rgba(239, 68, 68, 0.3);" data-i18n="btn_clear_history">清空全部历史</button>
+          </div>
+          <div id="historyListContainer" class="history-list">
+            <!-- 动态渲染卡片 -->
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="studio.js"></script>
+</body>
+</html>

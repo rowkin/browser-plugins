@@ -1,0 +1,194 @@
+{
+  "extName": {
+    "message": "二维码生成器",
+    "description": "扩展名称"
+  },
+  "extDescription": {
+    "message": "为选中的网址、文本或当前页面生成二维码。",
+    "description": "扩展描述"
+  },
+  "contextMenuTitle": {
+    "message": "生成二维码",
+    "description": "右键菜单项标题"
+  },
+  "copyButtonText": {
+    "message": "复制",
+    "description": "复制按钮文本"
+  },
+  "copiedText": {
+    "message": "已复制",
+    "description": "复制成功后显示的文本"
+  },
+  "copyFailedText": {
+    "message": "复制失败",
+    "description": "复制失败时显示的文本"
+  },
+  "clickToSelectText": {
+    "message": "点击选择",
+    "description": "URL文本提示"
+  },
+  "generateFailedText": {
+    "message": "二维码生成失败",
+    "description": "二维码生成失败时的错误信息"
+  },
+  "downloadQRCode": {
+    "message": "下载二维码",
+    "description": "下载按钮提示文本"
+  },
+  "downloadSuccess": {
+    "message": "下载成功",
+    "description": "下载成功后显示的消息"
+  },
+  "downloadFailed": {
+    "message": "下载失败",
+    "description": "下载失败时显示的消息"
+  },
+  "loadingText": {
+    "message": "正在生成二维码...",
+    "description": "生成二维码时显示的文本"
+  },
+  "customizeColor": {
+    "message": "自定义样式",
+    "description": "自定义颜色按钮文本"
+  },
+  "foregroundColor": {
+    "message": "前景色",
+    "description": "前景色输入框标签"
+  },
+  "backgroundColor": {
+    "message": "背景色",
+    "description": "背景色输入框标签"
+  },
+  "presetColors": {
+    "message": "预设主题",
+    "description": "预设颜色标签"
+  },
+  "classicBlackWhite": {
+    "message": "经典黑白",
+    "description": "经典黑白预设提示"
+  },
+  "blueTheme": {
+    "message": "商务蓝",
+    "description": "蓝色主题预设提示"
+  },
+  "greenTheme": {
+    "message": "清新绿",
+    "description": "绿色主题预设提示"
+  },
+  "redTheme": {
+    "message": "活力红",
+    "description": "红色主题预设提示"
+  },
+  "purpleTheme": {
+    "message": "优雅紫",
+    "description": "紫色主题预设提示"
+  },
+  "resetColor": {
+    "message": "重置",
+    "description": "重置颜色按钮文本"
+  },
+  "paddingControl": {
+    "message": "留白与边距",
+    "description": "留白控制标签"
+  },
+  "settingsHeader": {
+    "message": "设置",
+    "description": "设置面板标题"
+  },
+  "paddingNone": {
+    "message": "无",
+    "description": "无留白提示"
+  },
+  "paddingSmall": {
+    "message": "小",
+    "description": "小留白提示"
+  },
+  "paddingMedium": {
+    "message": "中",
+    "description": "中留白提示"
+  },
+  "paddingLarge": {
+    "message": "大",
+    "description": "大留白提示"
+  },
+  "qrGeneratorTitle": {
+    "message": "二维码生成器",
+    "description": "面板左侧标题"
+  },
+  "contextMenuParent": {
+    "message": "二维码（生成及识别）",
+    "description": "右键菜单父级标题"
+  },
+  "contextMenuGenerate": {
+    "message": "生成二维码",
+    "description": "右键菜单生成项"
+  },
+  "contextMenuRecognize": {
+    "message": "识别二维码",
+    "description": "右键菜单识别项"
+  },
+  "recognitionTitle": {
+    "message": "二维码识别结果",
+    "description": "识别面板标题"
+  },
+  "recognitionSuccess": {
+    "message": "识别成功",
+    "description": "识别成功提示"
+  },
+  "recognitionFailed": {
+    "message": "未检测到二维码",
+    "description": "识别失败提示"
+  },
+  "recognizedContent": {
+    "message": "识别内容",
+    "description": "识别内容标签"
+  },
+  "visitUrl": {
+    "message": "访问链接",
+    "description": "访问URL按钮"
+  },
+  "generateFromRecognized": {
+    "message": "生成二维码",
+    "description": "从识别内容生成二维码按钮"
+  },
+  "recognizing": {
+    "message": "正在识别二维码...",
+    "description": "识别中提示"
+  },
+  "customizeQRCode": {
+    "message": "自定义二维码",
+    "description": "从识别内容自定义生成二维码按钮"
+  },
+  "urlLengthHint": {
+    "message": "URL较长，建议使用短链接服务以提高扫描成功率",
+    "description": "URL长度提示消息"
+  },
+  "phoneNumber": {
+    "message": "电话",
+    "description": "电话号码类型标签"
+  },
+  "emailAddress": {
+    "message": "邮箱",
+    "description": "邮箱地址类型标签"
+  },
+  "plainText": {
+    "message": "文本",
+    "description": "纯文本类型标签"
+  },
+  "makeCall": {
+    "message": "拨打电话",
+    "description": "拨打电话按钮"
+  },
+  "sendEmail": {
+    "message": "发送邮件",
+    "description": "发送邮件按钮"
+  },
+  "darkGrayTheme": {
+    "message": "深灰主题",
+    "description": "深灰色预设主题"
+  },
+  "contextMenuStudio": {
+    "message": "🚀 打开全功能二维码工作台 (Studio)",
+    "description": "右键菜单打开工作台项"
+  }
+}

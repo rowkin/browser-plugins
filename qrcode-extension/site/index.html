@@ -483,107 +483,64 @@
       const text = siteInput.value.trim() || 'https://github.com';
       const colors = colorPresets[currentPreset] || colorPresets.classic;
 
-      // 临时容器使用 qrcode.min.js 生成矩阵
-      const tempDiv = document.createElement('div');
       try {
-        const qr = new QRCode(tempDiv, {
+        const tempDiv = document.createElement('div');
+        const qrInstance = new QRCode(tempDiv, {
           text: text,
           width: 256,
           height: 256,
           correctLevel: QRCode.CorrectLevel.H
         });
 
-        // 提取生成的原始 canvas
-        setTimeout(() => {
-          const rawCanvas = tempDiv.querySelector('canvas');
-          if (!rawCanvas) return;
-          drawCustomQR(rawCanvas, colors);
-        }, 30);
+        const qrModel = qrInstance._oQRCode;
+        if (!qrModel) return;
+        drawCustomQR(qrModel, colors);
       } catch (err) {
         console.error('QR Render err:', err);
       }
     }
 
-    function drawCustomQR(sourceCanvas, colors) {
+    function drawCustomQR(qrModel, colors) {
       const ctx = siteCanvas.getContext('2d');
       const size = siteCanvas.width;
-      const sCtx = sourceCanvas.getContext('2d');
-      const sWidth = sourceCanvas.width;
-      const sHeight = sourceCanvas.height;
-      const imgData = sCtx.getImageData(0, 0, sWidth, sHeight);
+      const count = qrModel.getModuleCount();
+      const padding = 12;
+      const cellSize = (size - padding * 2) / count;
 
-      // 背景
+      // 1. 填充背景
       ctx.fillStyle = colors.bg;
       ctx.fillRect(0, 0, size, size);
 
-      // 检测模块网格大小
-      let moduleCount = 0;
-      let firstRow = -1;
-      for (let y = 0; y < sHeight; y++) {
-        for (let x = 0; x < sWidth; x++) {
-          const idx = (y * sWidth + x) * 4;
-          if (imgData.data[idx] < 128) {
-            firstRow = y;
-            break;
-          }
-        }
-        if (firstRow !== -1) break;
-      }
-      
-      let moduleSize = 1;
-      if (firstRow !== -1) {
-        let run = 0;
-        for (let x = 0; x < sWidth; x++) {
-          const idx = (firstRow * sWidth + x) * 4;
-          if (imgData.data[idx] < 128) {
-            run++;
-          } else if (run > 0) {
-            moduleSize = run;
-            break;
-          }
-        }
-      }
-      moduleCount = Math.round(sWidth / moduleSize);
-      if (moduleCount < 21) moduleCount = 25;
-
-      const cellSize = size / moduleCount;
-
-      // 渐变色
+      // 2. 渐变填充样式
       const gradient = ctx.createLinearGradient(0, 0, size, size);
       gradient.addColorStop(0, colors.fg1);
       gradient.addColorStop(1, colors.fg2);
       ctx.fillStyle = gradient;
 
-      for (let r = 0; r < moduleCount; r++) {
-        for (let c = 0; c < moduleCount; c++) {
-          const sx = Math.floor((c + 0.5) * moduleSize);
-          const sy = Math.floor((r + 0.5) * moduleSize);
-          const idx = (sy * sWidth + sx) * 4;
-          const isDark = imgData.data[idx] < 128;
-
-          if (isDark) {
-            const px = c * cellSize;
-            const py = r * cellSize;
+      // 3. 逐个模块精确渲染
+      for (let r = 0; r < count; r++) {
+        for (let c = 0; c < count; c++) {
+          if (qrModel.isDark(r, c)) {
+            const px = padding + c * cellSize;
+            const py = padding + r * cellSize;
 
             if (currentDot === 'dots') {
               ctx.beginPath();
-              ctx.arc(px + cellSize / 2, py + cellSize / 2, cellSize * 0.42, 0, Math.PI * 2);
+              ctx.arc(px + cellSize / 2, py + cellSize / 2, cellSize * 0.44, 0, Math.PI * 2);
               ctx.fill();
             } else if (currentDot === 'rounded') {
-              drawRoundedRect(ctx, px + 0.5, py + 0.5, cellSize - 1, cellSize - 1, 3);
+              drawRoundedRect(ctx, px + 0.5, py + 0.5, cellSize - 1, cellSize - 1, Math.min(3, cellSize * 0.3));
             } else {
-              ctx.fillRect(px, py, cellSize, cellSize);
+              // 经典方块（稍微加 0.5 像素消除抗锯齿间隙）
+              ctx.fillRect(px, py, cellSize + 0.5, cellSize + 0.5);
             }
           }
         }
       }
 
-      // 嵌入 Logo
+      // 4. 嵌入 Logo 水印
       if (currentLogo !== 'none') {
         const logoSize = size * 0.22;
-        const lx = (size - logoSize) / 2;
-        const ly = (size - logoSize) / 2;
-
         ctx.fillStyle = colors.bg;
         ctx.beginPath();
         ctx.arc(size / 2, size / 2, logoSize * 0.65, 0, Math.PI * 2);

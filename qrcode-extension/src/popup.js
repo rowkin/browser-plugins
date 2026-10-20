@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', function() {
   const btnOpenOptions = document.getElementById('btn-open-options');
   const btnCopyUrl = document.getElementById('btn-copy-url');
   const btnDownload = document.getElementById('btn-download');
+  const brandLogo = document.getElementById('brand-logo');
 
   let currentUrl = '';
   let qrCodeInstance = null;
@@ -27,6 +28,14 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     chrome.tabs.create({ url: chrome.runtime.getURL(url) });
     window.close();
+  }
+
+  // 点击 Logo 跳转至官网 (内嵌宣传站)
+  if (brandLogo) {
+    brandLogo.addEventListener('click', () => {
+      chrome.tabs.create({ url: chrome.runtime.getURL('site/index.html') });
+      window.close();
+    });
   }
 
   // 渲染本地 QR 码

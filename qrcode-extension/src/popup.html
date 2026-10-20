@@ -33,7 +33,7 @@
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     }
     body {
-      width: 320px;
+      width: 330px;
       background: var(--bg);
       color: var(--text);
       padding: 16px;
@@ -53,9 +53,25 @@
       gap: 8px;
       font-size: 14px;
       font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      color: var(--text);
+      transition: opacity 0.2s;
+    }
+    .brand:hover {
+      opacity: 0.85;
     }
     .brand-icon {
-      font-size: 16px;
+      width: 26px;
+      height: 26px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: transform 0.2s;
+    }
+    .brand:hover .brand-icon {
+      transform: scale(1.08);
     }
     .btn-link {
       background: transparent;
@@ -91,18 +107,37 @@
       height: auto;
       display: block;
     }
+    .url-box-wrapper {
+      position: relative;
+      margin-bottom: 12px;
+    }
     .url-box {
       font-size: 11px;
-      color: var(--subtext);
+      color: var(--text);
       word-break: break-all;
       background: var(--card-bg);
       padding: 8px 10px;
       border-radius: 6px;
       border: 1px solid var(--border);
-      max-height: 48px;
+      max-height: 76px;
       overflow-y: auto;
-      margin-bottom: 12px;
-      line-height: 1.4;
+      overflow-x: hidden;
+      line-height: 1.5;
+      user-select: text;
+    }
+    /* 自定义可滚动提示滚动条 */
+    .url-box::-webkit-scrollbar {
+      width: 5px;
+    }
+    .url-box::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .url-box::-webkit-scrollbar-thumb {
+      background: var(--border);
+      border-radius: 4px;
+    }
+    .url-box::-webkit-scrollbar-thumb:hover {
+      background: var(--subtext);
     }
     .action-row {
       display: grid;
@@ -154,12 +189,13 @@
       display: none;
       background: var(--card-bg);
       border: 1px dashed var(--border);
-      padding: 12px;
+      padding: 10px 12px;
       border-radius: 8px;
-      font-size: 12px;
+      font-size: 11px;
       text-align: center;
       margin-bottom: 12px;
       color: var(--subtext);
+      line-height: 1.4;
     }
   </style>
   <script src="qrcode.min.js"></script>
@@ -167,8 +203,28 @@
 </head>
 <body>
   <div class="header">
-    <div class="brand">
-      <span class="brand-icon">🔳</span>
+    <div id="brand-logo" class="brand" title="前往官方宣传页 / Official Site">
+      <div class="brand-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="24" height="24" rx="6" fill="url(#cardBrandGrad)"/>
+          <rect x="4" y="4" width="6" height="6" rx="1.5" stroke="white" stroke-width="1.6"/>
+          <rect x="6" y="6" width="2" height="2" fill="white"/>
+          <rect x="14" y="4" width="6" height="6" rx="1.5" stroke="white" stroke-width="1.6"/>
+          <rect x="16" y="6" width="2" height="2" fill="white"/>
+          <rect x="4" y="14" width="6" height="6" rx="1.5" stroke="white" stroke-width="1.6"/>
+          <rect x="6" y="16" width="2" height="2" fill="white"/>
+          <rect x="14" y="14" width="2.5" height="2.5" rx="0.5" fill="white"/>
+          <rect x="17.5" y="14" width="2.5" height="2.5" rx="0.5" fill="white"/>
+          <rect x="14" y="17.5" width="2.5" height="2.5" rx="0.5" fill="white"/>
+          <rect x="17.5" y="17.5" width="2.5" height="2.5" rx="0.5" fill="white"/>
+          <defs>
+            <linearGradient id="cardBrandGrad" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#3b82f6"/>
+              <stop offset="100%" stop-color="#8b5cf6"/>
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
       <span>QR Code Tool</span>
     </div>
     <button id="btn-open-options" class="btn-link" title="打开高级配置页">
@@ -184,7 +240,9 @@
     <div id="qrcode"></div>
   </div>
 
-  <div id="url-display" class="url-box">正在获取当前页面网址...</div>
+  <div class="url-box-wrapper">
+    <div id="url-display" class="url-box" title="可上下滚动查看完整内容">正在获取当前页面网址...</div>
+  </div>
 
   <div class="action-row">
     <button id="btn-copy-url" class="btn-sm">📋 复制链接</button>

@@ -241,10 +241,14 @@
     if (!state.text || !state.text.trim()) return;
 
     try {
-      // 1. 创建 QRCode 实例获取矩阵
-      const qr = new QRCode(-1, QRCode.CorrectLevel[state.ecc] || QRCode.CorrectLevel.H);
-      qr.addData(state.text);
-      qr.make();
+      // 1. 创建 QRCode 实例获取矩阵模型
+      const tempDiv = document.createElement('div');
+      const qrInstance = new QRCode(tempDiv, {
+        text: state.text,
+        correctLevel: QRCode.CorrectLevel[state.ecc] || QRCode.CorrectLevel.H
+      });
+      const qr = qrInstance._oQRCode;
+      if (!qr) return;
 
       const count = qr.getModuleCount();
       const canvasSize = 280;
@@ -1001,6 +1005,14 @@
           localStorage.removeItem('qr_studio_history');
           renderHistoryList();
         }
+      });
+    }
+
+    // 点击左上角 Logo 跳转至官网 (内嵌宣传站)
+    const studioBrandHeader = document.getElementById('studioBrandHeader');
+    if (studioBrandHeader) {
+      studioBrandHeader.addEventListener('click', () => {
+        window.open('site/index.html', '_blank');
       });
     }
 

@@ -6,7 +6,21 @@
 
 ## 📦 现有浏览器插件列表
 
-### 1. 🧮 万能计算器 (Universal Calculator)
+### 1. 🍪 Cookie 管理器与每日格言 (Cookie Manager with Daily Quotes)
+
+一款集实时 Cookie 高级管理、一键固定智能同步与每日多语励志格言、实时天气于一体的美学级 Chrome 扩展。
+
+*   **官方演示官网**：[https://cookie.rowkin.xyz](https://cookie.rowkin.xyz)
+*   **Chrome 网上应用店**：[前往商店安装](https://chromewebstore.google.com/detail/jbddngoogmpocbdmoengcehnobapodpf)
+*   **最新安装包下载**：
+    *   [最新正式版 (cookie-manager-latest.zip)](./cookie-manager/cookie-manager-latest.zip)
+    *   [版本归档目录](./cookie-manager/)
+*   **隐私政策说明**：请参阅 [PRIVACY_POLICY.md](./cookie-manager/PRIVACY_POLICY.md)。
+*   **安装步骤**：下载 `.zip` 压缩包解压后，在 Chrome 浏览器访问 `chrome://extensions/` 并开启右上角“开发者模式”，选择“加载已解压的扩展程序”选择解压出来的目录即可。
+
+---
+
+### 2. 🧮 万能计算器 (Universal Calculator)
 
 一款轻量、精美、无广告的浏览器多功能计算与换算工具箱。
 
@@ -19,7 +33,7 @@
 
 ---
 
-### 2. 🛠️ 开发者助理 (DevHelper)
+### 3. 🛠️ 开发者助理 (DevHelper)
 
 专为研发、设计、测试人员打造的高效浏览器侧边栏开发辅助工具箱。
 

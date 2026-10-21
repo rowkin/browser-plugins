@@ -112,7 +112,7 @@
     "description": "大留白提示"
   },
   "qrGeneratorTitle": {
-    "message": "二维码生成器",
+    "message": "二维码快捷配置",
     "description": "面板左侧标题"
   },
   "contextMenuParent": {

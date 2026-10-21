@@ -229,26 +229,26 @@ function injectStyles() {
       
       .copy-btn {
         align-self: flex-end;
-        background: #fff;
-        color: #1a73e8;
-        border: 1px solid #dadce0;
+        background: #e6faf9;
+        color: #008f89;
+        border: 1px solid #00b8b2;
         padding: 6px 16px;
         border-radius: 16px;
         cursor: pointer;
         font-size: 12px;
-        font-weight: 500;
+        font-weight: 600;
         transition: all 0.2s;
       }
       
       .copy-btn:hover {
-        background: #f1f8ff;
-        border-color: #1a73e8;
-        box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        background: #ccfbf1;
+        border-color: #008f89;
+        box-shadow: 0 1px 4px rgba(0, 184, 178, 0.25);
       }
       
       .copy-btn.copied {
-        background: #e6f4ea;
-        color: #137333;
+        background: #e6faf9;
+        color: #0f766e;
         border-color: transparent;
       }
 
@@ -379,15 +379,15 @@ function injectStyles() {
         -webkit-appearance: none;
         width: 20px;
         height: 20px;
-        background: #1a73e8;
+        background: #00b8b2;
         border-radius: 50%;
         cursor: pointer;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        box-shadow: 0 2px 6px rgba(0, 184, 178, 0.4);
         transition: transform 0.1s;
       }
       
       .padding-slider::-webkit-slider-thumb:hover {
-        transform: scale(1.1);
+        transform: scale(1.15);
       }
       
       .padding-preset-buttons {
@@ -409,16 +409,16 @@ function injectStyles() {
       }
       
       .padding-preset-btn:hover {
-        background: #f8f9fa;
-        color: #1a73e8;
-        border-color: #1a73e8;
+        background: #f0fdfa;
+        color: #008f89;
+        border-color: #00b8b2;
       }
       
       .padding-preset-btn.active {
-        background: #e8f0fe;
-        color: #1a73e8;
-        border-color: #1a73e8;
-        font-weight: 500;
+        background: #e6faf9;
+        color: #008f89;
+        border-color: #00b8b2;
+        font-weight: 600;
       }
       
       .reset-container {
@@ -427,21 +427,21 @@ function injectStyles() {
       
       .reset-color-btn {
         width: 100%;
-        padding: 12px;
-        background: #fff;
-        border: 1px solid #dadce0;
+        padding: 11px;
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
         border-radius: 8px;
-        color: #d93025;
-        font-size: 14px;
+        color: #475569;
+        font-size: 13.5px;
         font-weight: 500;
         cursor: pointer;
         transition: all 0.2s;
       }
       
       .reset-color-btn:hover {
-        background: #fce8e6;
-        color: #c5221f;
-        border-color: #d93025;
+        background: #e6faf9;
+        color: #008f89;
+        border-color: #00b8b2;
       }
 
       /* Scrollbar Styling */
@@ -786,17 +786,17 @@ async function getColorSettings() {
         chrome.storage.local.get(['qrColorDark', 'qrColorLight'], (result) => {
           if (chrome.runtime.lastError) {
              console.warn('Storage error:', chrome.runtime.lastError);
-             resolve({ colorDark: '#000000', colorLight: '#ffffff' });
+             resolve({ colorDark: '#00b8b2', colorLight: '#ffffff' });
           } else {
              resolve({
-               colorDark: result.qrColorDark || '#000000',
+               colorDark: result.qrColorDark || '#00b8b2',
                colorLight: result.qrColorLight || '#ffffff'
              });
           }
         });
       } else {
         console.warn('chrome.storage.local not available');
-        resolve({ colorDark: '#000000', colorLight: '#ffffff' });
+        resolve({ colorDark: '#00b8b2', colorLight: '#ffffff' });
       }
     } catch (e) {
       console.warn('Error accessing storage:', e);
@@ -1114,8 +1114,14 @@ function injectQRCodePanel(url) {
     <button class="close-btn">&times;</button>
     <div class="panel-content">
       <div class="left-column">
-        <div class="left-column-header">
-          <h2 class="qr-title">${chrome.i18n.getMessage("qrGeneratorTitle") || "二维码生成器"}</h2>
+        <div class="left-column-header" style="display: flex; align-items: center; justify-content: space-between; padding: 14px 20px 10px;">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <img src="${chrome.runtime.getURL('icons/icon48.png')}" style="width: 22px; height: 22px; border-radius: 5px; display: block;" alt="Logo">
+            <h2 class="qr-title" style="margin: 0; font-size: 15px; font-weight: 600; color: #0f172a;">${chrome.i18n.getMessage("qrGeneratorTitle") || "二维码快捷配置"}</h2>
+          </div>
+          <button id="open-studio-from-panel" style="background: #e6faf9; color: #008f89; border: 1px solid #00b8b2; font-size: 11px; font-weight: 600; border-radius: 12px; padding: 2px 8px; cursor: pointer; display: flex; align-items: center; gap: 3px; transition: all 0.2s;" title="前往独立专业工坊 / QR Studio">
+            <span>🎨</span><span>独立工坊</span>
+          </button>
         </div>
         
         <div class="left-column-content">
@@ -1144,8 +1150,8 @@ function injectQRCodePanel(url) {
               <div class="color-picker-row">
                 <label>${chrome.i18n.getMessage("foregroundColor")}:</label>
                 <div class="color-input-container">
-                  <input type="color" id="color-dark" value="#000000" class="color-input">
-                  <input type="text" id="color-dark-text" value="#000000" class="color-text-input" maxlength="7">
+                  <input type="color" id="color-dark" value="#00b8b2" class="color-input">
+                  <input type="text" id="color-dark-text" value="#00B8B2" class="color-text-input" maxlength="7">
                 </div>
               </div>
               
@@ -1161,23 +1167,23 @@ function injectQRCodePanel(url) {
             <div class="preset-colors">
               <div class="preset-label">${chrome.i18n.getMessage("presetColors")}:</div>
               <div class="preset-buttons">
-                <button class="preset-btn" data-dark="#000000" data-light="#ffffff" title="${chrome.i18n.getMessage("classicBlackWhite")}">
-                  <span class="preset-color-box" style="background: linear-gradient(135deg, #000000 0%, #000000 50%, #ffffff 50%, #ffffff 100%);"></span>
+                <button class="preset-btn" data-dark="#00b8b2" data-light="#ffffff" title="马卡龙青绿 (原生推荐)">
+                  <span class="preset-color-box" style="background: linear-gradient(135deg, #00b8b2 0%, #00b8b2 50%, #ffffff 50%, #ffffff 100%);"></span>
                 </button>
-                <button class="preset-btn" data-dark="#0052d9" data-light="#ffffff" title="${chrome.i18n.getMessage("blueTheme")}">
-                  <span class="preset-color-box" style="background: linear-gradient(135deg, #0052d9 0%, #0052d9 50%, #ffffff 50%, #ffffff 100%);"></span>
+                <button class="preset-btn" data-dark="#0f172a" data-light="#ffffff" title="${chrome.i18n.getMessage("classicBlackWhite")}">
+                  <span class="preset-color-box" style="background: linear-gradient(135deg, #0f172a 0%, #0f172a 50%, #ffffff 50%, #ffffff 100%);"></span>
                 </button>
-                <button class="preset-btn" data-dark="#00a870" data-light="#ffffff" title="${chrome.i18n.getMessage("greenTheme")}">
-                  <span class="preset-color-box" style="background: linear-gradient(135deg, #00a870 0%, #00a870 50%, #ffffff 50%, #ffffff 100%);"></span>
+                <button class="preset-btn" data-dark="#059669" data-light="#ffffff" title="${chrome.i18n.getMessage("greenTheme")}">
+                  <span class="preset-color-box" style="background: linear-gradient(135deg, #059669 0%, #059669 50%, #ffffff 50%, #ffffff 100%);"></span>
                 </button>
-                <button class="preset-btn" data-dark="#d54941" data-light="#ffffff" title="${chrome.i18n.getMessage("redTheme")}">
-                  <span class="preset-color-box" style="background: linear-gradient(135deg, #d54941 0%, #d54941 50%, #ffffff 50%, #ffffff 100%);"></span>
+                <button class="preset-btn" data-dark="#0284c7" data-light="#ffffff" title="${chrome.i18n.getMessage("blueTheme")}">
+                  <span class="preset-color-box" style="background: linear-gradient(135deg, #0284c7 0%, #0284c7 50%, #ffffff 50%, #ffffff 100%);"></span>
                 </button>
-                <button class="preset-btn" data-dark="#8a2be2" data-light="#ffffff" title="${chrome.i18n.getMessage("purpleTheme")}">
-                  <span class="preset-color-box" style="background: linear-gradient(135deg, #8a2be2 0%, #8a2be2 50%, #ffffff 50%, #ffffff 100%);"></span>
+                <button class="preset-btn" data-dark="#ea580c" data-light="#ffffff" title="暖阳落日">
+                  <span class="preset-color-box" style="background: linear-gradient(135deg, #ea580c 0%, #ea580c 50%, #ffffff 50%, #ffffff 100%);"></span>
                 </button>
-                <button class="preset-btn" data-dark="#2c3e50" data-light="#ffffff" title="${chrome.i18n.getMessage("darkGrayTheme") || "深灰主题"}">
-                  <span class="preset-color-box" style="background: linear-gradient(135deg, #2c3e50 0%, #2c3e50 50%, #ffffff 50%, #ffffff 100%);"></span>
+                <button class="preset-btn" data-dark="#0f766e" data-light="#e6faf9" title="薄荷幽兰">
+                  <span class="preset-color-box" style="background: linear-gradient(135deg, #0f766e 0%, #0f766e 50%, #e6faf9 50%, #e6faf9 100%);"></span>
                 </button>
               </div>
             </div>
@@ -1220,6 +1226,15 @@ function injectQRCodePanel(url) {
   
   // 设置关闭事件
   setupCloseHandlers(panel, overlay);
+
+  // 快捷前往独立专业工坊 (QR Studio)
+  const openStudioBtn = panel.querySelector('#open-studio-from-panel');
+  if (openStudioBtn) {
+    openStudioBtn.addEventListener('click', () => {
+      chrome.runtime.sendMessage({ action: 'openStudio', url: url });
+      removeExistingPanel();
+    });
+  }
   
   // 显示URL
   panel.querySelector('#url-display').textContent = url;
@@ -1401,7 +1416,7 @@ async function setupColorCustomizer(panel, url) {
   
   // 重置按钮
   resetBtn.addEventListener('click', () => {
-    const defaultDark = '#000000';
+    const defaultDark = '#00b8b2';
     const defaultLight = '#ffffff';
     colorDarkInput.value = defaultDark;
     colorDarkText.value = defaultDark;

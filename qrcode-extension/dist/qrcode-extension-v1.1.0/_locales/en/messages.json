@@ -112,7 +112,7 @@
     "description": "Tooltip for large padding"
   },
   "qrGeneratorTitle": {
-    "message": "QR Code Generator",
+    "message": "QR Quick Config",
     "description": "Left panel title"
   },
   "contextMenuParent": {

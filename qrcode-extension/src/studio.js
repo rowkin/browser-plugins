@@ -7,7 +7,7 @@
   const I18N = {
     'zh': {
       app_title: 'QR Studio',
-      app_subtitle: '专业二维码工坊 v1.1.0',
+      app_subtitle: '专业二维码工坊 v1.1.1',
       nav_generator: '创意二维码生成',
       nav_camera: '相机扫码识别',
       nav_decoder: '上传图片解析',
@@ -83,7 +83,7 @@
     },
     'en': {
       app_title: 'QR Studio',
-      app_subtitle: 'Professional QR Workshop v1.1.0',
+      app_subtitle: 'Professional QR Workshop v1.1.1',
       nav_generator: 'Create QR Code',
       nav_camera: 'Camera Scanner',
       nav_decoder: 'Image Decoder',

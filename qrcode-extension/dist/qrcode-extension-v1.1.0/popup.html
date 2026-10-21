@@ -10,9 +10,10 @@
       --text: #0f172a;
       --subtext: #64748b;
       --border: #e2e8f0;
-      --primary: #3b82f6;
-      --primary-hover: #2563eb;
-      --primary-light: #eff6ff;
+      /* 经典马卡龙青绿色系 (Mint / Macaron Teal) */
+      --primary: #00b8b2;
+      --primary-hover: #009e99;
+      --primary-light: #e6faf9;
     }
     @media (prefers-color-scheme: dark) {
       :root {
@@ -21,9 +22,9 @@
         --text: #f8fafc;
         --subtext: #94a3b8;
         --border: #334155;
-        --primary: #3b82f6;
-        --primary-hover: #60a5fa;
-        --primary-light: rgba(59, 130, 246, 0.15);
+        --primary: #00c5bc;
+        --primary-hover: #26e6dc;
+        --primary-light: rgba(0, 197, 188, 0.15);
       }
     }
     * {
@@ -62,13 +63,19 @@
       opacity: 0.85;
     }
     .brand-icon {
-      width: 26px;
-      height: 26px;
+      width: 24px;
+      height: 24px;
       display: flex;
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
       transition: transform 0.2s;
+    }
+    .brand-icon img {
+      width: 100%;
+      height: 100%;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0, 184, 178, 0.25);
     }
     .brand:hover .brand-icon {
       transform: scale(1.08);
@@ -128,7 +135,7 @@
       transform: scale(1.15);
     }
     .palette-dot.active {
-      border-color: var(--primary);
+      border-color: var(--text);
       transform: scale(1.2);
     }
 
@@ -219,7 +226,7 @@
       align-items: center;
       justify-content: center;
       gap: 6px;
-      box-shadow: 0 2px 6px rgba(59, 130, 246, 0.3);
+      box-shadow: 0 2px 8px rgba(0, 184, 178, 0.35);
       transition: all 0.2s;
     }
     .btn-primary:hover {
@@ -246,25 +253,7 @@
   <div class="header">
     <div id="brand-logo" class="brand" title="前往官方宣传页 / Official Site">
       <div class="brand-icon">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect width="24" height="24" rx="6" fill="url(#cardBrandGrad)"/>
-          <rect x="4" y="4" width="6" height="6" rx="1.5" stroke="white" stroke-width="1.6"/>
-          <rect x="6" y="6" width="2" height="2" fill="white"/>
-          <rect x="14" y="4" width="6" height="6" rx="1.5" stroke="white" stroke-width="1.6"/>
-          <rect x="16" y="6" width="2" height="2" fill="white"/>
-          <rect x="4" y="14" width="6" height="6" rx="1.5" stroke="white" stroke-width="1.6"/>
-          <rect x="6" y="16" width="2" height="2" fill="white"/>
-          <rect x="14" y="14" width="2.5" height="2.5" rx="0.5" fill="white"/>
-          <rect x="17.5" y="14" width="2.5" height="2.5" rx="0.5" fill="white"/>
-          <rect x="14" y="17.5" width="2.5" height="2.5" rx="0.5" fill="white"/>
-          <rect x="17.5" y="17.5" width="2.5" height="2.5" rx="0.5" fill="white"/>
-          <defs>
-            <linearGradient id="cardBrandGrad" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
-              <stop offset="0%" stop-color="#3b82f6"/>
-              <stop offset="100%" stop-color="#8b5cf6"/>
-            </linearGradient>
-          </defs>
-        </svg>
+        <img src="icons/icon48.png" alt="QR Code Tool">
       </div>
       <span>QR Code Tool</span>
     </div>
@@ -281,13 +270,13 @@
     <div id="qrcode"></div>
   </div>
 
-  <!-- 快捷色彩预设调色点 -->
+  <!-- 快捷色彩预设调色点 (马卡龙青绿首选) -->
   <div class="palette-row" title="快捷切换二维码配色">
-    <div class="palette-dot active" data-color="#000000" style="background: #000000;" title="经典墨黑"></div>
-    <div class="palette-dot" data-color="#2563eb" style="background: #2563eb;" title="商务湛蓝"></div>
+    <div class="palette-dot active" data-color="#00b8b2" style="background: #00b8b2;" title="马卡龙青绿"></div>
+    <div class="palette-dot" data-color="#000000" style="background: #000000;" title="经典墨黑"></div>
+    <div class="palette-dot" data-color="#0284c7" style="background: #0284c7;" title="天青湛蓝"></div>
     <div class="palette-dot" data-color="#059669" style="background: #059669;" title="青翠翡绿"></div>
-    <div class="palette-dot" data-color="#dc2626" style="background: #dc2626;" title="活力正红"></div>
-    <div class="palette-dot" data-color="#7c3aed" style="background: #7c3aed;" title="优雅紫罗兰"></div>
+    <div class="palette-dot" data-color="#f59e0b" style="background: #f59e0b;" title="暖阳亮橙"></div>
   </div>
 
   <div class="url-box-wrapper">

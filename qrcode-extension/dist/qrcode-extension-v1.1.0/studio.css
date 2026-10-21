@@ -1,10 +1,10 @@
 /* ─── QR Studio 现代化设计系统与自适应主题变量 ─── */
 :root {
-  --primary-gradient: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #d946ef 100%);
-  --accent: #6366f1;
-  --accent-hover: #4f46e5;
-  --accent-light: rgba(99, 102, 241, 0.12);
-  --accent-border: rgba(99, 102, 241, 0.3);
+  --primary-gradient: linear-gradient(135deg, #00d2c7 0%, #00b8b2 50%, #008f89 100%);
+  --accent: #00b8b2;
+  --accent-hover: #009e99;
+  --accent-light: rgba(0, 184, 178, 0.12);
+  --accent-border: rgba(0, 184, 178, 0.3);
 
   --bg-app: #f8fafc;
   --bg-sidebar: #ffffff;
@@ -12,12 +12,12 @@
   --sidebar-title: #0f172a;
   --sidebar-text: #475569;
   --sidebar-text-hover: #0f172a;
-  --sidebar-text-active: #4f46e5;
-  --sidebar-hover: #f1f5f9;
-  --sidebar-active-bg: #eef2ff;
-  --sidebar-active-border: #6366f1;
-  --sidebar-badge-bg: #e0e7ff;
-  --sidebar-badge-text: #4338ca;
+  --sidebar-text-active: #008f89;
+  --sidebar-hover: #f0fdfa;
+  --sidebar-active-bg: #e6faf9;
+  --sidebar-active-border: #00b8b2;
+  --sidebar-badge-bg: #ccfbf1;
+  --sidebar-badge-text: #0f766e;
   --sidebar-btn-bg: #f8fafc;
   --sidebar-btn-border: #e2e8f0;
   --sidebar-btn-text: #334155;
@@ -26,7 +26,7 @@
   --bg-panel-sub: #f8fafc;
   --bg-input: #ffffff;
   --border-color: #e2e8f0;
-  --border-focus: #6366f1;
+  --border-focus: #00b8b2;
 
   --text-main: #0f172a;
   --text-muted: #64748b;
@@ -55,10 +55,10 @@ body[data-theme="dark"] {
   --sidebar-text-hover: #ffffff;
   --sidebar-text-active: #ffffff;
   --sidebar-hover: rgba(255, 255, 255, 0.06);
-  --sidebar-active-bg: rgba(99, 102, 241, 0.25);
-  --sidebar-active-border: #818cf8;
-  --sidebar-badge-bg: rgba(99, 102, 241, 0.3);
-  --sidebar-badge-text: #c7d2fe;
+  --sidebar-active-bg: rgba(0, 184, 178, 0.22);
+  --sidebar-active-border: #2dd4bf;
+  --sidebar-badge-bg: rgba(0, 184, 178, 0.25);
+  --sidebar-badge-text: #99f6e4;
   --sidebar-btn-bg: rgba(255, 255, 255, 0.06);
   --sidebar-btn-border: rgba(255, 255, 255, 0.1);
   --sidebar-btn-text: #cbd5e1;
@@ -67,7 +67,7 @@ body[data-theme="dark"] {
   --bg-panel-sub: #1e293b;
   --bg-input: #0f172a;
   --border-color: #334155;
-  --border-focus: #818cf8;
+  --border-focus: #2dd4bf;
 
   --text-main: #f8fafc;
   --text-muted: #94a3b8;
@@ -129,7 +129,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+  box-shadow: 0 4px 12px rgba(0, 184, 178, 0.35);
 }
 
 .brand-logo svg {
@@ -153,8 +153,8 @@ body {
 
 .brand-badge {
   font-size: 10px;
-  color: #6366f1;
-  font-weight: 500;
+  color: var(--accent);
+  font-weight: 600;
 }
 
 /* 导航菜单 */
@@ -610,7 +610,7 @@ body {
   align-items: center;
   justify-content: center;
   gap: 8px;
-  box-shadow: 0 4px 14px rgba(99, 102, 241, 0.35);
+  box-shadow: 0 4px 14px rgba(0, 184, 178, 0.35);
   transition: transform 0.15s, opacity 0.15s;
 }
 
@@ -724,8 +724,8 @@ body {
   position: absolute;
   width: 100%;
   height: 2px;
-  background: linear-gradient(90deg, transparent, #38bdf8, #818cf8, transparent);
-  box-shadow: 0 0 12px #38bdf8;
+  background: linear-gradient(90deg, transparent, #2dd4bf, #00b8b2, transparent);
+  box-shadow: 0 0 12px #00b8b2;
   animation: scanLaser 2.2s infinite ease-in-out;
 }
 

@@ -45,25 +45,7 @@
     <div class="container navbar-inner">
       <a href="#" class="brand" title="返回顶部 / Home">
         <div class="brand-icon">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect width="24" height="24" rx="6" fill="url(#siteBrandGrad)"/>
-            <rect x="4" y="4" width="6" height="6" rx="1.5" stroke="white" stroke-width="1.6"/>
-            <rect x="6" y="6" width="2" height="2" fill="white"/>
-            <rect x="14" y="4" width="6" height="6" rx="1.5" stroke="white" stroke-width="1.6"/>
-            <rect x="16" y="6" width="2" height="2" fill="white"/>
-            <rect x="4" y="14" width="6" height="6" rx="1.5" stroke="white" stroke-width="1.6"/>
-            <rect x="6" y="16" width="2" height="2" fill="white"/>
-            <rect x="14" y="14" width="2.5" height="2.5" rx="0.5" fill="white"/>
-            <rect x="17.5" y="14" width="2.5" height="2.5" rx="0.5" fill="white"/>
-            <rect x="14" y="17.5" width="2.5" height="2.5" rx="0.5" fill="white"/>
-            <rect x="17.5" y="17.5" width="2.5" height="2.5" rx="0.5" fill="white"/>
-            <defs>
-              <linearGradient id="siteBrandGrad" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" stop-color="#3b82f6"/>
-                <stop offset="100%" stop-color="#8b5cf6"/>
-              </linearGradient>
-            </defs>
-          </svg>
+          <img src="icons/icon48.png" style="width: 26px; height: 26px; border-radius: 6px; display: block;" alt="Logo">
         </div>
         <div>
           <span class="brand-title">QR Studio</span>
@@ -149,20 +131,20 @@
               <span data-i18n="labelPreset">预设色彩主题</span>
             </label>
             <div class="theme-pill-group">
-              <button class="theme-pill active" data-theme="classic">
-                <span class="theme-dot" style="background:#0f172a"></span>经典墨黑
+              <button class="theme-pill active" data-theme="macaron">
+                <span class="theme-dot" style="background:#00b8b2"></span>马卡龙青绿
               </button>
-              <button class="theme-pill" data-theme="blue">
-                <span class="theme-dot" style="background:#2563eb"></span>深海湛蓝
+              <button class="theme-pill" data-theme="classic">
+                <span class="theme-dot" style="background:#0f172a"></span>经典墨黑
               </button>
               <button class="theme-pill" data-theme="emerald">
                 <span class="theme-dot" style="background:#059669"></span>青翠翡绿
               </button>
-              <button class="theme-pill" data-theme="sunset">
-                <span class="theme-dot" style="background:linear-gradient(135deg, #f97316, #ec4899)"></span>晚霞渐变
+              <button class="theme-pill" data-theme="blue">
+                <span class="theme-dot" style="background:#0284c7"></span>科技天蓝
               </button>
-              <button class="theme-pill" data-theme="cyber">
-                <span class="theme-dot" style="background:linear-gradient(135deg, #06b6d4, #8b5cf6)"></span>赛博幻影
+              <button class="theme-pill" data-theme="sunset">
+                <span class="theme-dot" style="background:linear-gradient(135deg, #ea580c, #f59e0b)"></span>落日暖阳
               </button>
             </div>
           </div>
@@ -487,16 +469,16 @@
        ======================================================= */
     const siteCanvas = document.getElementById('site-qr-canvas');
     const siteInput = document.getElementById('site-text-input');
-    let currentPreset = 'classic';
+    let currentPreset = 'macaron';
     let currentDot = 'square';
     let currentLogo = 'none';
 
     const colorPresets = {
+      macaron: { fg1: '#00b8b2', fg2: '#008f89', bg: '#ffffff' },
       classic: { fg1: '#0f172a', fg2: '#0f172a', bg: '#ffffff' },
-      blue: { fg1: '#1d4ed8', fg2: '#3b82f6', bg: '#ffffff' },
       emerald: { fg1: '#047857', fg2: '#10b981', bg: '#ffffff' },
-      sunset: { fg1: '#f97316', fg2: '#ec4899', bg: '#ffffff' },
-      cyber: { fg1: '#06b6d4', fg2: '#8b5cf6', bg: '#ffffff' }
+      blue: { fg1: '#0284c7', fg2: '#38bdf8', bg: '#ffffff' },
+      sunset: { fg1: '#ea580c', fg2: '#f59e0b', bg: '#ffffff' }
     };
 
     function renderSiteQR() {

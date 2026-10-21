@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   let currentUrl = '';
   let activeTabId = null;
-  let currentColor = '#000000';
+  let currentColor = '#00b8b2';
   let qrCodeInstance = null;
 
   function isRestrictedUrl(url) {

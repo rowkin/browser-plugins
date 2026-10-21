@@ -20,12 +20,9 @@
   <script>
     // 立即执行以避免主题与语言初始化闪烁
     (function() {
-      // 1. 初始化主题
+      // 1. 初始化主题：强制默认浅色模式（不再跟随系统自动切为深色）
       const savedTheme = localStorage.getItem('qr-site-theme');
-      let theme = savedTheme;
-      if (!theme) {
-        theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-      }
+      const theme = savedTheme === 'dark' ? 'dark' : 'light';
       document.documentElement.setAttribute('data-theme', theme);
 
       // 2. 初始化语言
@@ -44,8 +41,27 @@
   <header class="navbar">
     <div class="container navbar-inner">
       <a href="#" class="brand" title="返回顶部 / Home">
-        <div class="brand-icon">
-          <img src="icons/icon48.png" style="width: 26px; height: 26px; border-radius: 6px; display: block;" alt="Logo">
+        <div class="brand-icon" style="background: transparent; box-shadow: none;">
+          <svg width="34" height="34" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg" style="border-radius: 8px; display: block; box-shadow: 0 4px 12px rgba(0, 184, 178, 0.25);">
+            <rect width="128" height="128" rx="28" fill="url(#brandLogoGrad)"/>
+            <rect x="22" y="22" width="32" height="32" rx="7" stroke="white" stroke-width="8" fill="none"/>
+            <rect x="33" y="33" width="10" height="10" rx="2.5" fill="white"/>
+            <rect x="74" y="22" width="32" height="32" rx="7" stroke="white" stroke-width="8" fill="none"/>
+            <rect x="85" y="33" width="10" height="10" rx="2.5" fill="white"/>
+            <rect x="22" y="74" width="32" height="32" rx="7" stroke="white" stroke-width="8" fill="none"/>
+            <rect x="33" y="85" width="10" height="10" rx="2.5" fill="white"/>
+            <rect x="74" y="74" width="12" height="12" rx="2.5" fill="white"/>
+            <rect x="94" y="74" width="12" height="12" rx="2.5" fill="white"/>
+            <rect x="74" y="94" width="12" height="12" rx="2.5" fill="white"/>
+            <rect x="94" y="94" width="12" height="12" rx="2.5" fill="white"/>
+            <defs>
+              <linearGradient id="brandLogoGrad" x1="0" y1="0" x2="128" y2="128" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#00d2c7"/>
+                <stop offset="50%" stop-color="#00b8b2"/>
+                <stop offset="100%" stop-color="#009e99"/>
+              </linearGradient>
+            </defs>
+          </svg>
         </div>
         <div>
           <span class="brand-title">QR Studio</span>

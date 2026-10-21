@@ -46,6 +46,19 @@
 
 ---
 
+
+### 4. 🔳 二维码生成与扫描工坊 (QR Code Studio)
+
+一站式美学级二维码创作、渐变美化定制、无损矢量导出与高灵敏度摄像头/图片识别工坊。
+
+*   **官方演示官网**：[https://qrcode.rowkin.xyz](https://qrcode.rowkin.xyz)
+*   **最新安装包下载**：
+    *   [最新正式版 (qrcode-extension-latest.zip)](./qrcode-extension/qrcode-extension-latest.zip)
+    *   [版本归档目录](./qrcode-extension/)
+*   **安装步骤**：下载 `.zip` 压缩包解压后，在 Chrome 浏览器访问 `chrome://extensions/` 并开启右上角“开发者模式”，选择“加载已解压的扩展程序”选择解压出来的目录即可。
+
+---
+
 ## 💬 社区交流与反馈
 
 如果您在体验过程中遇到了任何 Bug，或者有新的功能提案，请直接在本仓库的 [Issues](https://github.com/rowkin/browser-plugins/issues) 页面进行反馈，我们将第一时间予以诊断和解答。

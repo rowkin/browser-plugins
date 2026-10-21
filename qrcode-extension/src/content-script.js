@@ -1116,7 +1116,19 @@ function injectQRCodePanel(url) {
       <div class="left-column">
         <div class="left-column-header" style="display: flex; align-items: center; justify-content: space-between; padding: 14px 20px 10px;">
           <div style="display: flex; align-items: center; gap: 8px;">
-            <img src="${chrome.runtime.getURL('icons/icon48.png')}" style="width: 22px; height: 22px; border-radius: 5px; display: block;" alt="Logo">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="border-radius: 5px; flex-shrink: 0; display: block;">
+              <rect width="24" height="24" rx="5" fill="#00B8B2"/>
+              <rect x="4" y="4" width="6" height="6" rx="1.2" stroke="white" stroke-width="1.6" fill="none"/>
+              <rect x="6.2" y="6.2" width="1.6" height="1.6" fill="white"/>
+              <rect x="14" y="4" width="6" height="6" rx="1.2" stroke="white" stroke-width="1.6" fill="none"/>
+              <rect x="16.2" y="6.2" width="1.6" height="1.6" fill="white"/>
+              <rect x="4" y="14" width="6" height="6" rx="1.2" stroke="white" stroke-width="1.6" fill="none"/>
+              <rect x="6.2" y="16.2" width="1.6" height="1.6" fill="white"/>
+              <rect x="14" y="14" width="2.2" height="2.2" rx="0.4" fill="white"/>
+              <rect x="17.8" y="14" width="2.2" height="2.2" rx="0.4" fill="white"/>
+              <rect x="14" y="17.8" width="2.2" height="2.2" rx="0.4" fill="white"/>
+              <rect x="17.8" y="17.8" width="2.2" height="2.2" rx="0.4" fill="white"/>
+            </svg>
             <h2 class="qr-title" style="margin: 0; font-size: 15px; font-weight: 600; color: #0f172a;">${chrome.i18n.getMessage("qrGeneratorTitle") || "二维码快捷配置"}</h2>
           </div>
           <button id="open-studio-from-panel" style="background: #e6faf9; color: #008f89; border: 1px solid #00b8b2; font-size: 11px; font-weight: 600; border-radius: 12px; padding: 2px 8px; cursor: pointer; display: flex; align-items: center; gap: 3px; transition: all 0.2s;" title="前往独立专业工坊 / QR Studio">

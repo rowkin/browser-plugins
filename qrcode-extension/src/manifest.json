@@ -37,6 +37,7 @@
   "web_accessible_resources": [
     {
       "resources": [
+        "icons/*",
         "qrcode.min.js",
         "jsQR.min.js",
         "studio.html",

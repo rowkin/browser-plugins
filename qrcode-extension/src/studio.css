@@ -7,14 +7,23 @@
   --accent-border: rgba(99, 102, 241, 0.3);
 
   --bg-app: #f8fafc;
-  --bg-sidebar: #0f172a;
-  --sidebar-text: #94a3b8;
-  --sidebar-text-active: #ffffff;
-  --sidebar-hover: rgba(255, 255, 255, 0.08);
-  --sidebar-active-bg: rgba(99, 102, 241, 0.25);
+  --bg-sidebar: #ffffff;
+  --sidebar-border: #e2e8f0;
+  --sidebar-title: #0f172a;
+  --sidebar-text: #475569;
+  --sidebar-text-hover: #0f172a;
+  --sidebar-text-active: #4f46e5;
+  --sidebar-hover: #f1f5f9;
+  --sidebar-active-bg: #eef2ff;
+  --sidebar-active-border: #6366f1;
+  --sidebar-badge-bg: #e0e7ff;
+  --sidebar-badge-text: #4338ca;
+  --sidebar-btn-bg: #f8fafc;
+  --sidebar-btn-border: #e2e8f0;
+  --sidebar-btn-text: #334155;
 
   --bg-panel: #ffffff;
-  --bg-panel-sub: #f1f5f9;
+  --bg-panel-sub: #f8fafc;
   --bg-input: #ffffff;
   --border-color: #e2e8f0;
   --border-focus: #6366f1;
@@ -24,8 +33,8 @@
   --text-inverse: #ffffff;
 
   --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -1px rgba(0, 0, 0, 0.04);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 10px 10px -5px rgba(0, 0, 0, 0.03);
 
   --radius-sm: 6px;
   --radius-md: 10px;
@@ -39,11 +48,20 @@
 html[data-theme="dark"],
 body[data-theme="dark"] {
   --bg-app: #090d16;
-  --bg-sidebar: #060911;
+  --bg-sidebar: #0d121f;
+  --sidebar-border: rgba(255, 255, 255, 0.08);
+  --sidebar-title: #ffffff;
   --sidebar-text: #94a3b8;
-  --sidebar-text-active: #38bdf8;
+  --sidebar-text-hover: #ffffff;
+  --sidebar-text-active: #ffffff;
   --sidebar-hover: rgba(255, 255, 255, 0.06);
-  --sidebar-active-bg: rgba(99, 102, 241, 0.3);
+  --sidebar-active-bg: rgba(99, 102, 241, 0.25);
+  --sidebar-active-border: #818cf8;
+  --sidebar-badge-bg: rgba(99, 102, 241, 0.3);
+  --sidebar-badge-text: #c7d2fe;
+  --sidebar-btn-bg: rgba(255, 255, 255, 0.06);
+  --sidebar-btn-border: rgba(255, 255, 255, 0.1);
+  --sidebar-btn-text: #cbd5e1;
 
   --bg-panel: #111827;
   --bg-panel-sub: #1e293b;
@@ -84,14 +102,14 @@ body {
   overflow: hidden;
 }
 
-/* 左侧深色侧边栏 */
+/* 左侧自适应侧边栏 */
 .studio-sidebar {
   width: 250px;
   background-color: var(--bg-sidebar);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  border-right: 1px solid var(--sidebar-border);
   flex-shrink: 0;
   z-index: 20;
 }
@@ -128,14 +146,14 @@ body {
 .brand-title h1 {
   font-size: 15px;
   font-weight: 700;
-  color: #ffffff;
+  color: var(--sidebar-title);
   letter-spacing: -0.3px;
   margin: 0;
 }
 
 .brand-badge {
   font-size: 10px;
-  color: #a5b4fc;
+  color: #6366f1;
   font-weight: 500;
 }
 
@@ -166,13 +184,13 @@ body {
 
 .nav-item:hover {
   background-color: var(--sidebar-hover);
-  color: #ffffff;
+  color: var(--sidebar-text-hover);
 }
 
 .nav-item.active {
   background: var(--sidebar-active-bg);
-  color: #ffffff;
-  border-left: 3px solid #818cf8;
+  color: var(--sidebar-text-active);
+  border-left: 3px solid var(--sidebar-active-border);
 }
 
 .nav-item .nav-icon {
@@ -187,14 +205,14 @@ body {
   font-size: 10px;
   padding: 2px 7px;
   border-radius: var(--radius-full);
-  background: rgba(99, 102, 241, 0.3);
-  color: #c7d2fe;
+  background: var(--sidebar-badge-bg);
+  color: var(--sidebar-badge-text);
 }
 
 /* 侧边栏底部操作区 */
 .sidebar-footer {
   padding: 16px 18px;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-top: 1px solid var(--sidebar-border);
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -207,22 +225,22 @@ body {
 }
 
 .theme-toggle-btn, .lang-toggle-btn {
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: var(--sidebar-text);
-  padding: 6px 10px;
+  background: var(--sidebar-btn-bg);
+  border: 1px solid var(--sidebar-btn-border);
+  color: var(--sidebar-btn-text);
+  padding: 7px 12px;
   border-radius: var(--radius-sm);
   font-size: 12px;
+  font-weight: 500;
   display: flex;
   align-items: center;
   gap: 6px;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.15s ease;
 }
 
 .theme-toggle-btn:hover, .lang-toggle-btn:hover {
-  background: rgba(255, 255, 255, 0.12);
-  color: #ffffff;
+  border-color: var(--accent);
 }
 
 /* ─── 主体内容区 ─── */

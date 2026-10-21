@@ -4,11 +4,15 @@ document.addEventListener('DOMContentLoaded', function() {
   const restrictedNotice = document.getElementById('restricted-notice');
   const btnOpenStudio = document.getElementById('btn-open-studio');
   const btnOpenOptions = document.getElementById('btn-open-options');
+  const btnTriggerInpage = document.getElementById('btn-trigger-inpage');
   const btnCopyUrl = document.getElementById('btn-copy-url');
   const btnDownload = document.getElementById('btn-download');
   const brandLogo = document.getElementById('brand-logo');
+  const paletteDots = document.querySelectorAll('.palette-dot');
 
   let currentUrl = '';
+  let activeTabId = null;
+  let currentColor = '#000000';
   let qrCodeInstance = null;
 
   function isRestrictedUrl(url) {
@@ -38,15 +42,15 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
-  // 渲染本地 QR 码
-  function renderLocalQR(text) {
+  // 渲染本地 QR 码 (支持快捷主题色)
+  function renderLocalQR(text, color = currentColor) {
     qrContainer.innerHTML = '';
     try {
       qrCodeInstance = new QRCode(qrContainer, {
         text: text,
-        width: 156,
-        height: 156,
-        colorDark: "#000000",
+        width: 152,
+        height: 152,
+        colorDark: color,
         colorLight: "#ffffff",
         correctLevel: QRCode.CorrectLevel.H
       });
@@ -55,37 +59,63 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
 
-  // 获取当前活跃 Tab
+  // 快捷主题调色点点击联动
+  paletteDots.forEach(dot => {
+    dot.addEventListener('click', () => {
+      paletteDots.forEach(d => d.classList.remove('active'));
+      dot.classList.add('active');
+      currentColor = dot.getAttribute('data-color') || '#000000';
+      if (currentUrl) {
+        renderLocalQR(currentUrl, currentColor);
+      }
+    });
+  });
+
+  // 获取当前活跃 Tab 并初始化
   chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
     const activeTab = tabs && tabs[0];
     if (!activeTab) {
       currentUrl = 'https://github.com';
     } else {
       currentUrl = activeTab.url || '';
+      activeTabId = activeTab.id;
     }
 
     urlDisplay.textContent = currentUrl || '未知网址';
 
     if (isRestrictedUrl(currentUrl)) {
       if (restrictedNotice) restrictedNotice.style.display = 'block';
+      if (btnTriggerInpage) {
+        btnTriggerInpage.disabled = true;
+        btnTriggerInpage.style.opacity = '0.5';
+        btnTriggerInpage.style.cursor = 'not-allowed';
+        btnTriggerInpage.title = '受保护页面不支持注入页面悬浮窗';
+      }
       renderLocalQR(currentUrl || 'https://github.com');
     } else {
+      // 默认仅在卡片内安静呈现二维码，绝不再自动向宿主页面注入居中悬浮窗
       renderLocalQR(currentUrl);
-
-      // 非受限页面尝试唤起原有的页面内悬浮弹窗
-      chrome.runtime.sendMessage({
-        action: 'showQRCode',
-        tabId: activeTab.id,
-        url: currentUrl
-      }, (response) => {
-        if (chrome.runtime.lastError) {
-          console.warn('In-page prompt failed:', chrome.runtime.lastError);
-        }
-      });
     }
   });
 
-  // 打开 Studio 工作台
+  // 主动触发呼出【页面内悬浮窗】
+  if (btnTriggerInpage) {
+    btnTriggerInpage.addEventListener('click', () => {
+      if (!activeTabId || isRestrictedUrl(currentUrl)) {
+        alert('当前页面受系统保护，无法注入页面内悬浮窗，请直接使用【独立配置页】。');
+        return;
+      }
+      chrome.runtime.sendMessage({
+        action: 'showQRCode',
+        tabId: activeTabId,
+        url: currentUrl
+      }, (response) => {
+        window.close();
+      });
+    });
+  }
+
+  // 打开 Studio 独立配置页
   btnOpenStudio.addEventListener('click', () => openStudio(currentUrl));
   btnOpenOptions.addEventListener('click', () => openStudio(currentUrl));
 

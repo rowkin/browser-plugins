@@ -33,7 +33,7 @@
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     }
     body {
-      width: 330px;
+      width: 340px;
       background: var(--bg);
       color: var(--text);
       padding: 16px;
@@ -97,9 +97,9 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      margin: 0 auto 12px;
-      width: 180px;
-      height: 180px;
+      margin: 0 auto 10px;
+      width: 176px;
+      height: 176px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.06);
     }
     .qr-container canvas, .qr-container img {
@@ -107,6 +107,31 @@
       height: auto;
       display: block;
     }
+    /* 快捷调色小圆点 */
+    .palette-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .palette-dot {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: all 0.2s;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+    }
+    .palette-dot:hover {
+      transform: scale(1.15);
+    }
+    .palette-dot.active {
+      border-color: var(--primary);
+      transform: scale(1.2);
+    }
+
     .url-box-wrapper {
       position: relative;
       margin-bottom: 12px;
@@ -119,15 +144,14 @@
       padding: 8px 10px;
       border-radius: 6px;
       border: 1px solid var(--border);
-      max-height: 76px;
+      max-height: 68px;
       overflow-y: auto;
       overflow-x: hidden;
       line-height: 1.5;
       user-select: text;
     }
-    /* 自定义可滚动提示滚动条 */
     .url-box::-webkit-scrollbar {
-      width: 5px;
+      width: 4px;
     }
     .url-box::-webkit-scrollbar-track {
       background: transparent;
@@ -136,14 +160,12 @@
       background: var(--border);
       border-radius: 4px;
     }
-    .url-box::-webkit-scrollbar-thumb:hover {
-      background: var(--subtext);
-    }
-    .action-row {
+
+    .action-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 8px;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
     }
     .btn-sm {
       padding: 8px;
@@ -163,6 +185,25 @@
     .btn-sm:hover {
       border-color: var(--primary);
       color: var(--primary);
+    }
+    .btn-secondary {
+      padding: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      border-radius: 6px;
+      border: 1px solid var(--primary);
+      background: var(--primary-light);
+      color: var(--primary);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      transition: all 0.2s;
+    }
+    .btn-secondary:hover {
+      background: var(--primary);
+      color: #ffffff;
     }
     .btn-primary {
       width: 100%;
@@ -189,11 +230,11 @@
       display: none;
       background: var(--card-bg);
       border: 1px dashed var(--border);
-      padding: 10px 12px;
-      border-radius: 8px;
+      padding: 8px 10px;
+      border-radius: 6px;
       font-size: 11px;
       text-align: center;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
       color: var(--subtext);
       line-height: 1.4;
     }
@@ -227,30 +268,44 @@
       </div>
       <span>QR Code Tool</span>
     </div>
-    <button id="btn-open-options" class="btn-link" title="打开高级配置页">
+    <button id="btn-open-options" class="btn-link" title="打开高级配置工作台">
       ⚙️ 配置页
     </button>
   </div>
 
   <div id="restricted-notice" class="notice-box">
-    当前处于浏览器受保护页面，已为您就绪全功能工作台。
+    当前处于系统保护页面，可使用独立工作台进行深度定制。
   </div>
 
   <div id="qr-wrapper" class="qr-container">
     <div id="qrcode"></div>
   </div>
 
-  <div class="url-box-wrapper">
-    <div id="url-display" class="url-box" title="可上下滚动查看完整内容">正在获取当前页面网址...</div>
+  <!-- 快捷色彩预设调色点 -->
+  <div class="palette-row" title="快捷切换二维码配色">
+    <div class="palette-dot active" data-color="#000000" style="background: #000000;" title="经典墨黑"></div>
+    <div class="palette-dot" data-color="#2563eb" style="background: #2563eb;" title="商务湛蓝"></div>
+    <div class="palette-dot" data-color="#059669" style="background: #059669;" title="青翠翡绿"></div>
+    <div class="palette-dot" data-color="#dc2626" style="background: #dc2626;" title="活力正红"></div>
+    <div class="palette-dot" data-color="#7c3aed" style="background: #7c3aed;" title="优雅紫罗兰"></div>
   </div>
 
-  <div class="action-row">
+  <div class="url-box-wrapper">
+    <div id="url-display" class="url-box" title="可上下滑动查看完整链接">正在获取当前页面网址...</div>
+  </div>
+
+  <div class="action-grid">
     <button id="btn-copy-url" class="btn-sm">📋 复制链接</button>
     <button id="btn-download" class="btn-sm">📥 保存图片</button>
   </div>
 
-  <button id="btn-open-studio" class="btn-primary">
-    🚀 打开高阶定制工作台 (Studio)
-  </button>
+  <div class="action-grid">
+    <button id="btn-trigger-inpage" class="btn-secondary" title="在当前网页中间呼出快捷设置悬浮窗">
+      🪟 页面内悬浮窗
+    </button>
+    <button id="btn-open-studio" class="btn-primary" title="在新标签页打开全屏设计工作台">
+      🚀 独立配置页
+    </button>
+  </div>
 </body>
 </html>

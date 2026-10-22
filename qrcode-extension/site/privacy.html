@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Privacy Policy - QR Code Generator & Studio</title>
+  <link rel="icon" type="image/png" href="./favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./style.css">
+  <style>
+    .privacy-container {
+      max-width: 860px;
+      margin: 40px auto 80px;
+      padding: 0 24px;
+    }
+    .privacy-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      padding: 48px;
+      box-shadow: var(--shadow-lg);
+    }
+    .privacy-header {
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 24px;
+      margin-bottom: 32px;
+    }
+    .privacy-header h1 {
+      font-family: var(--font-display);
+      font-size: 32px;
+      color: var(--text-main);
+      margin-bottom: 12px;
+    }
+    .privacy-meta {
+      font-size: 13px;
+      color: var(--text-muted);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .privacy-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(0, 184, 178, 0.12);
+      color: var(--primary);
+      font-weight: 600;
+      font-size: 12px;
+    }
+    .privacy-section {
+      margin-bottom: 32px;
+    }
+    .privacy-section h2 {
+      font-size: 20px;
+      color: var(--text-main);
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .privacy-section p {
+      color: var(--text-muted);
+      font-size: 15px;
+      line-height: 1.7;
+      margin-bottom: 12px;
+    }
+    .privacy-section ul {
+      margin: 12px 0 16px 20px;
+      color: var(--text-muted);
+      font-size: 15px;
+      line-height: 1.7;
+    }
+    .privacy-section li {
+      margin-bottom: 8px;
+    }
+    .privacy-section strong {
+      color: var(--text-main);
+    }
+    .callout-box {
+      background: var(--bg-card-subtle);
+      border-left: 4px solid var(--primary);
+      padding: 16px 20px;
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      margin: 20px 0;
+    }
+    .callout-box p {
+      margin: 0;
+      font-size: 14px;
+      color: var(--text-main);
+    }
+    .table-permissions {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+      font-size: 14px;
+    }
+    .table-permissions th, .table-permissions td {
+      border: 1px solid var(--border);
+      padding: 12px 14px;
+      text-align: left;
+    }
+    .table-permissions th {
+      background: var(--bg-card-subtle);
+      color: var(--text-main);
+      font-weight: 600;
+    }
+    .table-permissions td {
+      color: var(--text-muted);
+    }
+    .table-permissions code {
+      background: rgba(0, 184, 178, 0.1);
+      color: var(--primary);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: monospace;
+      font-size: 13px;
+    }
+    .lang-switcher-btn {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      padding: 6px 14px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      color: var(--text-main);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+    .lang-switcher-btn:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+    @media (max-width: 640px) {
+      .privacy-card {
+        padding: 24px 20px;
+      }
+      .privacy-header h1 {
+        font-size: 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- 顶部导航栏 -->
+  <header class="header">
+    <div class="container header-inner">
+      <a href="./index.html" class="brand-link">
+        <div class="logo-box">
+          <svg viewBox="0 0 24 24" class="logo-icon">
+            <path d="M3 3h8v8H3V3zm2 2v4h4V5H5zm8-2h8v8h-8V3zm2 2v4h4V5h-4zM3 13h8v8H3v-8zm2 2v4h4v-4H5zm13-2h3v2h-3v-2zm-3 2h2v3h-2v-3zm3 3h3v3h-3v-3zm-5 1h2v2h-2v-2zm3-3h2v2h-2v-2z" fill="currentColor"/>
+          </svg>
+        </div>
+        <div>
+          <span class="brand-title">QR Code Generator</span>
+          <span class="brand-badge">Official</span>
+        </div>
+      </a>
+
+      <div class="header-actions">
+        <a href="./index.html" class="nav-link">← Back to Home / 返回官网</a>
+        <button id="langToggleBtn" class="lang-switcher-btn">
+          <span>🌐</span><span id="langText">中文 / English</span>
+        </button>
+        <button id="themeToggleBtn" class="theme-toggle-btn" aria-label="Toggle Theme">
+          <span class="theme-icon light-icon">☀️</span>
+          <span class="theme-icon dark-icon">🌙</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- 隐私政策正文容器 -->
+  <main class="privacy-container">
+    <article class="privacy-card">
+      <header class="privacy-header">
+        <div class="privacy-badge">🔒 Privacy Guaranteed · 100% Offline</div>
+        <h1 id="pageTitle">Privacy Policy</h1>
+        <div class="privacy-meta">
+          <span><strong>Effective Date:</strong> October 22, 2026</span>
+          <span><strong>Product:</strong> QR Code Generator (Chrome Extension & Web Studio)</span>
+          <span><strong>Developer:</strong> 79team / rowkin</span>
+        </div>
+      </header>
+
+      <!-- 英文内容区 -->
+      <div id="contentEn">
+        <div class="callout-box">
+          <p><strong>Core Promise:</strong> We respect your privacy. This extension runs <strong>100% locally in your browser</strong>. We do <strong>NOT</strong> collect, transmit, sell, or store any personal information, browsing history, or user data on external servers.</p>
+        </div>
+
+        <section class="privacy-section">
+          <h2>1. Introduction</h2>
+          <p>This Privacy Policy describes how the <strong>QR Code Generator</strong> browser extension and associated web tool handle your data. We believe privacy is a fundamental human right. Our software is deliberately engineered to perform all barcode and QR code generation, styling, and scanning tasks on your device without communicating with any external servers.</p>
+        </section>
+
+        <section class="privacy-section">
+          <h2>2. Data We Do NOT Collect</h2>
+          <p>We do not collect, process, track, or share any of the following:</p>
+          <ul>
+            <li><strong>Personal Identity Information (PII):</strong> We do not ask for or collect names, email addresses, IP addresses, or contact information.</li>
+            <li><strong>Browsing Activity:</strong> We do not log, monitor, or track websites you visit, URLs you browse, or tabs you open.</li>
+            <li><strong>QR Code Content:</strong> The text, URLs, contact cards (vCards), WiFi passwords, or images you generate or scan are processed strictly inside your browser's memory and are never uploaded.</li>
+            <li><strong>Analytics & Telemetry:</strong> We do not include third-party tracking scripts, analytics SDKs (e.g., Google Analytics), or behavioral telemetry.</li>
+          </ul>
+        </section>
+
+        <section class="privacy-section">
+          <h2>3. Permissions Used and Why</h2>
+          <p>The extension requests minimal Chrome permissions necessary to deliver its core features. Here is the comprehensive breakdown:</p>
+          
+          <table class="table-permissions">
+            <thead>
+              <tr>
+                <th>Permission</th>
+                <th>Purpose & Justification</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>contextMenus</code></td>
+                <td>Allows you to right-click on text, links, images, or the page itself to quickly generate or scan a QR code via convenient menu items.</td>
+              </tr>
+              <tr>
+                <td><code>activeTab</code></td>
+                <td>Only accessed when you explicitly click the extension action button or context menu to obtain the active tab's URL so you can generate its QR code without manual typing.</td>
+              </tr>
+              <tr>
+                <td><code>scripting</code></td>
+                <td>Used strictly to inject the lightweight in-page quick configuration popup when triggered by the user.</td>
+              </tr>
+              <tr>
+                <td><code>storage</code></td>
+                <td>Used only to save your aesthetic preferences (such as selected color scheme, padding settings) and local generation/scan history (up to 50 items) in <code>chrome.storage.local</code> on your device. Never synced to cloud.</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="privacy-section">
+          <h2>4. Camera & Image Recognition Privacy</h2>
+          <p>When using the camera scan or image decode features:</p>
+          <ul>
+            <li><strong>Camera Stream:</strong> Video frames are analyzed in real time using local WebRTC and the JavaScript library <code>jsQR</code>. No camera frames or video recordings are saved or transmitted to any server.</li>
+            <li><strong>Image Decoding:</strong> Dragging, dropping, or pasting images into the decoder processes the image pixels locally using HTML5 Canvas. The original image remains on your machine.</li>
+          </ul>
+        </section>
+
+        <section class="privacy-section">
+          <h2>5. Third-Party Sharing & Disclosure</h2>
+          <p>Because we do not collect any user data, we do not sell, rent, trade, or transfer any information to third parties. There are no advertising networks or data monetization brokers involved in our extension.</p>
+        </section>
+
+        <section class="privacy-section">
+          <h2>6. Children's Privacy (COPPA Compliance)</h2>
+          <p>Our extension does not address anyone under the age of 13. We do not knowingly collect personal identifiable information from children under 13. If you are a parent or guardian and believe your child has provided us with personal information, please rest assured no personal data is collected or stored.</p>
+        </section>
+
+        <section class="privacy-section">
+          <h2>7. Updates to This Policy</h2>
+          <p>We may update this Privacy Policy from time to time to reflect improvements or legal compliance. Any changes will be published directly on this page with an updated "Effective Date".</p>
+        </section>
+
+        <section class="privacy-section">
+          <h2>8. Contact Us</h2>
+          <p>If you have any questions or concerns regarding this Privacy Policy or the security of our extension, please contact us:</p>
+          <ul>
+            <li><strong>Official Website:</strong> <a href="https://qrcode.rowkin.xyz" target="_blank" style="color: var(--primary);">https://qrcode.rowkin.xyz</a></li>
+            <li><strong>GitHub Repository:</strong> <a href="https://github.com/rowkin/browser-plugins" target="_blank" style="color: var(--primary);">https://github.com/rowkin/browser-plugins</a></li>
+            <li><strong>Privacy Inquiries:</strong> Contact developer via GitHub Issues or support portal.</li>
+          </ul>
+        </section>
+      </div>
+
+      <!-- 中文内容区 (默认隐藏，可通过切换按钮显示) -->
+      <div id="contentZh" style="display: none;">
+        <div class="callout-box">
+          <p><strong>核心承诺：</strong>我们深知隐私对于您的重要性。本扩展程序<strong>100% 在您的本地浏览器中离线运行</strong>。我们<strong>绝不</strong>收集、上传、传输、出售或存储您的任何个人信息、浏览历史或输入内容到外部服务器。</p>
+        </div>
+
+        <section class="privacy-section">
+          <h2>1. 概述与核心原则</h2>
+          <p>本隐私政策说明了 <strong>QR Code Generator（专业二维码生成器与工坊）</strong> 浏览器扩展程序及相关网页工作台如何处理您的信息。我们坚信隐私是用户的基本权利。本工具的设计理念为“零云端依赖”：所有的二维码生成、样式渲染、图像识别与相机扫码均完全在您的本地设备内存中运算完成，无需且绝不与任何远程服务器交换业务数据。</p>
+        </section>
+
+        <section class="privacy-section">
+          <h2>2. 我们明确不收集的数据</h2>
+          <p>我们绝不收集、追踪或共享以下任何数据：</p>
+          <ul>
+            <li><strong>个人身份信息 (PII)：</strong>绝不索取或收集姓名、邮箱、手机号、IP 地址或联系方式。</li>
+            <li><strong>网络浏览轨迹：</strong>绝不记录、监控或追踪您访问的任何网页、浏览历史或开启的标签页。</li>
+            <li><strong>二维码内容明细：</strong>您生成或扫描的任何网址、文本、WiFi 密码、名片信息或图片，均仅在客户端浏览器内存中瞬时计算，绝不上报。</li>
+            <li><strong>数据统计与遥测追踪：</strong>绝无嵌入任何第三方追踪脚本、广告 SDK 或行为分析工具（如 Google Analytics）。</li>
+          </ul>
+        </section>
+
+        <section class="privacy-section">
+          <h2>3. 浏览器权限使用目的说明</h2>
+          <p>本扩展仅申请实现核心功能所必需的最小化 Chrome 权限：</p>
+          
+          <table class="table-permissions">
+            <thead>
+              <tr>
+                <th>权限名称</th>
+                <th>使用目的与技术合规解释</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>contextMenus</code></td>
+                <td>允许在网页右键菜单中添加“为当前选中文本/链接/图片生成或识别二维码”快捷选项，方便用户一键呼出功能。</td>
+              </tr>
+              <tr>
+                <td><code>activeTab</code></td>
+                <td>仅在用户主动点击扩展图标或右键菜单时临时获取当前标签页的 URL，用于免去手动复制粘贴、即时生成当前页面的二维码。</td>
+              </tr>
+              <tr>
+                <td><code>scripting</code></td>
+                <td>仅在用户主动触发时，向当前页面安全注入悬浮快捷配置面板，提升操作交互便利度。</td>
+              </tr>
+              <tr>
+                <td><code>storage</code></td>
+                <td>仅用于在用户设备本地 <code>chrome.storage.local</code> 中保存个性化偏好（如前景色、背景色、留白边距）及最近的本地历史记录（最多50条），纯本地存储，绝不同步至外部云端。</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="privacy-section">
+          <h2>4. 相机与图片解码隐私保护</h2>
+          <p>当您使用摄像头扫码或拖拽解析图片时：</p>
+          <ul>
+            <li><strong>摄像头实时流：</strong>视频流仅在浏览器本地由纯 JavaScript 算法库 <code>jsQR</code> 逐帧分析，绝不对视频进行录制或上传至任何服务器。</li>
+            <li><strong>图片解析：</strong>粘贴或拖拽的图片通过 HTML5 Canvas 在本地像素级解析，原始图片始终保存在您的个人计算机中。</li>
+          </ul>
+        </section>
+
+        <section class="privacy-section">
+          <h2>5. 第三方数据共享声明</h2>
+          <p>由于我们不收集任何用户数据，我们绝不会向任何第三方机构、广告商或数据中介出售、出租、交换或透露任何用户数据。软件完全免费且不包含任何商业广告。</p>
+        </section>
+
+        <section class="privacy-section">
+          <h2>6. 儿童隐私保护</h2>
+          <p>本产品不针对 13 岁以下儿童，亦绝不故意收集任何未成年人的个人数据。</p>
+        </section>
+
+        <section class="privacy-section">
+          <h2>7. 政策修订</h2>
+          <p>如因功能迭代或法规合规要求更新本隐私政策，我们将直接在此页面公布最新版本并更新生效日期。</p>
+        </section>
+
+        <section class="privacy-section">
+          <h2>8. 联系方式</h2>
+          <p>若您对本隐私政策或扩展程序的安全性有任何疑问，请随时通过以下方式与我们取得联系：</p>
+          <ul>
+            <li><strong>官方网站：</strong><a href="https://qrcode.rowkin.xyz" target="_blank" style="color: var(--primary);">https://qrcode.rowkin.xyz</a></li>
+            <li><strong>开源代码仓库：</strong><a href="https://github.com/rowkin/browser-plugins" target="_blank" style="color: var(--primary);">https://github.com/rowkin/browser-plugins</a></li>
+            <li><strong>反馈支持：</strong>可通过 GitHub Issues 提交您的意见与反馈。</li>
+          </ul>
+        </section>
+      </div>
+    </article>
+  </main>
+
+  <!-- 底部版权 -->
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div>
+        <p>© 2026 79team. Licensed under ISC.</p>
+        <p style="font-size: 12px; margin-top: 4px; color: var(--text-subtle);">Client-Side Native Rendering · Zero Remote Telemetry</p>
+      </div>
+
+      <div class="footer-links">
+        <a href="./index.html" class="footer-link">Home / 官网</a>
+        <a href="./privacy.html" class="footer-link" style="color: var(--primary); font-weight: 600;">Privacy Policy / 隐私政策</a>
+        <a href="https://github.com/rowkin/browser-plugins" target="_blank" class="footer-link">GitHub</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // 中英文切换逻辑
+    const langBtn = document.getElementById('langToggleBtn');
+    const contentEn = document.getElementById('contentEn');
+    const contentZh = document.getElementById('contentZh');
+    const pageTitle = document.getElementById('pageTitle');
+    let currentLang = 'en';
+
+    langBtn.addEventListener('click', () => {
+      if (currentLang === 'en') {
+        currentLang = 'zh';
+        contentEn.style.display = 'none';
+        contentZh.style.display = 'block';
+        pageTitle.textContent = '隐私权政策 (Privacy Policy)';
+        document.documentElement.lang = 'zh-CN';
+      } else {
+        currentLang = 'en';
+        contentEn.style.display = 'block';
+        contentZh.style.display = 'none';
+        pageTitle.textContent = 'Privacy Policy';
+        document.documentElement.lang = 'en';
+      }
+    });
+
+    // 主题切换逻辑
+    const themeBtn = document.getElementById('themeToggleBtn');
+    const savedTheme = localStorage.getItem('site_theme') || 'light';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+
+    themeBtn.addEventListener('click', () => {
+      const current = document.documentElement.getAttribute('data-theme') || 'light';
+      const next = current === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('site_theme', next);
+    });
+  </script>
+</body>
+</html>

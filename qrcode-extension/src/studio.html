@@ -434,12 +434,57 @@
       <!-- ─── TAB 4: 历史记录管理 ─── -->
       <section id="tab-history" class="tab-pane">
         <div class="history-layout">
-          <div class="history-toolbar">
-            <div style="font-size: 16px; font-weight: 700;" data-i18n="history_title">二维码生成与扫描历史</div>
-            <button id="btnClearHistory" class="btn-secondary-action" style="color: #ef4444; border-color: rgba(239, 68, 68, 0.3);" data-i18n="btn_clear_history">清空全部历史</button>
+          <!-- 历史记录顶栏 -->
+          <div class="history-header-row">
+            <div>
+              <div class="history-main-title" data-i18n="history_title">二维码生成与扫描历史</div>
+              <div class="history-sub-title" data-i18n="history_sub">自动留存最近 50 条生成与扫描明细，支持分类筛选、检索、一键载入与快捷导出</div>
+            </div>
+            <div class="history-actions-top">
+              <button id="btnClearHistory" class="btn-danger-outline" data-i18n="btn_clear_history">🗑️ 清空全部历史</button>
+            </div>
           </div>
-          <div id="historyListContainer" class="history-list">
-            <!-- 动态渲染卡片 -->
+
+          <!-- 分类筛选与视图控制栏 -->
+          <div class="history-filter-bar">
+            <!-- 分类选项卡 -->
+            <div class="history-filter-tabs">
+              <button class="history-tab-btn active" data-filter="all">
+                <span data-i18n="filter_all">全部记录</span>
+                <span class="history-count-badge" id="countAll">0</span>
+              </button>
+              <button class="history-tab-btn" data-filter="create">
+                <span>🎨 <span data-i18n="filter_create">生成历史</span></span>
+                <span class="history-count-badge" id="countCreate">0</span>
+              </button>
+              <button class="history-tab-btn" data-filter="scan">
+                <span>📷 <span data-i18n="filter_scan">扫描解析</span></span>
+                <span class="history-count-badge" id="countScan">0</span>
+              </button>
+            </div>
+
+            <!-- 右侧搜索与视图模式切换 -->
+            <div class="history-filter-right">
+              <div class="history-search-box">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="historySearchInput" class="history-search-input" placeholder="按内容搜索历史..." data-i18n-ph="search_placeholder">
+              </div>
+              <div class="view-toggle-group">
+                <button id="btnViewTable" class="view-toggle-btn active" title="表格视图 (Table View)">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h18v18H3zM3 9h18M3 15h18M9 3v18"/></svg>
+                  <span data-i18n="view_table">表格</span>
+                </button>
+                <button id="btnViewCards" class="view-toggle-btn" title="卡片视图 (Card View)">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                  <span data-i18n="view_cards">卡片</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 历史记录展示容器（表格或卡片列表） -->
+          <div id="historyListContainer" class="history-container-body view-mode-table">
+            <!-- 动态渲染内容 -->
           </div>
         </div>
       </section>

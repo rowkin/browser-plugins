@@ -77,6 +77,26 @@
       decode_result_label: '解析成功提取内容：',
       btn_import_generator: '导入并重新生成',
       history_title: '二维码生成与扫描历史',
+      history_sub: '自动留存最近 50 条生成与扫描明细，支持分类筛选、检索、一键载入与快捷导出',
+      filter_all: '全部记录',
+      filter_create: '生成历史',
+      filter_scan: '扫描解析',
+      view_table: '表格',
+      view_cards: '卡片',
+      search_placeholder: '按内容搜索历史...',
+      col_type: '来源',
+      col_category: '类型',
+      col_content: '二维码内容明细',
+      col_time: '记录时间',
+      col_action: '操作',
+      btn_reuse_short: '载入',
+      btn_delete_short: '删除',
+      cat_url: '网址链接',
+      cat_wifi: 'WiFi网络',
+      cat_vcard: '名片信息',
+      cat_tel: '电话短信',
+      cat_text: '纯文本',
+      no_matched_history: '未检索到符合条件的历史记录',
       btn_clear_history: '清空全部历史',
       copied: '已复制！',
       copy_failed: '复制失败'
@@ -153,6 +173,26 @@
       decode_result_label: 'Decoded Result Content:',
       btn_import_generator: 'Load in Generator',
       history_title: 'QR Code Generation & Scan History',
+      history_sub: 'Keep recent 50 creation and scan records. Easily filter, search, reuse, and manage.',
+      filter_all: 'All Records',
+      filter_create: 'Created',
+      filter_scan: 'Scanned',
+      view_table: 'Table',
+      view_cards: 'Cards',
+      search_placeholder: 'Search history...',
+      col_type: 'Source',
+      col_category: 'Category',
+      col_content: 'QR Content & Detail',
+      col_time: 'Timestamp',
+      col_action: 'Actions',
+      btn_reuse_short: 'Load',
+      btn_delete_short: 'Delete',
+      cat_url: 'URL Link',
+      cat_wifi: 'WiFi Network',
+      cat_vcard: 'vCard Contact',
+      cat_tel: 'Phone / SMS',
+      cat_text: 'Plain Text',
+      no_matched_history: 'No matching history records found',
       btn_clear_history: 'Clear All History',
       copied: 'Copied!',
       copy_failed: 'Copy failed'
@@ -218,6 +258,13 @@
       const key = el.getAttribute('data-i18n');
       if (dict[key]) {
         el.textContent = dict[key];
+      }
+    });
+
+    document.querySelectorAll('[data-i18n-ph]').forEach(el => {
+      const key = el.getAttribute('data-i18n-ph');
+      if (dict[key]) {
+        el.setAttribute('placeholder', dict[key]);
       }
     });
 
@@ -573,10 +620,32 @@
     }
   }
 
+  let historyFilter = 'all'; // 'all' | 'create' | 'scan'
+  let historySearch = '';
+  let historyViewMode = 'table'; // 'table' | 'cards'
+
+  function detectContentCategory(content) {
+    if (!content) return { label: I18N[currentLang]?.cat_text || '纯文本', icon: '📝', key: 'text' };
+    const trimmed = String(content).trim();
+    if (/^https?:\/\//i.test(trimmed)) {
+      return { label: I18N[currentLang]?.cat_url || '网址链接', icon: '🌐', key: 'url', isUrl: true };
+    }
+    if (/^WIFI:/i.test(trimmed)) {
+      return { label: I18N[currentLang]?.cat_wifi || 'WiFi网络', icon: '📶', key: 'wifi' };
+    }
+    if (/^BEGIN:VCARD/i.test(trimmed)) {
+      return { label: I18N[currentLang]?.cat_vcard || '名片信息', icon: '👤', key: 'vcard' };
+    }
+    if (/^(tel:|smsto:)/i.test(trimmed)) {
+      return { label: I18N[currentLang]?.cat_tel || '电话短信', icon: '📞', key: 'tel' };
+    }
+    return { label: I18N[currentLang]?.cat_text || '纯文本', icon: '📝', key: 'text' };
+  }
+
   function saveHistory(content, type = 'create') {
     if (!content) return;
     const item = {
-      id: Date.now(),
+      id: Date.now() + '-' + Math.random().toString(36).substr(2, 5),
       content: content,
       type: type,
       time: new Date().toLocaleString()
@@ -587,44 +656,205 @@
     renderHistoryList();
   }
 
+  function deleteHistoryItem(id) {
+    historyList = historyList.filter(item => String(item.id) !== String(id));
+    localStorage.setItem('qr_studio_history', JSON.stringify(historyList));
+    renderHistoryList();
+  }
+
   function renderHistoryList() {
     const container = document.getElementById('historyListContainer');
     const badge = document.getElementById('historyBadge');
     if (!container) return;
 
+    // 1. 更新顶部主导航角标
     if (badge) {
       badge.textContent = historyList.length;
       badge.style.display = historyList.length > 0 ? 'inline-block' : 'none';
     }
 
-    if (historyList.length === 0) {
-      container.innerHTML = `<div style="grid-column: 1/-1; text-align: center; color: var(--text-muted); padding: 48px;">${currentLang === 'zh' ? '暂无历史记录' : 'No history yet'}</div>`;
+    // 2. 更新分类 Tabs 的数量统计
+    const countAllEl = document.getElementById('countAll');
+    const countCreateEl = document.getElementById('countCreate');
+    const countScanEl = document.getElementById('countScan');
+    const createCount = historyList.filter(i => i.type === 'create').length;
+    const scanCount = historyList.filter(i => i.type === 'scan').length;
+
+    if (countAllEl) countAllEl.textContent = historyList.length;
+    if (countCreateEl) countCreateEl.textContent = createCount;
+    if (countScanEl) countScanEl.textContent = scanCount;
+
+    // 3. 执行分类与搜索过滤
+    let filtered = historyList.filter(item => {
+      if (historyFilter === 'create' && item.type !== 'create') return false;
+      if (historyFilter === 'scan' && item.type !== 'scan') return false;
+      if (historySearch) {
+        const q = historySearch.toLowerCase();
+        const c = String(item.content || '').toLowerCase();
+        const t = String(item.time || '').toLowerCase();
+        return c.includes(q) || t.includes(q);
+      }
+      return true;
+    });
+
+    // 4. 空状态处理
+    if (filtered.length === 0) {
+      const emptyMsg = historySearch
+        ? (I18N[currentLang]?.no_matched_history || '未检索到符合条件的历史记录')
+        : (currentLang === 'zh' ? '暂无历史记录' : 'No history records yet');
+      container.innerHTML = `
+        <div class="history-empty-state">
+          <div class="empty-icon">${historySearch ? '🔍' : '📭'}</div>
+          <div class="empty-text">${emptyMsg}</div>
+        </div>`;
       return;
     }
 
-    container.innerHTML = historyList.map(item => `
-      <div class="history-card" data-id="${item.id}">
-        <div class="history-thumb">
-          <span style="font-size: 24px;">${item.type === 'scan' ? '📷' : '🎨'}</span>
-        </div>
-        <div class="history-info">
-          <div class="history-text" title="${escapeHtml(item.content)}">${escapeHtml(item.content)}</div>
-          <div class="history-time">${item.time}</div>
-        </div>
-        <button class="btn-secondary-action btn-history-reuse" data-content="${encodeURIComponent(item.content)}" title="Load into Generator" style="padding: 4px 8px; font-size: 11px;">
-          ${currentLang === 'zh' ? '载入' : 'Load'}
-        </button>
-      </div>
-    `).join('');
+    // 5. 根据当前视图模式 (Table 或 Cards) 渲染
+    if (historyViewMode === 'table') {
+      container.className = 'history-container-body view-mode-table';
+      let rowsHtml = filtered.map(item => {
+        const cat = detectContentCategory(item.content);
+        const isCreate = item.type === 'create';
+        const sourceLabel = isCreate
+          ? `🎨 ${I18N[currentLang]?.filter_create || '生成'}`
+          : `📷 ${I18N[currentLang]?.filter_scan || '扫码'}`;
+        const sourceClass = isCreate ? 'badge-create' : 'badge-scan';
 
-    container.querySelectorAll('.btn-history-reuse').forEach(btn => {
+        return `
+          <tr data-id="${item.id}">
+            <td style="width: 90px;">
+              <span class="badge-source ${sourceClass}">${sourceLabel}</span>
+            </td>
+            <td style="width: 110px;">
+              <span class="badge-category">
+                <span>${cat.icon}</span>
+                <span>${cat.label}</span>
+              </span>
+            </td>
+            <td>
+              <div class="cell-content-wrapper">
+                <span class="cell-content-text" title="${escapeHtml(item.content)}">${escapeHtml(item.content)}</span>
+                ${cat.isUrl ? `<a href="${escapeHtml(item.content)}" target="_blank" rel="noopener noreferrer" class="link-out-icon" title="在新窗口打开网址">↗</a>` : ''}
+              </div>
+            </td>
+            <td style="width: 150px;">
+              <span class="cell-time">${escapeHtml(item.time)}</span>
+            </td>
+            <td style="width: 160px; text-align: right;">
+              <div class="cell-actions">
+                <button class="btn-table-action btn-reuse btn-history-load" data-content="${encodeURIComponent(item.content)}" title="载入工坊">
+                  <span>⚡</span><span>${I18N[currentLang]?.btn_reuse_short || '载入'}</span>
+                </button>
+                <button class="btn-table-action btn-history-copy" data-content="${encodeURIComponent(item.content)}" title="复制数据">
+                  <span>📋</span>
+                </button>
+                <button class="btn-table-action btn-delete btn-history-delete" data-id="${item.id}" title="删除此条">
+                  <span>🗑️</span>
+                </button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+
+      container.innerHTML = `
+        <table class="history-table">
+          <thead>
+            <tr>
+              <th>${I18N[currentLang]?.col_type || '来源'}</th>
+              <th>${I18N[currentLang]?.col_category || '类型'}</th>
+              <th>${I18N[currentLang]?.col_content || '二维码内容明细'}</th>
+              <th>${I18N[currentLang]?.col_time || '记录时间'}</th>
+              <th style="text-align: right;">${I18N[currentLang]?.col_action || '操作'}</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${rowsHtml}
+          </tbody>
+        </table>
+      `;
+    } else {
+      // 卡片模式
+      container.className = 'history-container-body view-mode-cards';
+      let cardsHtml = filtered.map(item => {
+        const cat = detectContentCategory(item.content);
+        const isCreate = item.type === 'create';
+        const sourceLabel = isCreate
+          ? `🎨 ${I18N[currentLang]?.filter_create || '生成'}`
+          : `📷 ${I18N[currentLang]?.filter_scan || '扫码'}`;
+        const sourceClass = isCreate ? 'badge-create' : 'badge-scan';
+
+        return `
+          <div class="history-card-item" data-id="${item.id}">
+            <div class="card-top-row">
+              <span class="badge-source ${sourceClass}">${sourceLabel}</span>
+              <span class="badge-category">
+                <span>${cat.icon}</span>
+                <span>${cat.label}</span>
+              </span>
+            </div>
+            <div class="card-content-box" title="${escapeHtml(item.content)}">
+              ${escapeHtml(item.content)}
+            </div>
+            <div class="card-bottom-row">
+              <span class="cell-time">${escapeHtml(item.time)}</span>
+              <div class="cell-actions">
+                <button class="btn-table-action btn-reuse btn-history-load" data-content="${encodeURIComponent(item.content)}" title="载入工坊">
+                  <span>⚡</span><span>${I18N[currentLang]?.btn_reuse_short || '载入'}</span>
+                </button>
+                <button class="btn-table-action btn-history-copy" data-content="${encodeURIComponent(item.content)}" title="复制">
+                  <span>📋</span>
+                </button>
+                <button class="btn-table-action btn-delete btn-history-delete" data-id="${item.id}" title="删除">
+                  <span>🗑️</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      container.innerHTML = `<div class="history-cards-grid">${cardsHtml}</div>`;
+    }
+
+    // 6. 统一绑定交互操作事件
+    // A. 载入工坊
+    container.querySelectorAll('.btn-history-load').forEach(btn => {
       btn.addEventListener('click', (e) => {
         const rawContent = decodeURIComponent(e.currentTarget.getAttribute('data-content'));
         state.text = rawContent;
-        document.getElementById('inputUrl').value = rawContent;
-        // 切换到生成面板
-        document.querySelector('[data-tab="tab-generator"]').click();
+        const inputUrl = document.getElementById('inputUrl');
+        if (inputUrl) inputUrl.value = rawContent;
+        // 自动切换至“创意二维码生成”标签页
+        document.querySelector('[data-tab="tab-generator"]')?.click();
         renderQRCode();
+      });
+    });
+
+    // B. 一键复制
+    container.querySelectorAll('.btn-history-copy').forEach(btn => {
+      btn.addEventListener('click', async (e) => {
+        const targetBtn = e.currentTarget;
+        const rawContent = decodeURIComponent(targetBtn.getAttribute('data-content'));
+        try {
+          await navigator.clipboard.writeText(rawContent);
+          const origHtml = targetBtn.innerHTML;
+          targetBtn.innerHTML = '<span>✅</span>';
+          setTimeout(() => {
+            targetBtn.innerHTML = origHtml;
+          }, 1200);
+        } catch (err) {
+          console.error('复制失败:', err);
+        }
+      });
+    });
+
+    // C. 单条删除
+    container.querySelectorAll('.btn-history-delete').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const id = e.currentTarget.getAttribute('data-id');
+        deleteHistoryItem(id);
       });
     });
   }
@@ -1162,6 +1392,45 @@
           localStorage.removeItem('qr_studio_history');
           renderHistoryList();
         }
+      });
+    }
+
+    // 历史记录分类筛选 Tabs (全部 / 生成历史 / 扫描解析)
+    document.querySelectorAll('.history-tab-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        document.querySelectorAll('.history-tab-btn').forEach(b => b.classList.remove('active'));
+        const targetBtn = e.currentTarget;
+        targetBtn.classList.add('active');
+        historyFilter = targetBtn.getAttribute('data-filter') || 'all';
+        renderHistoryList();
+      });
+    });
+
+    // 历史记录关键词搜索
+    const historySearchInput = document.getElementById('historySearchInput');
+    if (historySearchInput) {
+      historySearchInput.addEventListener('input', (e) => {
+        historySearch = e.target.value.trim();
+        renderHistoryList();
+      });
+    }
+
+    // 历史记录视图模式切换 (Table 表格 / Cards 卡片)
+    const btnViewTable = document.getElementById('btnViewTable');
+    const btnViewCards = document.getElementById('btnViewCards');
+    if (btnViewTable && btnViewCards) {
+      btnViewTable.addEventListener('click', () => {
+        btnViewTable.classList.add('active');
+        btnViewCards.classList.remove('active');
+        historyViewMode = 'table';
+        renderHistoryList();
+      });
+
+      btnViewCards.addEventListener('click', () => {
+        btnViewCards.classList.add('active');
+        btnViewTable.classList.remove('active');
+        historyViewMode = 'cards';
+        renderHistoryList();
       });
     }
 

@@ -1115,7 +1115,7 @@ function injectQRCodePanel(url) {
     <div class="panel-content">
       <div class="left-column">
         <div class="left-column-header" style="display: flex; align-items: center; justify-content: space-between; padding: 14px 20px 10px;">
-          <div style="display: flex; align-items: center; gap: 8px;">
+          <div id="panel-brand-header" style="display: flex; align-items: center; gap: 8px; cursor: pointer;" title="前往官方宣传页 / https://qrcode.rowkin.xyz/">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="border-radius: 5px; flex-shrink: 0; display: block;">
               <rect width="24" height="24" rx="5" fill="#00B8B2"/>
               <rect x="4" y="4" width="6" height="6" rx="1.2" stroke="white" stroke-width="1.6" fill="none"/>
@@ -1245,6 +1245,14 @@ function injectQRCodePanel(url) {
     openStudioBtn.addEventListener('click', () => {
       chrome.runtime.sendMessage({ action: 'openStudio', url: url });
       removeExistingPanel();
+    });
+  }
+
+  // 点击左上角 Logo 跳转至官方宣传页 (https://qrcode.rowkin.xyz/)
+  const panelBrandHeader = panel.querySelector('#panel-brand-header');
+  if (panelBrandHeader) {
+    panelBrandHeader.addEventListener('click', () => {
+      window.open('https://qrcode.rowkin.xyz/', '_blank');
     });
   }
   

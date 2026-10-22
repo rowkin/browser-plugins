@@ -1026,11 +1026,11 @@
       });
     }
 
-    // 点击左上角 Logo 跳转至官网 (内嵌宣传站)
+    // 点击左上角 Logo 跳转至官方宣传页 (https://qrcode.rowkin.xyz/)
     const studioBrandHeader = document.getElementById('studioBrandHeader');
     if (studioBrandHeader) {
       studioBrandHeader.addEventListener('click', () => {
-        window.open('site/index.html', '_blank');
+        window.open('https://qrcode.rowkin.xyz/', '_blank');
       });
     }
 

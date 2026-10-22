@@ -115,6 +115,13 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
+  // 点击左上角 Logo 跳转至官方宣传页 (https://qrcode.rowkin.xyz/)
+  if (brandLogo) {
+    brandLogo.addEventListener('click', () => {
+      chrome.tabs.create({ url: 'https://qrcode.rowkin.xyz/' });
+    });
+  }
+
   // 打开 Studio 独立配置页
   btnOpenStudio.addEventListener('click', () => openStudio(currentUrl));
   btnOpenOptions.addEventListener('click', () => openStudio(currentUrl));

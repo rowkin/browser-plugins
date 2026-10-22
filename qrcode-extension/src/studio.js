@@ -885,35 +885,174 @@
       });
     }
 
-    // 导出 SVG
+    // 导出 SVG 矢量图
     const btnDownloadSvg = document.getElementById('btnDownloadSvg');
     if (btnDownloadSvg) {
       btnDownloadSvg.addEventListener('click', () => {
-        const qr = new QRCode(-1, QRCode.CorrectLevel[state.ecc] || QRCode.CorrectLevel.H);
-        qr.addData(state.text);
-        qr.make();
-        const count = qr.getModuleCount();
-        const svgSize = 1000;
-        const cell = svgSize / count;
+        try {
+          if (!state.text || !state.text.trim()) {
+            alert(currentLang === 'zh' ? '请先输入二维码内容' : 'Please enter QR code content first');
+            return;
+          }
 
-        let rects = '';
-        for (let r = 0; r < count; r++) {
-          for (let c = 0; c < count; c++) {
-            if (qr.isDark(r, c)) {
-              rects += `<rect x="${c * cell}" y="${r * cell}" width="${cell}" height="${cell}" fill="${state.fgColor1}" />`;
+          // 正确创建 QRCode 实例获取矩阵模型，避免 a.appendChild 异常
+          const tempDiv = document.createElement('div');
+          const qrInstance = new QRCode(tempDiv, {
+            text: state.text,
+            correctLevel: QRCode.CorrectLevel[state.ecc] || QRCode.CorrectLevel.H
+          });
+          const qr = qrInstance._oQRCode;
+          if (!qr) {
+            alert(currentLang === 'zh' ? '生成二维码数据失败' : 'Failed to generate QR data');
+            return;
+          }
+
+          const count = qr.getModuleCount();
+          const svgSize = 1000;
+          const padding = 50;
+          const contentSize = svgSize - padding * 2;
+          const cellSize = contentSize / count;
+
+          // 1. 渐变与色彩定义
+          let defsXml = '';
+          let mainFill = state.fgColor1;
+
+          if (state.colorMode === 'linear') {
+            defsXml = `
+  <defs>
+    <linearGradient id="qrGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="${state.fgColor1}"/>
+      <stop offset="100%" stop-color="${state.fgColor2}"/>
+    </linearGradient>
+  </defs>`;
+            mainFill = 'url(#qrGrad)';
+          } else if (state.colorMode === 'radial') {
+            defsXml = `
+  <defs>
+    <radialGradient id="qrGrad" cx="50%" cy="50%" r="70%">
+      <stop offset="0%" stop-color="${state.fgColor1}"/>
+      <stop offset="100%" stop-color="${state.fgColor2}"/>
+    </radialGradient>
+  </defs>`;
+            mainFill = 'url(#qrGrad)';
+          }
+
+          // 2. 背景
+          const bgXml = !state.bgTransparent 
+            ? `<rect width="100%" height="100%" fill="${state.bgColor}"/>` 
+            : '';
+
+          // 3. 辅助函数：判断是否处于 3 个定位码眼内
+          const isFinder = (r, c) => {
+            if (r < 7 && c < 7) return true;
+            if (r < 7 && c >= count - 7) return true;
+            if (r >= count - 7 && c < 7) return true;
+            return false;
+          };
+
+          // 4. 常规数据模块
+          let modulesXml = '';
+          for (let r = 0; r < count; r++) {
+            for (let c = 0; c < count; c++) {
+              if (isFinder(r, c)) continue;
+              if (qr.isDark(r, c)) {
+                const x = padding + c * cellSize;
+                const y = padding + r * cellSize;
+                if (state.dotStyle === 'circle' || state.dotStyle === 'dots') {
+                  const radius = cellSize * 0.44;
+                  modulesXml += `<circle cx="${x + cellSize / 2}" cy="${y + cellSize / 2}" r="${radius}" fill="${mainFill}"/>\n`;
+                } else if (state.dotStyle === 'rounded') {
+                  const rx = cellSize * 0.35;
+                  modulesXml += `<rect x="${x + 0.5}" y="${y + 0.5}" width="${cellSize - 1}" height="${cellSize - 1}" rx="${rx}" fill="${mainFill}"/>\n`;
+                } else if (state.dotStyle === 'fluid') {
+                  const rx = cellSize * 0.48;
+                  modulesXml += `<rect x="${x + 0.5}" y="${y + 0.5}" width="${cellSize - 1}" height="${cellSize - 1}" rx="${rx}" fill="${mainFill}"/>\n`;
+                } else {
+                  // 经典方形，1.01 避免拼接微缝
+                  modulesXml += `<rect x="${x}" y="${y}" width="${cellSize * 1.01}" height="${cellSize * 1.01}" fill="${mainFill}"/>\n`;
+                }
+              }
             }
           }
-        }
 
-        const svgXml = `<?xml version="1.0" standalone="no"?>
+          // 5. 绘制三个定位码眼
+          const eyeFill = state.eyeCustomColor ? state.eyeColor : mainFill;
+          const bgFill = state.bgTransparent ? '#ffffff' : state.bgColor;
+          let eyesXml = '';
+
+          const drawEyeSvg = (ex, ey) => {
+            const eyeSize = 7 * cellSize;
+            const centerOffset = 2 * cellSize;
+            const centerSize = 3 * cellSize;
+            const cx = ex + centerOffset;
+            const cy = ey + centerOffset;
+
+            let eyeSvg = '';
+            // 外框
+            if (state.eyeFrame === 'circle') {
+              eyeSvg += `<circle cx="${ex + eyeSize / 2}" cy="${ey + eyeSize / 2}" r="${eyeSize / 2 - cellSize / 2}" fill="none" stroke="${eyeFill}" stroke-width="${cellSize}"/>\n`;
+            } else if (state.eyeFrame === 'rounded') {
+              const r1 = cellSize * 2;
+              const r2 = cellSize * 1.4;
+              eyeSvg += `<rect x="${ex}" y="${ey}" width="${eyeSize}" height="${eyeSize}" rx="${r1}" fill="${eyeFill}"/>\n`;
+              eyeSvg += `<rect x="${ex + cellSize}" y="${ey + cellSize}" width="${eyeSize - 2 * cellSize}" height="${eyeSize - 2 * cellSize}" rx="${r2}" fill="${bgFill}"/>\n`;
+            } else {
+              // 经典方形
+              eyeSvg += `<rect x="${ex}" y="${ey}" width="${eyeSize}" height="${eyeSize}" fill="${eyeFill}"/>\n`;
+              eyeSvg += `<rect x="${ex + cellSize}" y="${ey + cellSize}" width="${eyeSize - 2 * cellSize}" height="${eyeSize - 2 * cellSize}" fill="${bgFill}"/>\n`;
+            }
+
+            // 内芯
+            if (state.eyeDot === 'circle') {
+              eyeSvg += `<circle cx="${cx + centerSize / 2}" cy="${cy + centerSize / 2}" r="${centerSize / 2}" fill="${eyeFill}"/>\n`;
+            } else {
+              eyeSvg += `<rect x="${cx}" y="${cy}" width="${centerSize}" height="${centerSize}" rx="${cellSize * 0.5}" fill="${eyeFill}"/>\n`;
+            }
+            return eyeSvg;
+          };
+
+          eyesXml += drawEyeSvg(padding, padding);
+          eyesXml += drawEyeSvg(padding + (count - 7) * cellSize, padding);
+          eyesXml += drawEyeSvg(padding, padding + (count - 7) * cellSize);
+
+          // 6. 嵌入中心 Logo (若启用)
+          let logoXml = '';
+          if (state.logoType !== 'none') {
+            const ratio = (state.logoSize || 22) / 100;
+            const logoW = contentSize * ratio;
+            const logoH = logoW;
+            const lx = (svgSize - logoW) / 2;
+            const ly = (svgSize - logoH) / 2;
+            const margin = (state.logoMargin || 4) * (contentSize / 280);
+
+            // 白色保护衬底
+            logoXml += `<rect x="${lx - margin}" y="${ly - margin}" width="${logoW + margin * 2}" height="${logoH + margin * 2}" rx="12" fill="#ffffff" filter="drop-shadow(0 4px 10px rgba(0,0,0,0.15))"/>\n`;
+
+            if (state.logoType === 'custom' && state.customLogoImg) {
+              logoXml += `<image x="${lx}" y="${ly}" width="${logoW}" height="${logoH}" href="${state.customLogoImg.src}" preserveAspectRatio="xMidYMid meet"/>\n`;
+            } else if (PRESET_LOGOS[state.logoType]) {
+              const svgStr = PRESET_LOGOS[state.logoType];
+              logoXml += `<svg x="${lx}" y="${ly}" width="${logoW}" height="${logoH}" viewBox="0 0 24 24">${svgStr.replace(/^<svg[^>]*>|<\/svg>$/gi, '')}</svg>\n`;
+            }
+          }
+
+          // 7. 组装最终 SVG XML
+          const finalSvg = `<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="${svgSize}" height="${svgSize}" viewBox="0 0 ${svgSize} ${svgSize}">
-  ${!state.bgTransparent ? `<rect width="100%" height="100%" fill="${state.bgColor}"/>` : ''}
-  ${rects}
+  ${defsXml}
+  ${bgXml}
+  ${modulesXml}
+  ${eyesXml}
+  ${logoXml}
 </svg>`;
 
-        const blob = new Blob([svgXml], { type: 'image/svg+xml;charset=utf-8' });
-        downloadFile(URL.createObjectURL(blob), `qrcode-${Date.now()}.svg`);
-        saveHistory(state.text, 'create');
+          const blob = new Blob([finalSvg], { type: 'image/svg+xml;charset=utf-8' });
+          downloadFile(URL.createObjectURL(blob), `qrcode-${Date.now()}.svg`);
+          saveHistory(state.text, 'create');
+        } catch (err) {
+          console.error('导出 SVG 矢量图失败:', err);
+          alert((currentLang === 'zh' ? '导出 SVG 失败: ' : 'Failed to export SVG: ') + err.message);
+        }
       });
     }
 

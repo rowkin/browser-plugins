@@ -7,7 +7,7 @@
   const I18N = {
     'zh': {
       app_title: 'QR Studio',
-      app_subtitle: '专业二维码工坊 v1.1.1',
+      app_subtitle: '专业二维码工坊 v1.1.2',
       nav_generator: '创意二维码生成',
       nav_camera: '相机扫码识别',
       nav_decoder: '上传图片解析',
@@ -103,7 +103,7 @@
     },
     'en': {
       app_title: 'QR Studio',
-      app_subtitle: 'Professional QR Workshop v1.1.1',
+      app_subtitle: 'Professional QR Workshop v1.1.2',
       nav_generator: 'Create QR Code',
       nav_camera: 'Camera Scanner',
       nav_decoder: 'Image Decoder',
@@ -163,7 +163,7 @@
       preview_tip: '✨ Instantly scannable by any mobile camera or scanner app',
       btn_download_png: 'Download High-Res PNG',
       btn_download_svg: 'Export Vector SVG',
-      btn_copy_image: 'Copy Image to Clipboard',
+      btn_copy_image: 'Copy to Clipboard',
       camera_start: 'Start Camera Scan',
       camera_stop: 'Stop Camera',
       scan_result_label: 'Scan Result:',
@@ -670,7 +670,7 @@
     // 1. 更新顶部主导航角标
     if (badge) {
       badge.textContent = historyList.length;
-      badge.style.display = historyList.length > 0 ? 'inline-block' : 'none';
+      badge.style.display = historyList.length > 0 ? 'inline-flex' : 'none';
     }
 
     // 2. 更新分类 Tabs 的数量统计

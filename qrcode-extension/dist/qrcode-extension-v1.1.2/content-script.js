@@ -826,18 +826,18 @@ async function getPaddingSettings() {
       if (chrome.storage && chrome.storage.local) {
         chrome.storage.local.get(['qrPadding'], (result) => {
           if (chrome.runtime.lastError) {
-             resolve({ padding: 0 });
+             resolve({ padding: 10 });
           } else {
              resolve({
-               padding: result.qrPadding !== undefined ? result.qrPadding : 0
+               padding: result.qrPadding !== undefined ? result.qrPadding : 10
              });
           }
         });
       } else {
-        resolve({ padding: 0 });
+        resolve({ padding: 10 });
       }
     } catch (e) {
-      resolve({ padding: 0 });
+      resolve({ padding: 10 });
     }
   });
 }
@@ -1203,12 +1203,12 @@ function injectQRCodePanel(url) {
             <div class="padding-control">
               <div class="padding-label">
                 <span>${chrome.i18n.getMessage("paddingControl")}</span>
-                <span class="padding-value" id="padding-value">0</span>
+                <span class="padding-value" id="padding-value">10</span>
               </div>
-              <input type="range" id="padding-slider" class="padding-slider" min="0" max="100" value="0" step="1">
+              <input type="range" id="padding-slider" class="padding-slider" min="0" max="100" value="10" step="1">
               <div class="padding-preset-buttons">
                 <button class="padding-preset-btn" data-padding="0" title="${chrome.i18n.getMessage("paddingNone")}">${chrome.i18n.getMessage("paddingNone")}</button>
-                <button class="padding-preset-btn" data-padding="10" title="${chrome.i18n.getMessage("paddingSmall")}">${chrome.i18n.getMessage("paddingSmall")}</button>
+                <button class="padding-preset-btn active" data-padding="10" title="${chrome.i18n.getMessage("paddingSmall")}">${chrome.i18n.getMessage("paddingSmall")}</button>
                 <button class="padding-preset-btn" data-padding="20" title="${chrome.i18n.getMessage("paddingMedium")}">${chrome.i18n.getMessage("paddingMedium")}</button>
                 <button class="padding-preset-btn" data-padding="30" title="${chrome.i18n.getMessage("paddingLarge")}">${chrome.i18n.getMessage("paddingLarge")}</button>
               </div>
@@ -1442,13 +1442,14 @@ async function setupColorCustomizer(panel, url) {
     colorDarkText.value = defaultDark;
     colorLightInput.value = defaultLight;
     colorLightText.value = defaultLight;
-    generateQRCode(panel, url, defaultDark, defaultLight, 0);
+    generateQRCode(panel, url, defaultDark, defaultLight, 10);
     saveColorSettings(defaultDark, defaultLight);
-    savePaddingSettings(0);
-    paddingSlider.value = 0;
-    paddingValue.textContent = '0';
+    savePaddingSettings(10);
+    paddingSlider.value = 10;
+    paddingValue.textContent = '10';
     paddingPresetBtns.forEach(btn => btn.classList.remove('active'));
-    paddingPresetBtns[0].classList.add('active');
+    const btn10 = Array.from(paddingPresetBtns).find(btn => parseInt(btn.dataset.padding) === 10);
+    if (btn10) btn10.classList.add('active');
   });
   
   // 留白滑块变化

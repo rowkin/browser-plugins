@@ -77,6 +77,8 @@
       </nav>
 
       <div class="nav-actions">
+        <!-- 商店直通一键安装按钮 -->
+        <a href="https://chromewebstore.google.com/detail/qr-code-generator/pemccmgijpaidcjkjbldcgfepleddkdk" target="_blank" rel="noreferrer" class="btn-nav-install" data-i18n="navBtnInstall">🛍️ 立即安装</a>
         <!-- 语言切换 -->
         <button id="btn-lang-toggle" class="btn-icon" title="切换语言 / Switch Language">
           🌐
@@ -113,13 +115,26 @@
       </p>
 
       <div class="hero-cta-group">
-        <a href="#install" class="btn-primary" data-i18n="ctaInstall">
-          <span>🚀 安装 Chrome 扩展</span>
+        <a href="https://chromewebstore.google.com/detail/qr-code-generator/pemccmgijpaidcjkjbldcgfepleddkdk" target="_blank" rel="noreferrer" class="btn btn-primary-store">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+            <path d="M12 0C5.383 0 0 5.383 0 12s5.383 12 12 12 12-5.383 12-12S18.617 0 12 0zm0 1.5c5.808 0 10.5 4.692 10.5 10.5 0 2.215-.688 4.272-1.865 5.972l-5.69-9.855c.34-.787.555-1.656.555-2.617 0-3.59-2.91-6.5-6.5-6.5-.477 0-.938.058-1.385.158l3.197 5.538c.517-.128 1.056-.201 1.613-.201 3.59 0 6.5 2.91 6.5 6.5 0 .557-.073 1.096-.201 1.613l-5.538-3.197c-.1-.447-.158-.908-.158-1.385 0-3.59 2.91-6.5 6.5-6.5.961 0 1.83.215 2.617.555L6.028 1.865C7.728.688 9.785 0 12 0z"/>
+          </svg>
+          <span data-i18n="btnStore">Chrome 网上应用店一键安装</span>
+          <span class="btn-tag-rec" data-i18n="tagRec">官方推荐</span>
         </a>
-        <a href="#playground" class="btn-secondary" data-i18n="ctaTryOnline">
+        <a href="https://github.com/rowkin/browser-plugins/releases" target="_blank" rel="noreferrer" class="btn btn-secondary">
+          <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+          </svg>
+          <span data-i18n="btnReleases">GitHub Releases 离线包</span>
+        </a>
+        <a href="#playground" class="btn btn-secondary" data-i18n="ctaTryOnline">
           <span>🎨 在线即刻体验</span>
         </a>
       </div>
+      <p class="hero-install-hint" data-i18n="heroInstallHint">⭐ 支持 Chrome、Edge、Brave、Arc 等所有 Chromium 浏览器 · 推荐应用商店安装，离线用户可前往 GitHub Releases 获取 ZIP</p>
     </div>
   </section>
 
@@ -307,8 +322,15 @@
         </div>
       </div>
 
-      <div style="text-align: center; margin-top: 40px;">
-        <a href="https://github.com/rowkin/browser-plugins/releases" target="_blank" class="btn-primary" data-i18n="btnDownloadZip">
+      <div style="display: flex; align-items: center; justify-content: center; gap: 16px; margin-top: 40px; flex-wrap: wrap;">
+        <a href="https://chromewebstore.google.com/detail/qr-code-generator/pemccmgijpaidcjkjbldcgfepleddkdk" target="_blank" rel="noreferrer" class="btn btn-primary-store">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+            <path d="M12 0C5.383 0 0 5.383 0 12s5.383 12 12 12 12-5.383 12-12S18.617 0 12 0zm0 1.5c5.808 0 10.5 4.692 10.5 10.5 0 2.215-.688 4.272-1.865 5.972l-5.69-9.855c.34-.787.555-1.656.555-2.617 0-3.59-2.91-6.5-6.5-6.5-.477 0-.938.058-1.385.158l3.197 5.538c.517-.128 1.056-.201 1.613-.201 3.59 0 6.5 2.91 6.5 6.5 0 .557-.073 1.096-.201 1.613l-5.538-3.197c-.1-.447-.158-.908-.158-1.385 0-3.59 2.91-6.5 6.5-6.5.961 0 1.83.215 2.617.555L6.028 1.865C7.728.688 9.785 0 12 0z"/>
+          </svg>
+          <span data-i18n="btnStore">Chrome 网上应用店一键安装</span>
+          <span class="btn-tag-rec" data-i18n="tagRec">官方推荐</span>
+        </a>
+        <a href="https://github.com/rowkin/browser-plugins/releases" target="_blank" rel="noreferrer" class="btn btn-secondary" data-i18n="btnDownloadZip">
           📦 前往 Releases 下载离线安装包
         </a>
       </div>
@@ -324,6 +346,7 @@
       </div>
 
       <div class="footer-links">
+        <a href="https://chromewebstore.google.com/detail/qr-code-generator/pemccmgijpaidcjkjbldcgfepleddkdk" target="_blank" rel="noreferrer" class="footer-link" data-i18n="ftStore">Chrome 商店</a>
         <a href="#playground" class="footer-link" data-i18n="navPlayground">在线体验</a>
         <a href="#features" class="footer-link" data-i18n="navFeatures">核心特性</a>
         <a href="#install" class="footer-link" data-i18n="navInstall">安装指南</a>
@@ -382,6 +405,12 @@
         tagInstall: "INSTALLATION",
         titleInstall: "便捷三步安装到 Chrome / Edge",
         descInstall: "遵循 Manifest V3 标准，无任何广告，开箱即用。",
+        navBtnInstall: "🛍️ 立即安装",
+        btnStore: "Chrome 网上应用店一键安装",
+        tagRec: "官方推荐",
+        btnReleases: "GitHub Releases 离线包",
+        heroInstallHint: "⭐ 支持 Chrome、Edge、Brave、Arc 等所有 Chromium 浏览器 · 推荐应用商店安装，离线用户可前往 GitHub Releases 获取 ZIP",
+        ftStore: "Chrome 商店",
         step1Title: "下载最新构建包",
         step1Desc: "从 GitHub Releases 下载最新的 qrcode-extension-v1.1.2.zip 离线压缩包并解压。",
         step2Title: "打开扩展管理面板",
@@ -435,6 +464,12 @@
         tagInstall: "INSTALLATION",
         titleInstall: "Easy 3-Step Setup for Chrome & Edge",
         descInstall: "Complies with Manifest V3 standards. No telemetry, no ads.",
+        navBtnInstall: "🛍️ Install Now",
+        btnStore: "Add to Chrome - Free",
+        tagRec: "OFFICIAL",
+        btnReleases: "GitHub Releases ZIP",
+        heroInstallHint: "⭐ Supports Chrome, Edge, Brave, Arc and all Chromium browsers · Recommended install from Web Store",
+        ftStore: "Chrome Web Store",
         step1Title: "Download Latest Release",
         step1Desc: "Download qrcode-extension-v1.1.2.zip from GitHub Releases and extract it.",
         step2Title: "Open Extension Manager",

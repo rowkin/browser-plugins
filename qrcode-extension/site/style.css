@@ -310,6 +310,72 @@ body {
   box-shadow: var(--shadow-md);
 }
 
+/* 顶部导航“立即安装”按钮 */
+.btn-nav-install {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 16px;
+  background: linear-gradient(135deg, #0284c7 0%, #2563eb 50%, #4f46e5 100%);
+  color: #FFFFFF !important;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  box-shadow: 0 3px 12px rgba(37, 99, 235, 0.3);
+  transition: transform 0.2s, box-shadow 0.2s;
+  white-space: nowrap;
+}
+
+.btn-nav-install:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 5px 18px rgba(37, 99, 235, 0.45);
+}
+
+/* 官方 Chrome 商店安装主推大按钮 */
+.btn-primary-store {
+  padding: 13px 26px;
+  background: linear-gradient(135deg, #0284c7 0%, #2563eb 55%, #4f46e5 100%);
+  color: #FFFFFF !important;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  font-size: 15px;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 10px 25px -5px rgba(37, 99, 235, 0.4);
+  border: none;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  position: relative;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.btn-primary-store:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 15px 30px -5px rgba(37, 99, 235, 0.55);
+}
+
+.btn-tag-rec {
+  background: rgba(255, 255, 255, 0.25);
+  font-size: 11px;
+  padding: 2px 7px;
+  border-radius: 10px;
+  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.hero-install-hint {
+  font-size: 13.5px;
+  color: var(--text-muted);
+  margin-top: -30px;
+  margin-bottom: 40px;
+  line-height: 1.6;
+}
+
 /* Live Playground Interactive Demo */
 .playground-section {
   padding: 40px 0 80px;
